@@ -12,8 +12,8 @@ sampleneighSequential <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
   # elements in the sample unodes are the no repeated elements in the sample nodes.waves are the vertices added in each
   # wave. Vertices may be present in more that one wave and more that once in a single wave. last.added are the vertices
   # that are the most recently added into the set.
-  
-  
+
+
   unodes <- nodes.waves <- as.list(rep(0, n.seeds))
   # Seed selection: is without replacement and at random
   if (is.null(seed)) {
@@ -43,7 +43,7 @@ sampleneighAroundOneSeed <- function(net, seed0, n.neigh = 1) {
   # sample unodes are the no repeated elements in the sample nodes.waves are the vertices added in each wave. Vertices may
   # be present in more that one wave and more that once in a single wave. last.added are the vertices that are the most
   # recently added into the set.
-  
+
   sampleN <- nodes <- seed0
   nodes.waves <- as.list(rep(0, n.neigh))
   effEdges <- net$edges
@@ -51,14 +51,14 @@ sampleneighAroundOneSeed <- function(net, seed0, n.neigh = 1) {
   nn <- n.neigh
   new.nodes <- 0
   # if(n.neigh==0) we only keep the seeds
-  
+
   wave <- 1
   while (wave <= n.neigh & more) {
     a <- is.element(effEdges, nodes)  #'nodes' will be accumulating all included vertices (non repeated)
-    if (any(a)) 
+    if (any(a))
       {
         eedges <- which(matrix(a, dim(effEdges)[1], 2), arr.ind = TRUE)  #now it is the row number and column where they are in the edges matrix
-        nodes.waves[[wave]] <- arr.nodes <- sort(effEdges[cbind(eedges[, 1], sapply(eedges[, 2], FUN = switch, 2, 
+        nodes.waves[[wave]] <- arr.nodes <- sort(effEdges[cbind(eedges[, 1], sapply(eedges[, 2], FUN = switch, 2,
           1))])  #the vertices we arrived to (duplicity is allowed)
         # I need this specially to know which vertices were the last added:
         if (!anyDuplicated(eedges[, 1])) {
@@ -71,15 +71,15 @@ sampleneighAroundOneSeed <- function(net, seed0, n.neigh = 1) {
         ### cycles).  We want to include them as may times as they are neighbours of already included vertices. That is why I
         ### consider arr.nodes.if a originally seed vertex is included more than once, it is because it was selected also by
         ### following one edge and then it also has the category of non seed.
-        
+
         sampleN <- sort(c(sampleN, arr.nodes))
         nodes <- unique(sampleN)
-        if (nn > 1) 
+        if (nn > 1)
           effEdges <- effEdges[-unique(eedges[, 1]), ]  #I remove the 'used edges' to facilitate following searches within while,and assure
         # we do not 'arrive' to a node more times than edges it has.
         if (length(effEdges) > 0) {
-          if (is.vector(effEdges)) 
-          effEdges <- t(effEdges)  #I have to this very often in R to make sure effEdges is a matrix and not a vector 
+          if (is.vector(effEdges))
+          effEdges <- t(effEdges)  #I have to this very often in R to make sure effEdges is a matrix and not a vector
         } else {
           more <- FALSE
         }  #when it reduces to become a matrix with one row.
@@ -101,8 +101,8 @@ sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
   # elements in the sample unodes are the no repeated elements in the sample nodes.waves are the vertices added in each
   # wave. Vertices may be present in more that one wave and more that once in a single wave. last.added are the vertices
   # that are the most recently added into the set.
-  
-  
+
+
   # Seed selection: is without replacement and at random
   if (is.null(seed)) {
     seed0 <- sort(sample(1:length(net$degree), n.seeds, rep = FALSE))
@@ -117,10 +117,10 @@ sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
   wave <- 1
   while (wave <= n.neigh & more) {
     a <- is.element(effEdges, nodes)  #'nodes' will be accumulating all included vertices (non repeated)
-    if (any(a)) 
+    if (any(a))
       {
         eedges <- which(matrix(a, dim(effEdges)[1], 2), arr.ind = TRUE)  #now it is the row number and column where they are in the edges matrix
-        nodes.waves[[wave]] <- arr.nodes <- sort(effEdges[cbind(eedges[, 1], sapply(eedges[, 2], FUN = switch, 2, 
+        nodes.waves[[wave]] <- arr.nodes <- sort(effEdges[cbind(eedges[, 1], sapply(eedges[, 2], FUN = switch, 2,
           1))])  #the vertices we arrived to (duplicity is allowed)
         # I need this specially to know which vertices were the last added:
         if (!anyDuplicated(eedges[, 1])) {
@@ -133,15 +133,15 @@ sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
         ### cycles).  We want to include them as may times as they are neighbours of already included vertices. That is why I
         ### consider arr.nodes.if a originally seed vertex is included more than once, it is because it was selected also by
         ### following one edge and then it also has the category of non seed.
-        
+
         sampleN <- sort(c(sampleN, arr.nodes))
         nodes <- unique(sampleN)
-        if (nn > 1) 
+        if (nn > 1)
           effEdges <- effEdges[-unique(eedges[, 1]), ]  #I remove the 'used edges' to facilitate following searches within while,and assure
         # we do not 'arrive' to a node more times than edges it has.
         if (length(effEdges) > 0) {
-          if (is.vector(effEdges)) 
-          effEdges <- t(effEdges)  #I have to this very often in R to make sure effEdges is a matrix and not a vector 
+          if (is.vector(effEdges))
+          effEdges <- t(effEdges)  #I have to this very often in R to make sure effEdges is a matrix and not a vector
         } else {
           more <- FALSE
         }  #when it reduces to become a matrix with one row.
@@ -181,7 +181,7 @@ Oempdegreedistrib0 <- function(net, n.seed, n.neigh, num.sam, idname = "Temp", s
   for (m in 1:num.sam) {
     # if(m%%100==1)#cat('Obtaining empd of sample ',m,'\n')
     neigh.seeds <- sort(sample(1:length(net$degree), n.seed, rep = FALSE))  #n.neigh=0!!!!!!!
-    tab.seeds <- table(neigh.seeds)  #id seeds 
+    tab.seeds <- table(neigh.seeds)  #id seeds
     seeds1[m, ] <- neigh.seeds
     ###### degrees #####
     deg.seed <- realdd[rep(as.integer(names(tab.seeds)), tab.seeds)]  #duplicities allowed
@@ -197,7 +197,7 @@ Oempdegreedistrib0 <- function(net, n.seed, n.neigh, num.sam, idname = "Temp", s
     Oempd[[m]] <- list(Oempd = Oempd.seed)
   }  # for(m in 1:num.sam)
   # browser()
-  list(idname = idname, samples = samples, values = values.array, Oempd = Oempd, num.sam = num.sam, val.seed = val.seed.array, 
+  list(idname = idname, samples = samples, values = values.array, Oempd = Oempd, num.sam = num.sam, val.seed = val.seed.array,
     n.seed = n.seed, n.neigh = n.neigh, p0.seed = p0.seed.array, seeds1 = seeds1)
 }
 
@@ -209,16 +209,16 @@ OempdegreedistribK <- function(net, n.seed, n.neigh, num.sam, idname = "Temp", s
   # number of different samples taken from the same network idname is to identify from which nets we are sampling and
   # resampling.
   seeds1 <- matrix(0, num.sam, n.seed)
-  p0.seed.array <- Oempd <- ekseed.array <- values.array <- val.seed.array <- val.nonseed.array <- samples <- as.list(rep(NA, 
+  p0.seed.array <- Oempd <- ekseed.array <- values.array <- val.seed.array <- val.nonseed.array <- samples <- as.list(rep(NA,
     num.sam))
-  
+
   ## -------the 'real' parameters in the network:-------##
   real <- real.parameters(net)
   realdd <- real$realdd
   # rmeand<-real$mean(realdd) rquart<-real$rquart
   rfreq <- real$rfreq
   # rperc<-real$rperc -------------------------------------##
-  
+
   for (m in 1:num.sam) {
     # if(m%%100==1)#cat('Obtaining empd of sample ',m,'\n') browser()
     neigh <- sampleneighSequential(net, n.seeds = n.seed, n.neigh = n.neigh, seed = seeds[m, ])
@@ -226,10 +226,10 @@ OempdegreedistribK <- function(net, n.seed, n.neigh, num.sam, idname = "Temp", s
     # nodes<-neigh$sampleN[!is.element(neigh$sampleN,neigh$last.added)] #vertices that are not included last (with their
     # duplicities)
     nodes <- neigh$sampleN  #vertices up to distance n.neigh(with their duplicities)!!!!!!!!!!!!!!
-    tab.nodes <- table(nodes)  #now it has the info of seeds and non-seed 
+    tab.nodes <- table(nodes)  #now it has the info of seeds and non-seed
     # Now we want to distinguish between seeds and non seeds. Remember that some seeds can also be non seed if they were also
     # selected by following one edge.
-    tab.seeds <- table(neigh$seeds)  #id seeds        
+    tab.seeds <- table(neigh$seeds)  #id seeds
     a <- is.element(names(tab.nodes), names(tab.seeds))
     if (all(names(tab.nodes[a]) == names(tab.seeds))) {
       tab.nodes[a] <- tab.nodes[a] - tab.seeds
@@ -243,13 +243,13 @@ OempdegreedistribK <- function(net, n.seed, n.neigh, num.sam, idname = "Temp", s
     deg.nonseed <- realdd[rep(as.integer(names(tab.nodes)), tab.nodes)]  #to incorporate their duplicity
     deg.nonseedU <- realdd[as.integer(names(tab.nodes))]  #it contains the non seeds only one time (I do not use in the rest of the code)
     # --------------------#
-    samples[[m]] <- list(freq.deg.seed = freq.deg.seed <- table(deg.seed), freq.deg.nonseed = freq.deg.nonseed <- table(deg.nonseed), 
+    samples[[m]] <- list(freq.deg.seed = freq.deg.seed <- table(deg.seed), freq.deg.nonseed = freq.deg.nonseed <- table(deg.nonseed),
       freq.deg.nonseedU = freq.deg.nonseedU <- table(deg.nonseedU))
     ##### resample and extract the degree of selected vertices######
     val.seed.array[[m]] <- val.seed <- sort(unique(deg.seed))  #as.numeric(names(freq.deg.seed))
     val.nonseed.array[[m]] <- val.nonseed <- sort(unique(deg.nonseed))  #as.numeric(names(freq.deg.nonseed))
-    val.nonseedU <- sort(unique(deg.nonseedU))  #as.numeric(names(freq.deg.nonseedU)) 
-    
+    val.nonseedU <- sort(unique(deg.nonseedU))  #as.numeric(names(freq.deg.nonseedU))
+
     p0.real <- rfreq[1]
     p0.seed <- 0
     if (any(val.seed == 0)) {
@@ -259,7 +259,7 @@ OempdegreedistribK <- function(net, n.seed, n.neigh, num.sam, idname = "Temp", s
     p0.seed.array[[m]] <- p0.seed
     values <- sort(union(val.seed, val.nonseed))  #all the possible degree values toresample
     values.array[[m]] <- values
-    
+
     ###################### Frequency ##### (Not the relative frequency)
     OFseed <- table.row(deg.seed, values)
     OFnonseed <- table.row(deg.nonseed, values)
@@ -282,13 +282,13 @@ OempdegreedistribK <- function(net, n.seed, n.neigh, num.sam, idname = "Temp", s
     Oempd.nw.p0rEks <- (Of.seed + (1 - p0.real) * ekseed * Of.nonseed.nw/vals)/(n.seed + ekseed * sum(Of.nonseed.nw/vals))
     if (any(values == 0)) {
       Oempd.nw.p0sEks <- c(p0.seed, Oempd.nw.p0sEks)  #5
-      Oempd.nw.p0rEks <- c(p0.real, Oempd.nw.p0rEks)  #8  
+      Oempd.nw.p0rEks <- c(p0.real, Oempd.nw.p0rEks)  #8
     }
     Oempd[[m]] <- list(Oempd = Oempd.nw.p0sEks, Oempd.nw.p0rEks = Oempd.nw.p0rEks)
   }  # for(m in 1:num.sam)
   # browser()
-  list(idname = idname, samples = samples, values = values.array, Oempd = Oempd, num.sam = num.sam, val.seed = val.seed.array, 
-    val.nonseed = val.nonseed.array, n.seed = n.seed, n.neigh = n.neigh, p0.real = p0.real, p0.seed = p0.seed.array, 
+  list(idname = idname, samples = samples, values = values.array, Oempd = Oempd, num.sam = num.sam, val.seed = val.seed.array,
+    val.nonseed = val.nonseed.array, n.seed = n.seed, n.neigh = n.neigh, p0.real = p0.real, p0.seed = p0.seed.array,
     ekseed = ekseed.array, seeds1 = seeds1)
 }
 
@@ -310,7 +310,7 @@ Bempdegreedistrib0 <- function(sam.out, num.sam, n.boot, idname = "Temp") {
   # bootstrap samples taken from each sample
   n.seed <- sam.out$n.seed
   n.neigh <- sam.out$n.neigh
-  if (length(num.sam) == 1) 
+  if (length(num.sam) == 1)
     num.sam <- 1:num.sam
   empd <- as.list(rep(NA, length(num.sam)))
   i <- 1
@@ -338,9 +338,9 @@ BempdegreedistribK <- function(sam.out, num.sam, n.boot, idname = "Temp") {
   # bootstrap samples taken from each sample
   n.seed <- sam.out$n.seed
   n.neigh <- sam.out$n.neigh
-  if (length(num.sam) == 1) 
+  if (length(num.sam) == 1)
     num.sam <- 1:num.sam
-  
+
   empd <- as.list(rep(NA, length(num.sam)))
   i <- 1
   for (m in num.sam) {
@@ -351,11 +351,11 @@ BempdegreedistribK <- function(sam.out, num.sam, n.boot, idname = "Temp") {
     val.nonseed <- sam.out$val.nonseed[[m]]
     freq.deg.seed <- sam.out$samples[[m]]$freq.deg.seed
     freq.deg.nonseed <- sam.out$samples[[m]]$freq.deg.nonseed
-    
+
     bsam.seed <- myBsample(val.seed, n.seed, n.boot, prob = freq.deg.seed)  #matrix n.boot x n.seed
     bsam.nonseed.nw <- myBsample(val.nonseed, sum(freq.deg.nonseed), n.boot, prob = freq.deg.nonseed)  #matrix n.boot x sum(freq.deg.nonseed)
     bsam.nonseed.w <- myBsample(val.nonseed, sum(freq.deg.nonseed), n.boot, prob = freq.deg.nonseed/val.nonseed)  #matrix
-    
+
     p0.B <- rep(0, n.boot)
     if (any(val.seed == 0)) {
       # if any seed has degree zero
@@ -363,10 +363,10 @@ BempdegreedistribK <- function(sam.out, num.sam, n.boot, idname = "Temp") {
     }
     p0.real <- sam.out$p0.real
     p0.seed <- sam.out$p0.seed[[m]]
-    
+
     values <- sam.out$values[[m]]  #all the possible degree values to resample
     # if (all(values==0)) {values<-0.1}
-    
+
     ###################### Frequency ##### (Not the relative frequency)
     Fseed <- t(apply(bsam.seed, 1, table.row, vect = values))  #frequency (sorted according to values)
     # browser()
@@ -381,15 +381,15 @@ BempdegreedistribK <- function(sam.out, num.sam, n.boot, idname = "Temp") {
     } else {
       Fnonseed.w <- t(apply(as.matrix(bsam.nonseed.w), 1, table.row, vect = values))
     }
-    
+
     # Fnonseed.nw<-t(apply(as.matrix(bsam.nonseed.nw),1,table.row,vect=values)) # '
     # Fnonseed.w<-t(apply(as.matrix(bsam.nonseed.w),1,table.row,vect=values)) # '
-    
+
     #################################################################### combining information from seeds and nonseeds ######
-    
+
     # mean degree computed from the original sampled seeds:
     ekseed <- sam.out$ekseed[[m]]
-    
+
     colzero <- NULL
     if (any(values == 0)) {
       colzero <- which(values == 0)
@@ -411,7 +411,7 @@ BempdegreedistribK <- function(sam.out, num.sam, n.boot, idname = "Temp") {
     #### p0 estimated from orginal sampled seeds# E(K) estimated from bootstrap samples from the seeds
     #### empd.nw.p0sEkb<-(f.seed+(1-p0.seed)*apply(bsam.seed,1,FUN=mean)*t(t(f.nonseed.nw)/vals))/(n.seed+
     #### apply(bsam.seed,1,FUN=mean)*rowSums(t(t(f.nonseed.nw)/vals)))
-    empd.nw.p0sEkb <- (f.seed + t(t(f.nonseed.nw)/vals) * (1 - p0.B) * apply(bsam.seed, 1, FUN = mean))/(n.seed + rowSums(t(t(f.nonseed.nw)/vals)) * 
+    empd.nw.p0sEkb <- (f.seed + t(t(f.nonseed.nw)/vals) * (1 - p0.B) * apply(bsam.seed, 1, FUN = mean))/(n.seed + rowSums(t(t(f.nonseed.nw)/vals)) *
       apply(bsam.seed, 1, FUN = mean))
     # E(K) estimated from the original seeds sample
     # empd.nw.p0sEks<-(f.seed+(1-p0.seed)*ekseed*t(t(f.nonseed.nw)/vals))/(n.seed+ ekseed*rowSums(t(t(f.nonseed.nw)/vals)))
@@ -420,7 +420,7 @@ BempdegreedistribK <- function(sam.out, num.sam, n.boot, idname = "Temp") {
     ######################################### empd.nw.p0rEkb<-(f.seed+(1-p0.real)*apply(bsam.seed,1,FUN=mean)*t(t(f.nonseed.nw)/vals))/
     ######################################### (n.seed+apply(bsam.seed,1,FUN=mean)*rowSums(t(t(f.nonseed.nw)/vals))) E(K) estimated from the original seeds sample
     ######################################### empd.nw.p0rEks<-(f.seed+(1-p0.real)*ekseed*t(t(f.nonseed.nw)/vals))/(n.seed+ ekseed*rowSums(t(t(f.nonseed.nw)/vals)))
-    
+
     if (any(values == 0)) {
       empd.w.p0s <- cbind(`0` = p0.B, empd.w.p0s)  #1
       # empd.w.p0r<-cbind('0'=p0.real,empd.w.p0r) #2
@@ -450,7 +450,7 @@ OparametersEst <- function(outOempd) {
     vals <- outOempd$values[[m]]
     mean[m] <- sum(vals * distrib)
     quartiles[m, ] <- vals[sapply(X = c(0.25, 0.5, 0.75), FUN = min.greater, v = cumsum(distrib), ge = TRUE)]
-    rfreq[m, ] <- c(distribvals(distrib, vals, 0), distribvals(distrib, vals, 1), distribvals(distrib, vals, 2), distribvals(distrib, 
+    rfreq[m, ] <- c(distribvals(distrib, vals, 0), distribvals(distrib, vals, 1), distribvals(distrib, vals, 2), distribvals(distrib,
       vals, 3), distribvals(distrib, vals, 4))
     deciles[m, ] <- vals[sapply(X = seq(0.1, 0.9, by = 0.1), FUN = min.greater, v = cumsum(distrib), ge = TRUE)]
   }
@@ -530,9 +530,9 @@ Bias <- function(opar.out, rpar.out) {
   quarSMES <- sqrt(rowMeans((t(opar.out$quartiles) - rpar.out$rquart)^2))
   rfreqSMES <- sqrt(rowMeans((t(opar.out$rfreq) - rpar.out$rfreq)^2))
   deciSMES <- sqrt(rowMeans((t(opar.out$deciles) - rpar.out$rdeci)^2))
-  
+
   rnam <- c("mean", "quart1", "quart2", "quart3", paste("rfreq", 0:4), paste("deci", 1:9))
-  BiasSMES <- data.frame(meanBias = c(meanBias, quarBias, rfreqBias, deciBias), sqrtSMES = c(meanSMES, quarSMES, rfreqSMES, 
+  BiasSMES <- data.frame(meanBias = c(meanBias, quarBias, rfreqBias, deciBias), sqrtSMES = c(meanSMES, quarSMES, rfreqSMES,
     deciSMES))
   rownames(BiasSMES) <- rnam
   BiasSMES
@@ -564,12 +564,12 @@ BparametersEst <- function(outBempd) {
   } else {
     n.dist <- 3
   }
-  
+
   mean <- array(NA, c(tn.sam, outBempd$n.boot, n.dist))
   quartiles <- array(NA, c(tn.sam, 3, outBempd$n.boot, n.dist))
   rfreq <- array(NA, c(tn.sam, 5, outBempd$n.boot, n.dist))  #freq of 0,1,2,3,4
   deciles <- array(NA, c(tn.sam, 9, outBempd$n.boot, n.dist))  #10,20,30,40,50,60,70,80,90
-  
+
   for (m in 1:tn.sam) {
     w <- 1
     in.while <- TRUE
@@ -588,12 +588,12 @@ BparametersEst <- function(outBempd) {
         }
       }
       vals <- outBempd$values[[m]]  #as.numeric(colnames(empd))  ###checar
-      
+
       if (dim(empd)[2] != length(as.vector(vals))) {
         # browser()
         mean[m, , w] <- t(empd) %*% as.vector(vals)
       } else mean[m, , w] <- empd %*% as.vector(vals)
-      
+
       cempd <- t(apply(empd, 1, FUN = cumsum))
       quartiles[m, , , w] <- t(sapply(X = c(0.25, 0.5, 0.75), FUN = cempdpercentile, cempd = cempd, vals = vals))
       rfreq[m, , , w] <- t(sapply(X = 0:4, FUN = distribvalsmat, empd = empd, vals = vals))
@@ -638,7 +638,7 @@ cempdpercentile <- function(cempd, perc, vals) {
 B.Bias <- function(bpar.out, opar.out) {
   # bpar.out the bootstrap estimated parameters. List with the names mean, quartiles, rfreq, deciles. This elements are
   # arrays opar.out the estimated parameters form the original samples. List with the names, mean, quetiles, rfreq, deciles
-  
+
   if (length(bpar.out$num.sam) == 1) {
     sams <- 1:bpar.out$num.sam
   } else {
@@ -652,14 +652,14 @@ B.Bias <- function(bpar.out, opar.out) {
     q3Bias <- apply(bpar.out$quartiles[, 3, , ] - opar.out$quartiles[sams, 3], 3, FUN = mean)
     ## quarBias<-apply(bpar.out$quartiles-opar.out$rquart[num.sam],c(2,4),FUN=mean)
     quarBias <- cbind(q1Bias, q2Bias, q3Bias)
-    
+
     f0Bias <- apply(bpar.out$rfreq[, 1, , ] - opar.out$rfreq[sams, 1], 3, FUN = mean)
     f1Bias <- apply(bpar.out$rfreq[, 2, , ] - opar.out$rfreq[sams, 2], 3, FUN = mean)
     f2Bias <- apply(bpar.out$rfreq[, 3, , ] - opar.out$rfreq[sams, 3], 3, FUN = mean)
     f3Bias <- apply(bpar.out$rfreq[, 4, , ] - opar.out$rfreq[sams, 4], 3, FUN = mean)
     f4Bias <- apply(bpar.out$rfreq[, 5, , ] - opar.out$rfreq[sams, 5], 3, FUN = mean)
     rfreqBias <- cbind(f0Bias, f1Bias, f2Bias, f3Bias, f4Bias)
-    
+
     d1Bias <- apply(bpar.out$deciles[, 1, , ] - opar.out$deciles[sams, 1], 3, FUN = mean)
     d2Bias <- apply(bpar.out$deciles[, 2, , ] - opar.out$deciles[sams, 2], 3, FUN = mean)
     d3Bias <- apply(bpar.out$deciles[, 3, , ] - opar.out$deciles[sams, 3], 3, FUN = mean)
@@ -670,22 +670,22 @@ B.Bias <- function(bpar.out, opar.out) {
     d8Bias <- apply(bpar.out$deciles[, 8, , ] - opar.out$deciles[sams, 8], 3, FUN = mean)
     d9Bias <- apply(bpar.out$deciles[, 9, , ] - opar.out$deciles[sams, 9], 3, FUN = mean)
     deciBias <- cbind(d1Bias, d2Bias, d3Bias, d4Bias, d5Bias, d6Bias, d7Bias, d8Bias, d9Bias)
-    
+
     meanSMSE <- sqrt(apply((bpar.out$mean - opar.out$mean[sams])^2, 3, FUN = mean))
-    
+
     q1SMSE <- apply((bpar.out$quartiles[, 1, , ] - opar.out$quartiles[sams, 1])^2, 3, FUN = mean)
     q2SMSE <- apply((bpar.out$quartiles[, 2, , ] - opar.out$quartiles[sams, 2])^2, 3, FUN = mean)
     q3SMSE <- apply((bpar.out$quartiles[, 3, , ] - opar.out$quartiles[sams, 3])^2, 3, FUN = mean)
     ## quarBias<-apply(bpar.out$quartiles-opar.out$rquart[num.sam],c(2,4),FUN=mean)
     quarSMSE <- sqrt(cbind(q1SMSE, q2SMSE, q3SMSE))
-    
+
     f0SMSE <- apply((bpar.out$rfreq[, 1, , ] - opar.out$rfreq[sams, 1])^2, 3, FUN = mean)
     f1SMSE <- apply((bpar.out$rfreq[, 2, , ] - opar.out$rfreq[sams, 2])^2, 3, FUN = mean)
     f2SMSE <- apply((bpar.out$rfreq[, 3, , ] - opar.out$rfreq[sams, 3])^2, 3, FUN = mean)
     f3SMSE <- apply((bpar.out$rfreq[, 4, , ] - opar.out$rfreq[sams, 4])^2, 3, FUN = mean)
     f4SMSE <- apply((bpar.out$rfreq[, 5, , ] - opar.out$rfreq[sams, 5])^2, 3, FUN = mean)
     rfreqSMSE <- cbind(f0SMSE, f1SMSE, f2SMSE, f3SMSE, f4SMSE)
-    
+
     d1SMSE <- apply((bpar.out$deciles[, 1, , ] - opar.out$deciles[sams, 1])^2, 3, FUN = mean)
     d2SMSE <- apply((bpar.out$deciles[, 2, , ] - opar.out$deciles[sams, 2])^2, 3, FUN = mean)
     d3SMSE <- apply((bpar.out$deciles[, 3, , ] - opar.out$deciles[sams, 3])^2, 3, FUN = mean)
@@ -698,20 +698,20 @@ B.Bias <- function(bpar.out, opar.out) {
     deciSMSE <- sqrt(cbind(d1SMSE, d2SMSE, d3SMSE, d4SMSE, d5SMSE, d6SMSE, d7SMSE, d8SMSE, d9SMSE))
   } else {
     meanBias <- mean(bpar.out$mean - opar.out$mean[sams])
-    
+
     q1Bias <- mean(bpar.out$quartiles[, 1, , ] - opar.out$quartiles[sams, 1])
     q2Bias <- mean(bpar.out$quartiles[, 2, , ] - opar.out$quartiles[sams, 2])
     q3Bias <- mean(bpar.out$quartiles[, 3, , ] - opar.out$quartiles[sams, 3])
     ## quarBias<-apply(bpar.out$quartiles-opar.out$rquart[num.sam],c(2,4),FUN=mean)
     quarBias <- cbind(q1Bias, q2Bias, q3Bias)
-    
+
     f0Bias <- mean(bpar.out$rfreq[, 1, , ] - opar.out$rfreq[sams, 1])
     f1Bias <- mean(bpar.out$rfreq[, 2, , ] - opar.out$rfreq[sams, 2])
     f2Bias <- mean(bpar.out$rfreq[, 3, , ] - opar.out$rfreq[sams, 3])
     f3Bias <- mean(bpar.out$rfreq[, 4, , ] - opar.out$rfreq[sams, 4])
     f4Bias <- mean(bpar.out$rfreq[, 5, , ] - opar.out$rfreq[sams, 5])
     rfreqBias <- cbind(f0Bias, f1Bias, f2Bias, f3Bias, f4Bias)
-    
+
     d1Bias <- mean(bpar.out$deciles[, 1, , ] - opar.out$deciles[sams, 1])
     d2Bias <- mean(bpar.out$deciles[, 2, , ] - opar.out$deciles[sams, 2])
     d3Bias <- mean(bpar.out$deciles[, 3, , ] - opar.out$deciles[sams, 3])
@@ -722,22 +722,22 @@ B.Bias <- function(bpar.out, opar.out) {
     d8Bias <- mean(bpar.out$deciles[, 8, , ] - opar.out$deciles[sams, 8])
     d9Bias <- mean(bpar.out$deciles[, 9, , ] - opar.out$deciles[sams, 9])
     deciBias <- cbind(d1Bias, d2Bias, d3Bias, d4Bias, d5Bias, d6Bias, d7Bias, d8Bias, d9Bias)
-    
+
     meanSMSE <- sqrt(mean((bpar.out$mean - opar.out$mean[sams])^2))
-    
+
     q1SMSE <- mean((bpar.out$quartiles[, 1, , ] - opar.out$quartiles[sams, 1])^2)
     q2SMSE <- mean((bpar.out$quartiles[, 2, , ] - opar.out$quartiles[sams, 2])^2)
     q3SMSE <- mean((bpar.out$quartiles[, 3, , ] - opar.out$quartiles[sams, 3])^2)
     ## quarBias<-apply(bpar.out$quartiles-opar.out$rquart[num.sam],c(2,4),FUN=mean)
     quarSMSE <- sqrt(cbind(q1SMSE, q2SMSE, q3SMSE))
-    
+
     f0SMSE <- mean((bpar.out$rfreq[, 1, , ] - opar.out$rfreq[sams, 1])^2)
     f1SMSE <- mean((bpar.out$rfreq[, 2, , ] - opar.out$rfreq[sams, 2])^2)
     f2SMSE <- mean((bpar.out$rfreq[, 3, , ] - opar.out$rfreq[sams, 3])^2)
     f3SMSE <- mean((bpar.out$rfreq[, 4, , ] - opar.out$rfreq[sams, 4])^2)
     f4SMSE <- mean((bpar.out$rfreq[, 5, , ] - opar.out$rfreq[sams, 5])^2)
     rfreqSMSE <- cbind(f0SMSE, f1SMSE, f2SMSE, f3SMSE, f4SMSE)
-    
+
     d1SMSE <- mean((bpar.out$deciles[, 1, , ] - opar.out$deciles[sams, 1])^2)
     d2SMSE <- mean((bpar.out$deciles[, 2, , ] - opar.out$deciles[sams, 2])^2)
     d3SMSE <- mean((bpar.out$deciles[, 3, , ] - opar.out$deciles[sams, 3])^2)
@@ -777,13 +777,13 @@ B.Bias.RMSE.ij.S <- function(net, n.seeds, n.neigh, sam.size, n.boot, otherNetPa
   b <- 1
   for (i in n.seeds) {
     for (j in n.neigh) {
-      
+
       if (j == 0) {
         n.dist <- 1  #n.dist is the number of different emp distr.
       } else {
         n.dist <- 3
       }
-      
+
       # cat('i= ',i,'\t','j= ',j,'\n') browser()
       if (j == 0) {
         Obs.distrib <- Oempdegreedistrib(net, n.seed = i, n.neigh = j, num.sam = sam.size)
@@ -791,57 +791,57 @@ B.Bias.RMSE.ij.S <- function(net, n.seeds, n.neigh, sam.size, n.boot, otherNetPa
       } else {
         Obs.distrib <- Oempdegreedistrib(net, n.seed = i, n.neigh = j, num.sam = sam.size, seeds = TMP)
       }
-      
+
       Oparam <- OparametersEst(Obs.distrib)
       # browser()
       seeds2[which(n.neigh == j), which(n.seeds == i), , 1:dim(Obs.distrib$seeds1)[2]] <- Obs.distrib$seeds1
-      
+
       B.distrib <- Bempdegreedistrib(Obs.distrib, num.sam = sam.size, n.boot = n.boot)
       Bparam <- BparametersEst(B.distrib)
       # browser()
       B.mean[[b]] <- Bparam$mean
-      
-      
+
+
       biasRMSE <- B.Bias(Bparam, Oparam)
       All.biasRMSE <- cbind(All.biasRMSE, biasRMSE)
-      
+
       # mean intervals and fallins
-      
+
       Mean.intervals.list[[b]] <- intervals <- BMean.intervals(Opar = Oparam$mean, Bpar = Bparam$mean, n.dist)
       Mean.fallins[[b]] <- list(ij = c(i, j), fallins = fallInsMean(ints = intervals, rpar = realparam$rmean, n.dist))
-      if (otherNetParameters) 
+      if (otherNetParameters)
         {
-          OtherPar.intervals.list[[b]] <- OtherPar.intervals <- list(quartiles = Bintervalsi(Opari = Oparam$quart, 
-          Bpari = Bparam$quart, n.dist, num.par = 3), rfreq = Bintervalsi(Opari = Oparam$rfreq, Bpari = Bparam$rfreq, 
+          OtherPar.intervals.list[[b]] <- OtherPar.intervals <- list(quartiles = Bintervalsi(Opari = Oparam$quart,
+          Bpari = Bparam$quart, n.dist, num.par = 3), rfreq = Bintervalsi(Opari = Oparam$rfreq, Bpari = Bparam$rfreq,
           n.dist, num.par = 5), deciles = Bintervalsi(Opari = Oparam$deciles, Bpari = Bparam$deciles, n.dist, num.par = 9))
           Other.fallins[[b]] <- list(ij = c(i, j), fi.quart = NA, fi.rfreq = NA, fi.deciles = NA)
         }  #if(OtherNetParameters)
-      
+
       b <- b + 1
     }
   }
-  list(All.biasRMSE = All.biasRMSE, Mean.intervals = Mean.intervals.list, Mean.fallins = Mean.fallins, B.mean = B.mean, 
+  list(All.biasRMSE = All.biasRMSE, Mean.intervals = Mean.intervals.list, Mean.fallins = Mean.fallins, B.mean = B.mean,
     seeds2 = seeds2)
 }
 
 # ---------------------------------------------------------------------------------------#
 
 BMean.intervals <- function(Opar, Bpar, n.dist) {
-  
+
   # Opar is output of OparametersEst Opar$mean Bpar is output of BparametersEst Bpar$mean n.dist is the number of empirical
   # distributions considered browser()
   if (n.dist > 1) {
     mean.int <- apply(Bpar, c(1, 3), FUN = quantile, prob = c(0.025, 0.975))  #debe ser una matriz 2x tn.sam x n.dist
     mean.int1 <- cbind(2 * Opar - mean.int[2, , ], 2 * Opar - mean.int[1, , ])[, c(1, 4, 2, 5, 3, 6)]  #firts to columns dist1, then dist2 and finally dist3
-    mean.int2 <- cbind(Opar + apply(Bpar, c(1, 3), FUN = mean) - mean.int[2, , ], Opar + apply(Bpar, c(1, 3), FUN = mean) - 
+    mean.int2 <- cbind(Opar + apply(Bpar, c(1, 3), FUN = mean) - mean.int[2, , ], Opar + apply(Bpar, c(1, 3), FUN = mean) -
       mean.int[1, , ])[, c(1, 4, 2, 5, 3, 6)]
     mean.int3 <- cbind(Opar^2/mean.int[2, , ], 2 * Opar^2/mean.int[1, , ])[, c(1, 4, 2, 5, 3, 6)]
     mean.int <- cbind(t(mean.int[, , 1]), t(mean.int[, , 2]), t(mean.int[, , 3]))
-  } else if (n.dist == 1) 
+  } else if (n.dist == 1)
     {
       mean.int <- t(apply(Bpar, c(1), FUN = quantile, prob = c(0.025, 0.975)))  #debe ser una matriz tn.sam x2
       mean.int1 <- cbind(2 * Opar - mean.int[, 2], 2 * Opar - mean.int[, 1])
-      mean.int2 <- cbind(Opar + apply(Bpar, c(1), FUN = mean) - mean.int[, 2], Opar + apply(Bpar, c(1), FUN = mean) - 
+      mean.int2 <- cbind(Opar + apply(Bpar, c(1), FUN = mean) - mean.int[, 2], Opar + apply(Bpar, c(1), FUN = mean) -
         mean.int[, 1])
       mean.int3 <- cbind(Opar^2/mean.int[, 2], 2 * Opar^2/mean.int[, 1])
     }  #if (n.dist>1)
@@ -878,32 +878,32 @@ Bintervalsi <- function(Opari, Bpari, n.dist, num.par) {
   # Opari is the parameter(s) of interesout from OparametersEst (either: mean,quartiles,rfreq,deciles) Bpari is the
   # parameter(s) of interes from BparametersEst (either: mean,quartiles,rfreq,deciles) n.dist is the number of empirical
   # distributions considered
-  
+
   reorder <- as.vector(matrix(rep(1:(num.par), each = 2), 2, num.par) + c(0, num.par))
   # browser()
   if (n.dist > 1) {
     par.int <- apply(Bpari, c(1, 2, 4), FUN = quantile, prob = c(0.025, 0.975))  #debe ser una matriz: 2 x num.sam x num param x n.dist
-    
+
     par.int1.a <- apply(-par.int[2, , , ], 3, FUN = "+", 2 * Opari)  #matrix (num.sam)(num.par) x ndist #the first col is the vect of a matrix num.sam x num.par con dist1
-    par.int1.b <- apply(-par.int[1, , , ], 3, FUN = "+", 2 * Opari)  # ' 
+    par.int1.b <- apply(-par.int[1, , , ], 3, FUN = "+", 2 * Opari)  # '
     par.int1 <- cbind(par.int1.a, par.int1.b)[, reorder]  #the first two columns are the lower and upper limit according to n.dist1...
-    
+
     ##### test for the quartiles plot(1:60,rep(5,60),t='n',ylim=c(-3,6)) segments(1:60,par.int[,1],1:60,par.int[,2])
-    
+
     par.int2.a <- apply(apply(Bpari, c(1, 2, 4), FUN = mean) - par.int[2, , , ], 3, FUN = "+", Opari)
     par.int2.b <- apply(apply(Bpari, c(1, 2, 4), FUN = mean) - par.int[1, , , ], 3, FUN = "+", Opari)
     par.int2 <- cbind(par.int2.a, par.int2.b)[, reorder]
-    
+
     par.int3.a <- apply(1/par.int[2, , , ], 3, FUN = "*", Opari)
     par.int3.b <- apply(1/par.int[1, , , ], 3, FUN = "*", Opari)
     par.int3 <- cbind(par.int3.a, par.int3.b)[, reorder]
-    
+
     ##### segments(1:60,par.int3[,1],1:60,par.int3[,2])
-  } else if (n.dist == 1) 
+  } else if (n.dist == 1)
     {
       par.int <- apply(Bpari, c(1, 2), FUN = quantile, prob = c(0.025, 0.975))  #debe ser una matriz 2 x num.sam x num.par
       par.int1 <- cbind(2 * Opari - par.int[2, , ], 2 * Opari - par.int[1, , ])[, reorder]  #debe ser una matriz num.sam x 2(num.par)
-      par.int2 <- cbind(Opari + apply(Bpari, c(1, 2), FUN = mean) - par.int[2, , ], Opari + apply(Bpari, c(1, 2), FUN = mean) - 
+      par.int2 <- cbind(Opari + apply(Bpari, c(1, 2), FUN = mean) - par.int[2, , ], Opari + apply(Bpari, c(1, 2), FUN = mean) -
         par.int[1, , ])[, reorder]
       par.int3 <- cbind(Opari^2/par.int[2, , ], 2 * Opari^2/par.int[1, , ])[, reorder]
       mpar.int <- NULL
@@ -916,7 +916,7 @@ Bintervalsi <- function(Opari, Bpari, n.dist, num.par) {
 fallInsi <- function(intsi, rpari, n.boot, n.dist) {
   # intsi is output of Bintervalsi (for quarts, rfreq or deciles) rpari is the parameter(s) of interes from real.parameters
   # (either:rquart,rfreq,rdeci) n.dist is the number of empirical distributions considered
-  
+
   if (n.dist > 1) {
     fi.mean <- fi1.mean <- fi2.mean <- fi3.mean <- rep(0, 3)
     col <- c(1, 3, 5)
@@ -936,64 +936,64 @@ fallInsi <- function(intsi, rpari, n.boot, n.dist) {
   fi
 }
 
-############################################################################### 
+###############################################################################
 
-
-load(paste(distr, "10000x", order, ".RData", sep = ""))
-
-MC <- 200  #length(networks)
-nsam <- 2
-n.boot <- 500
-# n.seeds<-c(3,5,7,10,20,50,100)#
-n.neigh <- c(0, 1, 2, 3, 4, 5)  #
-# OBSME <- MC.BBRMSE <- 0
-# MC.int.mean<-matrix(0,(length(n.seeds)*length(n.neigh)*4),6,dimnames=list(c(rep.int(rep.int(c('int','int1','int2','int3'),length(n.neigh)),length(n.seeds))),c(rep.int(c('2.5%','97.5%'),3))))
-# MC.FI<-array(0,dim=c((length(n.seeds)*length(n.neigh)*4),3,MC),
-# dimnames=list(c(rep.int(rep.int(c('int','int1','int2','int3'),length(n.neigh)),length(n.seeds))),c('dist1','dist2','dist3')))
-Bmean <- array(NA, dim = c(length(n.neigh), length(n.seeds), n.boot, nsam, MC))
-# sample.means<-array(NA, dim=c(length(n.neigh), length(n.seeds), nsam, MC))
-seeds <- array(0, dim = c(MC, length(n.neigh), length(n.seeds), nsam, max(n.seeds)))
-for (mc in (n * MC + 1):(n * MC + MC)) {
-  # mc=1
-  net <- networks[[mc]]
-  # rp<-real.parameters(net) OBSME<-OBSME+Bias.SMSE.ij.S(net,rp,n.seeds,n.neigh,nsam)/MC
-  
-  # Bootstrap
-  BBRMSE <- B.Bias.RMSE.ij.S(net, n.seeds, n.neigh, nsam, n.boot)
-  # MC.BBRMSE<-BBRMSE$All.biasRMSE/MC+MC.BBRMSE
-  
-  seeds[(mc - n * MC), , , , ] <- BBRMSE$seeds2
-  
-  # INTERVALS for(i in 1:(length(n.seeds)*length(n.neigh))){
-  # MC.int.mean[(i*4-3),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int)]<-MC.int.mean[(i*4-3),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int)]+apply(BBRMSE$Mean.intervals[[i]]$mean.int,2,mean)/MC
-  # MC.int.mean[(i*4-2),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int1)]<-MC.int.mean[(i*4-2),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int1)]+apply(BBRMSE$Mean.intervals[[i]]$mean.int1,2,mean)/MC
-  # MC.int.mean[(i*4-1),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int2)]<-MC.int.mean[(i*4-1),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int2)]+apply(BBRMSE$Mean.intervals[[i]]$mean.int2,2,mean)/MC
-  # MC.int.mean[(i*4),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int3)]<-MC.int.mean[(i*4),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int3)]+apply(BBRMSE$Mean.intervals[[i]]$mean.int3,2,mean)/MC
-  # }
-  
-  # #FALLINS for(i in 1:(length(n.seeds)*length(n.neigh)))
-  # MC.FI[(i*4-3):(i*4),1:ncol(BBRMSE$Mean.fallins[[i]]$fallins),(mc-n*MC)]=BBRMSE$Mean.fallins[[i]]$fallins
-  
-  # #Intermediate output print(c('Monte Carlo', mc)); print(apply(MC.FI[,,1:(mc-n*MC)], c(1,2), sum)/(mc-n*MC))
-  print(mc)
-  
-  # B.means[[(mc-n*MC)]]<-BBRMSE$B.mean
-  b <- 1
-  for (j in 1:length(n.seeds)) {
-    for (i in 1:length(n.neigh)) {
-      # B.mean is a list of lists: 1-5mc <= 1-24combinations of n.neigh and n.seeds <= <=nsam*n.boot*3 matrix, where 1-3 are
-      # different distributions, and only 1 distribution exists for n.neigh=0 (i.e. nsam*n.boot matrix). So, we take 1st
-      # distribution for each of 24 combinations of seeds and neighbours, apply mean over bootstraps and get 1*nsam vector of
-      # means, which we sort and embed in the sample.means: sample.means[i,j,,(mc-n*MC)]<-sort(apply(BBRMSE$B.mean[[b]][,,1],
-      # 1, mean))
-      Bmean[i, j, , , (mc - n * MC)] <- t(BBRMSE$B.mean[[b]][, , 1])
-      b <- b + 1
-    }
-  }
-}
-save(seeds, file = paste(distr, order, "_seeds_", n, ".RData", sep = ""))
-save(Bmean, file = paste(distr, order, "_BMean_", n, ".RData", sep = ""))
-# save(MC.FI, file = paste(distr, order, '_MCFI_', n, '.RData', sep=''))
-
-# write.table(MC.BBRMSE,file = paste(distr, order, '_MCBBRMSE_', n,'.txt', sep='')) write.table(MC.int.mean,file =
-# paste(distr, order,'_MCintmean_', n,'.txt', sep='')) 
+#
+# load(paste(distr, "10000x", order, ".RData", sep = ""))
+#
+# MC <- 200  #length(networks)
+# nsam <- 2
+# n.boot <- 500
+# # n.seeds<-c(3,5,7,10,20,50,100)#
+# n.neigh <- c(0, 1, 2, 3, 4, 5)  #
+# # OBSME <- MC.BBRMSE <- 0
+# # MC.int.mean<-matrix(0,(length(n.seeds)*length(n.neigh)*4),6,dimnames=list(c(rep.int(rep.int(c('int','int1','int2','int3'),length(n.neigh)),length(n.seeds))),c(rep.int(c('2.5%','97.5%'),3))))
+# # MC.FI<-array(0,dim=c((length(n.seeds)*length(n.neigh)*4),3,MC),
+# # dimnames=list(c(rep.int(rep.int(c('int','int1','int2','int3'),length(n.neigh)),length(n.seeds))),c('dist1','dist2','dist3')))
+# Bmean <- array(NA, dim = c(length(n.neigh), length(n.seeds), n.boot, nsam, MC))
+# # sample.means<-array(NA, dim=c(length(n.neigh), length(n.seeds), nsam, MC))
+# seeds <- array(0, dim = c(MC, length(n.neigh), length(n.seeds), nsam, max(n.seeds)))
+# for (mc in (n * MC + 1):(n * MC + MC)) {
+#   # mc=1
+#   net <- networks[[mc]]
+#   # rp<-real.parameters(net) OBSME<-OBSME+Bias.SMSE.ij.S(net,rp,n.seeds,n.neigh,nsam)/MC
+#
+#   # Bootstrap
+#   BBRMSE <- B.Bias.RMSE.ij.S(net, n.seeds, n.neigh, nsam, n.boot)
+#   # MC.BBRMSE<-BBRMSE$All.biasRMSE/MC+MC.BBRMSE
+#
+#   seeds[(mc - n * MC), , , , ] <- BBRMSE$seeds2
+#
+#   # INTERVALS for(i in 1:(length(n.seeds)*length(n.neigh))){
+#   # MC.int.mean[(i*4-3),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int)]<-MC.int.mean[(i*4-3),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int)]+apply(BBRMSE$Mean.intervals[[i]]$mean.int,2,mean)/MC
+#   # MC.int.mean[(i*4-2),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int1)]<-MC.int.mean[(i*4-2),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int1)]+apply(BBRMSE$Mean.intervals[[i]]$mean.int1,2,mean)/MC
+#   # MC.int.mean[(i*4-1),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int2)]<-MC.int.mean[(i*4-1),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int2)]+apply(BBRMSE$Mean.intervals[[i]]$mean.int2,2,mean)/MC
+#   # MC.int.mean[(i*4),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int3)]<-MC.int.mean[(i*4),1:ncol(BBRMSE$Mean.intervals[[i]]$mean.int3)]+apply(BBRMSE$Mean.intervals[[i]]$mean.int3,2,mean)/MC
+#   # }
+#
+#   # #FALLINS for(i in 1:(length(n.seeds)*length(n.neigh)))
+#   # MC.FI[(i*4-3):(i*4),1:ncol(BBRMSE$Mean.fallins[[i]]$fallins),(mc-n*MC)]=BBRMSE$Mean.fallins[[i]]$fallins
+#
+#   # #Intermediate output print(c('Monte Carlo', mc)); print(apply(MC.FI[,,1:(mc-n*MC)], c(1,2), sum)/(mc-n*MC))
+#   print(mc)
+#
+#   # B.means[[(mc-n*MC)]]<-BBRMSE$B.mean
+#   b <- 1
+#   for (j in 1:length(n.seeds)) {
+#     for (i in 1:length(n.neigh)) {
+#       # B.mean is a list of lists: 1-5mc <= 1-24combinations of n.neigh and n.seeds <= <=nsam*n.boot*3 matrix, where 1-3 are
+#       # different distributions, and only 1 distribution exists for n.neigh=0 (i.e. nsam*n.boot matrix). So, we take 1st
+#       # distribution for each of 24 combinations of seeds and neighbours, apply mean over bootstraps and get 1*nsam vector of
+#       # means, which we sort and embed in the sample.means: sample.means[i,j,,(mc-n*MC)]<-sort(apply(BBRMSE$B.mean[[b]][,,1],
+#       # 1, mean))
+#       Bmean[i, j, , , (mc - n * MC)] <- t(BBRMSE$B.mean[[b]][, , 1])
+#       b <- b + 1
+#     }
+#   }
+# }
+# save(seeds, file = paste(distr, order, "_seeds_", n, ".RData", sep = ""))
+# save(Bmean, file = paste(distr, order, "_BMean_", n, ".RData", sep = ""))
+# # save(MC.FI, file = paste(distr, order, '_MCFI_', n, '.RData', sep=''))
+#
+# # write.table(MC.BBRMSE,file = paste(distr, order, '_MCBBRMSE_', n,'.txt', sep='')) write.table(MC.int.mean,file =
+# # paste(distr, order,'_MCintmean_', n,'.txt', sep=''))

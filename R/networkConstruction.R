@@ -3,7 +3,6 @@
 
 ###################### NETWORK CONSTRUCTION FUNCTIONS ##########################
 
-library(VGAM)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
 
@@ -11,8 +10,8 @@ li <- function(delta, b, lim = 10000) {
   # b can be a vector
   res <- rep(0, length(b))
   if (length(delta) != 1)
-    stop("delta debe ser escalar") else res[b == 1] <- zeta(delta)
-  # else if(length(delta)==length(b))res[b==1]<-zeta(delta[b==1])
+    stop("delta debe ser escalar") else res[b == 1] <- VGAM::zeta(delta)
+  # else if(length(delta)==length(b))res[b==1]<-VGAM::zeta(delta[b==1])
   a <- which(b != 1)
   if (length(a))
     for (j in a) res[j] <- sum(b[j]^(1:lim)/(1:lim)^delta)
@@ -172,7 +171,7 @@ rpower.law <- function(n, param) {
   # where param a real number >1
   if (length(param) != 1 | param <= 1)
     stop("the power law parameter must be a real number grater than one") else {
-    pdf.s <- (1:1000)^(-param) * (zeta(param))^(-1)
+    pdf.s <- (1:1000)^(-param) * (VGAM::zeta(param))^(-1)
     sim <- cut(runif(n), unique(c(0, cumsum(pdf.s))), labels = FALSE, right = FALSE)
   }
   sim
@@ -185,7 +184,7 @@ dpower.law <- function(x, param) {
   if (length(param) != 1)
     stop("the power law parameter dimension is wrong (it must be of length 1)
          or the parameter value is incorrect") else {
-               pdf.s <- x^(-param) * (zeta(param))^(-1)
+               pdf.s <- x^(-param) * (VGAM::zeta(param))^(-1)
          }
   pdf.s
 }
@@ -450,8 +449,12 @@ local.network.MR.new5 <- function(n, distrib, param = NULL, degree = NULL,
 
 table.mult.degree <- function(vector, place, m, freq = TRUE) {
   if (freq) {
-    if (place < m)
-      res <- c(vector[place] * (vector[place] - 1)/2, vector[place] * vector[(place + 1):m]) else res <- vector[place] * (vector[place] - 1)/2
+    if (place < m){
+      res <- c(vector[place] * (vector[place] - 1)/2,
+               vector[place] * vector[(place + 1):m])
+      } else {
+            res <- vector[place] * (vector[place] - 1)/2
+      }
   } else {
     res <- vector[place] * vector[place:m]
   }
