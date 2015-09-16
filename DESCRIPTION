@@ -1,13 +1,18 @@
 Package: snowboot
 Type: Package
-Title: Network Analysis with Non-Parametric Methods
-Emerging from Snowball and Bootstrap Sampling
+Title: Network Analysis with Non-Parametric Methods that
+    Emerge from Snowball and Bootstrap Sampling
 Version: 0.1
 Date: 2015-09-15
-Author: Leticia Ram\u00edrez, Vyacheslav Lyubchich, Kusha Nezafati
+Authors@R: c(
+    person("Leticia", "Ram\u00edrez", email = "llramirezramirez@gmail.com", role = c("aut","cre")),
+    person("Vyacheslav", "Lyubchich", email = "lyubchic@umces.edu", role = c("aut","cre"))),
+    person("Kusha", "Nezafati", email = "kusha.nezafati@gmail.com", role = "aut" ))
 Maintainer: Kusha Nezafati <kusha.nezafati@gmail.com>
 Description: This package can take imported network objects or simulate them.
     The package can also analyze these objects using methods that center around
     snowball and bootstrap sampleing
+Depends: R (>= 3.2.2)
 License: GPL-3
 LazyData: TRUE
+Imports: VGAM
