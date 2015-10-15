@@ -1,3 +1,20 @@
+#' A function to snowball sample the neighbors around a single seed.
+#'
+#' This function returns the vertices samples by snowball up to wave n.neigh
+#' around a single seed. The functions main purpose is to be called from
+#' \code{\link{sampleneighSequential}.}
+#' @param net A network object.
+#' @param seed0 A number that is the id of the seed whose neighbors are sampled.
+#' @param n.neigh A number for the waves of snowball sampling.
+#' @return a list containing:
+#'    \item{seed}{A number that is the id of the seed whose neighbors are sampled.}
+#'    \item{sampleN}{A numeric vector containg ids of the vertices from
+#'          the snowball sampling and the intial seed's id. This vector may have
+#'          duplicates, since the algorithm allows for multiple inclusions.}
+#'    \item{unode}{A numeric vector containg the unique values in \code{$sampleN}.}
+#'    \item{nodes.waves}{A list of numeric vectors (one per wave) each
+#'          containing the ids of the nodes sampled in that particular wave.}
+#' @export
 sampleneighAroundOneSeed <- function(net, seed0, n.neigh = 1) {
       # this function returns the vertices samples by snowball up to wave n.neigh around a single seed net is object network
       # (what is important is the component $edges and the length of $degree) this function randomly sample n.seeds and then
