@@ -7,7 +7,9 @@ B.EmpDistrib <-function(net,n.seeds,n.neigh,sam.size=1,n.boot,otherNetParameters
     for(i in n.seeds){
         for(j in n.neigh){
 
-            if(j==0){n.dist<-1   #n.dist is the number of different emp distr.
+            if(j==0){
+                  n.dist <- 1
+                  # ^ n.dist is the number of different emp distr.
             }else{n.dist<-3}
 
             if(j==0){
@@ -32,6 +34,31 @@ B.EmpDistrib <-function(net,n.seeds,n.neigh,sam.size=1,n.boot,otherNetParameters
     return(list(Obs.distrib.out=Obs.distrib.out, w.p0s=w.p0s, nw.p0sEkb=nw.p0sEkb, nw.p0sEks=nw.p0sEks))
 }
 
+kmax_in_LSMI <- function(bootEmpD){
+      res <- numeric()
+      for(i in 1:length(bootEmpD[[1]])){
+            res <- c(res,max(bootEmpD[[1]][[i]]$values[[1]]))
+      }
+      res
+}
+
+estimable_k <- function(bootEmpD){
+      w.p0s <- intersect(dimnames(bootEmpD$w.p0s[[1]])[[2]],dimnames(bootEmpD$w.p0s[[2]])[[2]])
+      for(i in 3:length(bootEmpD$w.p0s)){
+            w.p0s <- intersect(w.p0s,dimnames(bootEmpD$w.p0s[[i]])[[2]])
+      }
+      nw.p0sEkb <- intersect(dimnames(bootEmpD$nw.p0sEkb[[1]])[[2]],dimnames(bootEmpD$nw.p0sEkb[[2]])[[2]])
+      for(i in 3:length(bootEmpD$nw.p0sEkb)){
+            nw.p0sEkb <- intersect(nw.p0sEkb,dimnames(bootEmpD$nw.p0sEkb[[i]])[[2]])
+      }
+      nw.p0sEks <- intersect(dimnames(bootEmpD$nw.p0sEks[[1]])[[2]],dimnames(bootEmpD$nw.p0sEks[[2]])[[2]])
+      for(i in 3:length(bootEmpD$nw.p0sEks)){
+            nw.p0sEks <- intersect(nw.p0sEks,dimnames(bootEmpD$nw.p0sEks[[i]])[[2]])
+      }
+      res <- list(w.p0s, nw.p0sEkb, nw.p0sEks)
+      res
+}
+
 combineLSMINodes <- function(bootEmpD){
     #function combines the unodes(or seed1) from the elements of
     #Obs.distrib.out object, which is inside the bootEmpD list
@@ -49,27 +76,94 @@ combineLSMINodes <- function(bootEmpD){
     unlist(nodes)
 }
 closestCoverNDX <- function(x,coverage=.95){
-    which(abs(x-coverage)==min(abs(x-coverage)),arr.ind=T)}
-p_k_cross_validation <- function(networks, n.seeds, n.neigh, n.boot, sam.size=1,
-                                 kmax){
+    which(abs(x-coverage)==min(abs(x-coverage)),arr.ind=T)
+}
+
+#' A function that sorts a matrix of tied optimal seed-wave combinations so that
+#' the first is the largest seeds among the smallest waves.
+#'
+#' The function takes a matrix containing tied optimal seed-wave combinations
+#' from the training proxy and sorts the rows of this matrix so that the
+#' largest number of seeds for the lowest number of waves is on top
+#' @param inMat is a matrix of tied seed-wave indices.
+sort_tied_opti <- function(inMat){
+      if(dim(inMat)[1] == 1)
+            return(inMat)
+      largestSeedFirst <- inMat[order(inMat[,1],decreasing = T),]
+      outMat <- largestSeedFirst[order(largestSeedFirst[,2]),]
+      outMat
+}
+# Alternative is to get the smallest sample size which is estimated with mean(degree)
+# ##1.2. Find approximate sample size
+# SS <- matrix(NA, length(n.neigh), length(n.seeds))
+# SS[1,] <- n.seeds
+# for(i in 1:5){
+#       SS[(i+1),] <- SS[i,] + SS[1,]*MU*(MU-1)^(i-1)
+# }
+# #SS
+
+p_k_cross_validation <- function(networks, distrib, param,
+                                 n.seeds, n.neigh, n.boot, sam.size=1,kmax,
+                                 kmax_bound_coef=1/4,
+                                 proxyRep = 10, proxyOrder = 50, lim=10000){
       # Add more inputs for kmax upperbound and lowerbound for number of times
       # each p_k is sampled after all proxyReps are done. kmax upperbound should
       # be 1/4 the max k in LSMI
+      # param <- c(.1,2)
+
+      #sort seed waves to assist in optimal seed-wave selection
+
+      n.seeds <- sort(n.seeds)
+      n.neigh <- sort(n.neigh)
+      MC <- length(networks)
+      net_order <- networks[[1]]$n
+      x <- 1:net_order
+      if (distrib == "polylog"){
+            if (length(param) != 2)
+                  stop("the Gutenber-Richter law parameter is wrong") else {
+                        trueDist <- x^(-param[1]) * exp(-x/param[2])/li(param[1], exp(-1/param[2]), lim = lim)
+                  }
+      }
+
+
+
+
+      fallin.trudDist.w.p0s <- fallin.trudDist.nw.p0sEkb <- fallin.trudDist.nw.p0sEks <- array(0, c(length(n.seeds), length(n.neigh), kmax,2))
+      confidenceIntervalWidth.w.p0s <- confidenceIntervalWidth.nw.p0sEkb <- confidenceIntervalWidth.nw.p0sEks <- array(NA, c(length(n.seeds), length(n.neigh), MC, kmax))
       for (mc in 1:MC){#mc=1
+
             bootEmpD=B.EmpDistrib(networks[[mc]],n.seeds,n.neigh,sam.size,n.boot)
+            if (kmax > min(kmax_in_LSMI(bootEmpD)))
+                  kmax <-  min(kmax_in_LSMI(bootEmpD))
             used <- unique(combineLSMINodes(bootEmpD))
             count <- 1
+            fallin.proxy.w.p0s <- fallin.proxy.nw.p0sEkb <- fallin.proxy.nw.p0sEks <- array(0, c(length(n.seeds), length(n.neigh), proxyRep, kmax))
             for(i in 1:length(n.seeds)){
                   # i=1
                   for(j in 1:length(n.neigh)){
                         # j=1
                         # build proxy from bootEmpD$Obs.empd.out
                         tmp.w.p0s <- apply(bootEmpD$w.p0s[[count]], 2, quantile, probs=c(0.025, 0.975))
+                        tmp.w.p0s <- tmp.w.p0s[,match(1:kmax,dimnames(tmp.w.p0s)[[2]], nomatch = NA)]
+                        dimnames(tmp.w.p0s)[[2]] <- 1:kmax
+
                         tmp.nw.p0sEkb <- apply(bootEmpD$nw.p0sEkb[[count]], 2, quantile, probs=c(0.025, 0.975))
+                        tmp.nw.p0sEkb <- tmp.nw.p0sEkb[,match(1:kmax,dimnames(tmp.nw.p0sEkb)[[2]], nomatch = NA)]
+                        dimnames(tmp.nw.p0sEkb)[[2]] <- 1:kmax
+
                         tmp.nw.p0sEks <- apply(bootEmpD$nw.p0sEks[[count]], 2, quantile, probs=c(0.025, 0.975))
+                        tmp.nw.p0sEks <- tmp.nw.p0sEks[,match(1:kmax,dimnames(tmp.nw.p0sEks)[[2]], nomatch = NA)]
+                        dimnames(tmp.nw.p0sEks)[[2]] <- 1:kmax
+
+                        #browser()
                         confidenceIntervalWidth.w.p0s[i, j, mc, ] <- tmp.w.p0s[2, 1:kmax]-tmp.w.p0s[1, 1:kmax]
                         confidenceIntervalWidth.nw.p0sEkb[i, j, mc, ] <- tmp.nw.p0sEkb[2,1:kmax]-tmp.w.p0s[1, 1:kmax]
                         confidenceIntervalWidth.nw.p0sEks[i, j, mc, ] <- tmp.nw.p0sEks[2,1:kmax]-tmp.w.p0s[1, 1:kmax]
+
+                        tmp.w.p0s[is.na(tmp.w.p0s)] <- 0
+                        tmp.nw.p0sEkb[is.na(tmp.nw.p0sEkb)] <- 0
+                        tmp.nw.p0sEks[is.na(tmp.nw.p0sEks)] <- 0
+
                         for(k in 1:proxyRep){
                               # k=1
                               proxyNodes <- sample(used, proxyOrder, replace = F)
@@ -100,8 +194,10 @@ p_k_cross_validation <- function(networks, n.seeds, n.neigh, n.boot, sam.size=1,
             if (is.list(opti.cover.w.p0s)){
 
                   for(kDegree in 1:kmax){
-                        optimalSeedNDX = opti.cover.w.p0s[[kDegree]][1, ][1]
-                        optimalNeighNDX <- opti.cover.w.p0s[[kDegree]][1, ][2]
+                        sortedOpti.cover.w.p0s <- sort_tied_opti(opti.cover.w.p0s[[kDegree]])
+                        #browser()
+                        optimalSeedNDX <-  sortedOpti.cover.w.p0s[1, ][1]
+                        optimalNeighNDX <- sortedOpti.cover.w.p0s[1, ][2]
                         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
                         CI <- quantile(bootEmpD$w.p0s[[listLocation]][, kDegree], probs=c(0.025, 0.975))
                         fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX,kDegree,2]=fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree, 2]+1
@@ -128,8 +224,9 @@ p_k_cross_validation <- function(networks, n.seeds, n.neigh, n.boot, sam.size=1,
             if (is.list(opti.cover.nw.p0sEkb)){
 
                   for(kDegree in 1:kmax){
-                        optimalSeedNDX = opti.cover.nw.p0sEkb[[kDegree]][1,][1]
-                        optimalNeighNDX <- opti.cover.nw.p0sEkb[[kDegree]][1,][2]
+                        sortedOpti.cover.nw.p0sEkb <- sort_tied_opti(opti.cover.nw.p0sEkb[[kDegree]])
+                        optimalSeedNDX <-  sortedOpti.cover.nw.p0sEkb[1, ][1]
+                        optimalNeighNDX <- sortedOpti.cover.nw.p0sEkb[1, ][2]
                         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
                         CI <- quantile(bootEmpD$nw.p0sEkb[[listLocation]][,kDegree], probs=c(0.025, 0.975))
                         fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree,2]=fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree,2]+1
@@ -154,8 +251,9 @@ p_k_cross_validation <- function(networks, n.seeds, n.neigh, n.boot, sam.size=1,
             if (is.list(opti.cover.nw.p0sEks)){
 
                   for(kDegree in 1:kmax){
-                        optimalSeedNDX = opti.cover.nw.p0sEks[[kDegree]][1,][1]
-                        optimalNeighNDX <- opti.cover.nw.p0sEks[[kDegree]][1,][2]
+                        sortedOpti.cover.nw.p0sEks <- sort_tied_opti(opti.cover.nw.p0sEks[[kDegree]])
+                        optimalSeedNDX <-  sortedOpti.cover.nw.p0sEks[1, ][1]
+                        optimalNeighNDX <- sortedOpti.cover.nw.p0sEks[1, ][2]
                         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
                         CI <- quantile(bootEmpD$nw.p0sEks[[listLocation]][,kDegree], probs=c(0.025, 0.975))
                         fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree,2]=fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree,2]+1
@@ -186,6 +284,7 @@ p_k_cross_validation <- function(networks, n.seeds, n.neigh, n.boot, sam.size=1,
                                      fallin.trudDist.nw.p0sEks,confidenceIntervalWidth.w.p0s,
                                      confidenceIntervalWidth.nw.p0sEkb,confidenceIntervalWidth.nw.p0sEks)
 
+      crossValidationResults
       #save(crossValidationResults,file=paste("polylog(0.1,2)1000x2000_kmax30_CVresults-",jobNDX,".RData",sep = ""))
 }
 

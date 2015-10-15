@@ -9,9 +9,9 @@ Authors@R: c(
     person("Vyacheslav", "Lyubchich", email = "lyubchic@umces.edu", role = c("aut")),
     person("Kusha", "Nezafati", email = "kusha.nezafati@gmail.com", role = "cre" ))
 Maintainer: Kusha Nezafati <kusha.nezafati@gmail.com>
-Description: This package can take imported network objects or simulate them.
-    The package can also analyze these objects using methods that center around
-    snowball and bootstrap sampleing
+Description: This package analyzes network objects, which are imported or
+      simulated by the package. The non-parametric methods of analysis center
+      around snowball and bootstrap sampling.
 Depends: R (>= 3.2.2)
 License: GPL-3
 LazyData: TRUE
