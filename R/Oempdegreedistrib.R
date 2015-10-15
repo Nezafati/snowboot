@@ -1,21 +1,24 @@
-#' A function to obtain the empirical distribution of the snowball samples.
+#' Obtaining Empirical Network Degree Distribution from Labeled Snowball
+#' Sampling with Multiple Inclusion (LSMI).
 #'
-#' This function obtains the empirical degree distribution from the snowball
-#' samples. The user inputs the network, the number of seeds, waves and snowball
+#' Oempdegreedistrib is used to obtain the empirical network degree distribution
+#' from labeled snowball sampling with multiple inclusion (LSMI). # move to arg# The user inputs the network, the number of seeds, waves and snowball
 #' samples to take. The return value is a list which includes the empirical
-#' distribution of the snowball samples \code{Oempd}. Usually one snowball
-#' sample is requested (\code{num.sam = 1}) n.seed is
+#' distribution of the snowball samples \code{Oempd}.  n.seed is
 #' the number of seed to set the neighbourhood sample n.neigh is the neighbouhood size around each seed num.sam is the
 #' number of different samples taken from the same network idname is to identify from which nets we are sampling and
 #' resampling.
 #'
-#' @param net the network that the function samples from.
-#' @param n.seed the number of seeds in the snowball sample.
-#' @param n.neigh the number of waves carried out by the snowball sample (e.g.
-#'    n.neigh = 2 means each snowball sample will contain the seeds, the
-#'    neighbors of the seeds, and the neighors of the neighbors of the seeds).
-#'    Recall this algorithm allow mutiple inclusions.
-#' @param num.sam a number value for the snowball samples to take.
+#' @param net a list that must contain elements $edges (\code{matrix}. a two column matrix),
+#'    $n (\code{num}. network order). The object can be created by
+#'    \code{\link{local.network.MR.new5}} or it can be imported.
+#' @param n.seed a number of seeds in the snowball sample.
+#'    It must be a positive integer.
+#' @param n.neigh a number of waves to be sampled around each seed in LSMI. (e.g.
+#'    n.neigh = 0 corresponds to seeds only, n.neigh = 1 corresponds to sampling
+#'    seeds and their first neighbors).
+#'    Recall this algorithm allow for mutiple inclusions #reference to paper.
+#' @param num.sam a number for the snowball samples to take.
 #' @param idname a single \code{character} to name the object. The default
 #'    value is "Temp".
 #' @param seeds an optional paramater that is used whenever we know the seeds
