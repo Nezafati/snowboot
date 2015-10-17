@@ -13,10 +13,10 @@ B.EmpDistrib <-function(net,n.seeds,n.neigh,sam.size=1,n.boot,otherNetParameters
             }else{n.dist<-3}
 
             if(j==0){
-                Obs.distrib<-Oempdegreedistrib(net,n.seed=i,n.neigh=j,num.sam=sam.size)
+                Obs.distrib<-Oempdegreedistrib(net,n.seeds=i,n.neigh=j,num.sam=sam.size)
                 TMP <- Obs.distrib$seeds1
             }else{
-                Obs.distrib<-Oempdegreedistrib(net,n.seed=i,n.neigh=j,num.sam=sam.size, seed=NULL)
+                Obs.distrib<-Oempdegreedistrib(net,n.seeds=i,n.neigh=j,num.sam=sam.size, seed=NULL)
             }
             Oparam<-OparametersEst(Obs.distrib)
             #B.distrib<-Bempdegreedistrib(Obs.distrib, num.sam=sam.size,n.boot=n.boot)

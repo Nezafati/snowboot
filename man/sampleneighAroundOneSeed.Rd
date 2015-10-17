@@ -2,30 +2,36 @@
 % Please edit documentation in R/sampleneighAroundOneSeed.R
 \name{sampleneighAroundOneSeed}
 \alias{sampleneighAroundOneSeed}
-\title{A function to snowball sample the neighbors around a single seed.}
+\title{Snowball sampling with multiple inclusion around a single seed}
 \usage{
 sampleneighAroundOneSeed(net, seed0, n.neigh = 1)
 }
 \arguments{
-\item{net}{A network object.}
+\item{net}{a list that must contain elements $edges (\code{matrix}. a two column matrix),
+$n (\code{num}. network order), and $degree (\code{int} of length n).
+ The object can be created by \code{\link{local.network.MR.new5}} or
+ it can be imported.}
 
-\item{seed0}{A number that is the id of the seed whose neighbors are sampled.}
+\item{seed0}{\code{num}. Id of a seed to be sampled around.}
 
-\item{n.neigh}{A number for the waves of snowball sampling.}
+\item{n.neigh}{a number of waves to be sampled around each seed in LSMI.
+For example, n.neigh = 0 corresponds to seeds only, and n.neigh = 1
+corresponds to sampling seeds and their first neighbors).
+Note that the algorithm allow for mutiple inclusions.}
 }
 \value{
 a list containing:
-   \item{seed}{A number that is the id of the seed whose neighbors are sampled.}
-   \item{sampleN}{A numeric vector containg ids of the vertices from
-         the snowball sampling and the intial seed's id. This vector may have
+   \item{seed}{seed0 \code{num}. Id of a seed to be sampled around.}
+   \item{sampleN}{A vector of numeric ids of the nodes from
+         LSMI along with the original seed. This vector may have
          duplicates, since the algorithm allows for multiple inclusions.}
-   \item{unode}{A numeric vector containg the unique values in \code{$sampleN}.}
-   \item{nodes.waves}{A list of numeric vectors (one per wave) each
-         containing the ids of the nodes sampled in that particular wave.}
+   \item{unode}{A vector containing the unique values in \code{$sampleN}.}
+   \item{nodes.waves}{A list of length \code{n.neigh} containing vectors where
+         each vector reprots numeric ids of nodes sampled in a particular wave.}
 }
 \description{
-This function returns the vertices samples by snowball up to wave n.neigh
-around a single seed. The functions main purpose is to be called from
+This function performs snowball sampling with multiple inclusions (LSMI) around a
+single seed. #move to Remark: The functions main purpose is to be called from
 \code{\link{sampleneighSequential}.}
 }
 

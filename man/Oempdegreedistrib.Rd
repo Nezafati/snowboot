@@ -2,70 +2,73 @@
 % Please edit documentation in R/Oempdegreedistrib.R
 \name{Oempdegreedistrib}
 \alias{Oempdegreedistrib}
-\title{A function to obtain the empirical distribution of the snowball samples.}
+\title{Obtaining an Empirical Network Degree Distribution from Labeled Snowball
+Sampling with Multiple Inclusion (LSMI).}
 \usage{
-Oempdegreedistrib(net, n.seed, n.neigh, num.sam, idname = "Temp",
-  seeds = NULL)
+Oempdegreedistrib(net, n.seeds, n.neigh, num.sam = 1, seeds = NULL)
 }
 \arguments{
-\item{net}{the network that the function samples from.}
+\item{net}{a list that must contain elements
+\code{$n} (\code{integer}. network order),
+\code{$edges} (\code{matrix}. a \code{n}x2 matrix),
+and \code{$degree} (\code{integer} of length n).
+The object can be created by \code{\link{local.network.MR.new5}} or
+it can be imported.}
 
-\item{n.seed}{the number of seeds in the snowball sample.}
+\item{n.seeds}{a number of seeds in the snowball sample.
+It must be a positive integer.}
 
-\item{n.neigh}{the number of waves carried out by the snowball sample (e.g.
-n.neigh = 2 means each snowball sample will contain the seeds, the
-neighbors of the seeds, and the neighors of the neighbors of the seeds).
-Recall this algorithm allow mutiple inclusions.}
+\item{n.neigh}{a number of waves to be sampled around each seed in LSMI.
+For example, n.neigh = 0 corresponds to seeds only, and n.neigh = 1
+corresponds to sampling seeds and their first neighbors).
+Note that the algorithm allow for mutiple inclusions.}
 
-\item{num.sam}{a number value for the snowball samples to take.}
-
-\item{idname}{a single \code{character} to name the object. The default
-value is "Temp".}
+\item{num.sam}{a number for the LSMI repititions. Default value is one.}
 
 \item{seeds}{an optional paramater that is used whenever we know the seeds
-we would like to initiate the snowball with.}
+   we would like to initiate the snowball with. WARNING: If this parameter
+   is used, then num.sam > 1, this will
+   cause an error.}
 }
 \value{
 a list consisting of
-   \item{idname}{A \code{character} value for the optional id of the object.}
-   \item{samples}{A list containing lists (one per sample) each with
-         three tables: the frequency of degrees sampled from seeds,
+   \item{samples}{a list of length equal to \code{num.sam} where each element
+         is a list containing three tables:
+         the frequency of degrees sampled from seeds,
          non-seeds including duplicated nodes,
-         and non-seeds without duplications.}
-   \item{values}{A list containing vectors (one per sample) of the unique
-         degree values sampled.}
-   \item{Oemp}{The main output. A list of lists (one per sample) each
-         containing two tables for estimating the empirical distribution
-         from the sample.
-         The first table, called \code{Oempd} is of interest}
-   \item{num.sam}{a number value for the snowball samples to take}
-   \item{val.seed}{A list containing vectors (one per snowball sample)
-         of the unique degree values sampled from the seeds.}
-   \item{val.nonseed}{A list containing vectors (one per snowball sample)
-         of the unique degree values sampled from the non-seeds.
-         *Note: This item does not exist when n.neigh equals zero.}
-   \item{n.seed}{the number of seeds in the snowball sample.}
+         and non-seeds without duplications. Each sample has its own list.}
+   \item{values}{a list of length \code{num.sam} where each element is a
+         vector containing the unique degree values sampled
+         (One vector per LSMI).}
+   \item{Oemp}{a list of length \code{num.sam}, where each element
+         is a list containing two tables based on different methods to
+         estimating the empirical distribution from the network sample
+         (One list per LSMI).}
+   \item{num.sam}{num.sam a number for the LSMI repititions.}
+   \item{val.seed}{a list of length \code{num.sam} where each element
+         is a vector of unique degree values sampled solely from seeds
+         (One vector per LSMI).}
+   \item{val.nonseed}{a list of length \code{num.sam} where each
+         element is a vector of unique degree values sampled
+         solely from non-seeds
+         (One vector per LSMI).
+         Note: This item is unreported when n.neigh equals zero.}
+   \item{n.seeds}{the number of seeds in the snowball sample.}
    \item{n.neigh}{the number of waves carried out by the snowball sample. See
          input argument for details.}
-   \item{p0.real}{the proportion of nodes from the network that are
-         degree zero.
-         *Note: This item does not exist when n.neigh equals zero.}
-   \item{p0.seed}{a list of number values (one per snowball sample) equal to
-         the proportion of seeds with degree zero.}
-   \item{ekseed}{a list of numeric values (one per snowball sample) equal
-         to the sample mean of the seeds.
-         *Note: This item does not exist when n.neigh equals zero.}
-   \item{seeds1}{a matrix of the seed ids, where each row corresponds to
-         one snowball sample. }
+   \item{p0.real}{proportion of nodes from the network with degree zero.
+         Note: p0.real is unreported when n.neigh equals zero.}
+   \item{p0.seed}{a list of length \code{num.sam} where each
+         element is the proportion of seeds with degree zero.
+         (One element per LSMI).}
+   \item{ekseed}{a list of length \code{num.sam} where each
+         element is the sample mean of the seeds.
+         *Note: This is unreported when n.neigh equals zero.}
+   \item{seeds1}{a matrix of dimension \code{num.sam}x\code{n.seeds} with
+         the numeric seed ids. Each row corresponds to one LSMI.}
 }
 \description{
-This function obtains the empirical degree distribution from the snowball
-samples. The user inputs the network, the number of seeds, waves and snowball
-samples to take. The return value is a list which includes the empirical
-distribution of the snowball samples \code{Oempd}. Usually one snowball
-sample is requested (\code{num.sam = 1}) n.seed is
-the number of seed to set the neighbourhood sample n.neigh is the neighbouhood size around each seed num.sam is the
-number of different samples taken from the same network idname is to identify from which nets we are sampling and
-resampling.
+Oempdegreedistrib is used to obtain the empirical network degree distribution
+from labeled snowball sampling with multiple inclusion (LSMI).
 }
 

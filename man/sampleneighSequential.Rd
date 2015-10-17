@@ -2,23 +2,36 @@
 % Please edit documentation in R/sampleneighSequential.R
 \name{sampleneighSequential}
 \alias{sampleneighSequential}
-\title{A function for snowball sampling.}
+\title{Snowball sampling with multiple inclusion.}
 \usage{
-sampleneighSequential(net, n.seeds = 10, n.neigh = 1, seed = NULL)
+sampleneighSequential(net, n.seeds = 10, n.neigh = 1, seeds = NULL)
 }
 \arguments{
-\item{net}{A network object.}
+\item{net}{a list that must contain elements
+\code{$n} (\code{integer}. network order),
+\code{$edges} (\code{matrix}. a \code{n}x2 matrix),
+and \code{$degree} (\code{integer} of length n).
+The object can be created by \code{\link{local.network.MR.new5}} or
+it can be imported.}
 
-\item{n.seeds}{A number designating the desired number of seeds.}
+\item{n.seeds}{a number of seeds in the snowball sample.
+It must be a positive integer.}
 
-\item{n.neigh}{A number designating teh desired number of waves.}
+\item{n.neigh}{a number of waves to be sampled around each seed in LSMI.
+For example, n.neigh = 0 corresponds to seeds only, and n.neigh = 1
+corresponds to sampling seeds and their first neighbors).
+Note that the algorithm allow for mutiple inclusions.}
 
-\item{An}{optional \code{numeric} vector with desired seed ids.}
+\item{seeds}{an optional paramater that is used whenever we know the seeds
+   we would like to initiate the snowball with. WARNING: If this parameter
+   is used, then num.sam > 1, this will
+   cause an error.}
 }
 \value{
-A list containing:
-   \item{seeds}{A \code{numeric} vector containing the ids of the seeds.}
-   \item{sampleN}{A numeric vector containg ids of the vertices from
+A list containing the following elements:
+   \item{seeds}{A \code{numeric} a vector containing the numerics ids of
+         sampled seeds.}
+   \item{sampleN}{A numeric vector containg ids of the nodes from
          the snowball sampling and the intial seeds' ids. This vector may have
          duplicates, since the algorithm allows for multiple inclusions.}
    \item{unodes}{a list of \code{numeric} vectors (one per seed) each
@@ -32,8 +45,6 @@ A list containing:
          from \code{\link{sampleneighAroundOneSeed}}.}
 }
 \description{
-The function will conduct snowball sampling on a network object when given
-the network object, number of desired seeds (or the actual seed ids), and
-the desired number of waves.
+The function will conduct snowball sampling.
 }
 

@@ -1,8 +1,8 @@
-BempdegreedistribK <- function(sam.out, num.sam, n.boot, idname = "Temp") {
+BempdegreedistribK <- function(sam.out, num.sam, n.boot) {
       # This function obtains the bootstrap samples for each sample from a network sam.out is the output of Oempdegreedistrib
       # num.sam is the number of different samples taken from the same network. Scalar o vector. n.boot is the number of
       # bootstrap samples taken from each sample
-      n.seed <- sam.out$n.seed
+      n.seeds <- sam.out$n.seeds
       n.neigh <- sam.out$n.neigh
       if (length(num.sam) == 1)
             num.sam <- 1:num.sam
@@ -18,14 +18,14 @@ BempdegreedistribK <- function(sam.out, num.sam, n.boot, idname = "Temp") {
             freq.deg.seed <- sam.out$samples[[m]]$freq.deg.seed
             freq.deg.nonseed <- sam.out$samples[[m]]$freq.deg.nonseed
 
-            bsam.seed <- myBsample(val.seed, n.seed, n.boot, prob = freq.deg.seed)  #matrix n.boot x n.seed
+            bsam.seed <- myBsample(val.seed, n.seeds, n.boot, prob = freq.deg.seed)  #matrix n.boot x n.seeds
             bsam.nonseed.nw <- myBsample(val.nonseed, sum(freq.deg.nonseed), n.boot, prob = freq.deg.nonseed)  #matrix n.boot x sum(freq.deg.nonseed)
             bsam.nonseed.w <- myBsample(val.nonseed, sum(freq.deg.nonseed), n.boot, prob = freq.deg.nonseed/val.nonseed)  #matrix
 
             p0.B <- rep(0, n.boot)
             if (any(val.seed == 0)) {
                   # if any seed has degree zero
-                  p0.B <- rowSums(bsam.seed == 0)/n.seed  #the estimation from the bootstrap samples
+                  p0.B <- rowSums(bsam.seed == 0)/n.seeds  #the estimation from the bootstrap samples
             }
             p0.real <- sam.out$p0.real
             p0.seed <- sam.out$p0.seed[[m]]
@@ -70,22 +70,22 @@ BempdegreedistribK <- function(sam.out, num.sam, n.boot, idname = "Temp") {
                   f.nonseed.w <- Fnonseed.w
             }
             # browser() WB # seeds and weighted nonseeds ###### consider the p0 fixed from the seed information:
-            # empd.w.p0s<-(f.seed+(1-p0.seed)*f.nonseed.w)/(n.seed+sum(freq.deg.nonseed))
-            empd.w.p0s <- (f.seed + f.nonseed.w * (1 - p0.B))/(n.seed + sum(freq.deg.nonseed))
+            # empd.w.p0s<-(f.seed+(1-p0.seed)*f.nonseed.w)/(n.seeds+sum(freq.deg.nonseed))
+            empd.w.p0s <- (f.seed + f.nonseed.w * (1 - p0.B))/(n.seeds + sum(freq.deg.nonseed))
             #### consider the p0 fixed from the real information:
-            #### empd.w.p0r<-(f.seed+(1-p0.real)*f.nonseed.w)/(n.seed+sum(freq.deg.nonseed)) NWB # seeds and non weighted nonseeds ####
+            #### empd.w.p0r<-(f.seed+(1-p0.real)*f.nonseed.w)/(n.seeds+sum(freq.deg.nonseed)) NWB # seeds and non weighted nonseeds ####
             #### p0 estimated from orginal sampled seeds# E(K) estimated from bootstrap samples from the seeds
-            #### empd.nw.p0sEkb<-(f.seed+(1-p0.seed)*apply(bsam.seed,1,FUN=mean)*t(t(f.nonseed.nw)/vals))/(n.seed+
+            #### empd.nw.p0sEkb<-(f.seed+(1-p0.seed)*apply(bsam.seed,1,FUN=mean)*t(t(f.nonseed.nw)/vals))/(n.seeds+
             #### apply(bsam.seed,1,FUN=mean)*rowSums(t(t(f.nonseed.nw)/vals)))
-            empd.nw.p0sEkb <- (f.seed + t(t(f.nonseed.nw)/vals) * (1 - p0.B) * apply(bsam.seed, 1, FUN = mean))/(n.seed + rowSums(t(t(f.nonseed.nw)/vals)) *
+            empd.nw.p0sEkb <- (f.seed + t(t(f.nonseed.nw)/vals) * (1 - p0.B) * apply(bsam.seed, 1, FUN = mean))/(n.seeds + rowSums(t(t(f.nonseed.nw)/vals)) *
                                                                                                                        apply(bsam.seed, 1, FUN = mean))
             # E(K) estimated from the original seeds sample
-            # empd.nw.p0sEks<-(f.seed+(1-p0.seed)*ekseed*t(t(f.nonseed.nw)/vals))/(n.seed+ ekseed*rowSums(t(t(f.nonseed.nw)/vals)))
-            empd.nw.p0sEks <- (f.seed + ekseed * t(t(f.nonseed.nw)/vals) * (1 - p0.B))/(n.seed + ekseed * rowSums(t(t(f.nonseed.nw)/vals)))
+            # empd.nw.p0sEks<-(f.seed+(1-p0.seed)*ekseed*t(t(f.nonseed.nw)/vals))/(n.seeds+ ekseed*rowSums(t(t(f.nonseed.nw)/vals)))
+            empd.nw.p0sEks <- (f.seed + ekseed * t(t(f.nonseed.nw)/vals) * (1 - p0.B))/(n.seeds + ekseed * rowSums(t(t(f.nonseed.nw)/vals)))
             ######################################### p0 taken as known # E(K) estimated from bootstrap samples from the seeds
             ######################################### empd.nw.p0rEkb<-(f.seed+(1-p0.real)*apply(bsam.seed,1,FUN=mean)*t(t(f.nonseed.nw)/vals))/
-            ######################################### (n.seed+apply(bsam.seed,1,FUN=mean)*rowSums(t(t(f.nonseed.nw)/vals))) E(K) estimated from the original seeds sample
-            ######################################### empd.nw.p0rEks<-(f.seed+(1-p0.real)*ekseed*t(t(f.nonseed.nw)/vals))/(n.seed+ ekseed*rowSums(t(t(f.nonseed.nw)/vals)))
+            ######################################### (n.seeds+apply(bsam.seed,1,FUN=mean)*rowSums(t(t(f.nonseed.nw)/vals))) E(K) estimated from the original seeds sample
+            ######################################### empd.nw.p0rEks<-(f.seed+(1-p0.real)*ekseed*t(t(f.nonseed.nw)/vals))/(n.seeds+ ekseed*rowSums(t(t(f.nonseed.nw)/vals)))
 
             if (any(values == 0)) {
                   empd.w.p0s <- cbind(`0` = p0.B, empd.w.p0s)  #1
@@ -96,5 +96,5 @@ BempdegreedistribK <- function(sam.out, num.sam, n.boot, idname = "Temp") {
             }
             empd[[m]] <- list(empd.w.p0s = empd.w.p0s, empd.nw.p0sEkb = empd.nw.p0sEkb, empd.nw.p0sEks = empd.nw.p0sEks)
       }  # for(m in num.sam)
-      list(idname = idname, values = sam.out$values, empd = empd, num.sam = num.sam, n.boot = n.boot, n.neigh = n.neigh)
+      list(values = sam.out$values, empd = empd, num.sam = num.sam, n.boot = n.boot, n.neigh = n.neigh)
 }

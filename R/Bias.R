@@ -24,7 +24,7 @@ Bias.SMSE.ij <- function(net, real.par, n.seeds, n.neigh, sam.size) {
       for (i in n.seeds) {
             for (j in n.neigh) {
                   # cat('i= ',i,'\t','j= ',j,'\n')
-                  Obs.distrib <- Oempdegreedistrib(net, n.seed = i, n.neigh = j, num.sam = sam.size)
+                  Obs.distrib <- Oempdegreedistrib(net, n.seeds = i, n.neigh = j, num.sam = sam.size)
                   Oparam <- OparametersEst(Obs.distrib)
                   biasSMSE <- Bias(Oparam, real.par)
                   All.biasSMSE <- cbind(All.biasSMSE, rbind(biasSMSE, c(i, j)))
@@ -186,10 +186,10 @@ B.Bias.RMSE.ij.S <- function(net, n.seeds, n.neigh, sam.size, n.boot, otherNetPa
 
                   # cat('i= ',i,'\t','j= ',j,'\n') browser()
                   if (j == 0) {
-                        Obs.distrib <- Oempdegreedistrib(net, n.seed = i, n.neigh = j, num.sam = sam.size)
+                        Obs.distrib <- Oempdegreedistrib(net, n.seeds = i, n.neigh = j, num.sam = sam.size)
                         TMP <- Obs.distrib$seeds1
                   } else {
-                        Obs.distrib <- Oempdegreedistrib(net, n.seed = i, n.neigh = j, num.sam = sam.size, seeds = TMP)
+                        Obs.distrib <- Oempdegreedistrib(net, n.seeds = i, n.neigh = j, num.sam = sam.size, seeds = TMP)
                   }
 
                   Oparam <- OparametersEst(Obs.distrib)
