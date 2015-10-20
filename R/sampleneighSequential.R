@@ -2,32 +2,40 @@
 #'
 #' The function will conduct snowball sampling.
 #'
-#' @inheritParams Oempdegreedistrib
+#' @param net a list that must contain elements
+#'    \code{$n} (\code{integer}. network order),
+#'    \code{$edges} (\code{matrix}. a \code{n}x\code{2} matrix),
+#'    and \code{$degree} (\code{integer} vector of length n).
+#'    The object can be created by \code{\link{local.network.MR.new5}} or
+#'    it can be imported.
+#' @param n.seeds a number of seeds in the snowball sample.
+#'    It must be a positive integer.
+#' @param n.neigh a number of waves to be sampled around each seed in LSMI.
+#'    For example, n.neigh = 0 corresponds to seeds only, and n.neigh = 1
+#'    corresponds to sampling seeds and their first neighbors).
+#'    Note that the algorithm allow for mutiple inclusions.
+#' @param seeds A vector of length \code{n.seeds} containing the
+#'    numeric ids of the seeds to initiate sampling. Note that this is an
+#'    optional parameter.
 #' @return A list containing the following elements:
 #'    \item{seeds}{A \code{numeric} a vector containing the numerics ids of
 #'          sampled seeds.}
-#'    \item{sampleN}{A numeric vector containg ids of the nodes from
+#'    \item{sampleN}{A \code{numeric} vector containg ids of the nodes from
 #'          the snowball sampling and the intial seeds' ids. This vector may have
 #'          duplicates, since the algorithm allows for multiple inclusions.}
-#'    \item{unodes}{a list of \code{numeric} vectors (one per seed) each
-#'          containing the seed's id and the unique ids of all nodes that were
-#'          snowball sampled from that seed using
-#'          \code{\link{sampleneighAroundOneSeed}}.}
-#'    \item{nodes.waves}{A list of list (one per seed) each containing, yet
-#'          another, list of numeric vectors (one per wave) each
-#'          containing the ids of the nodes sampled in that particular wave. The
-#'          second outter most list is the output element \code{$nodes.waves}
-#'          from \code{\link{sampleneighAroundOneSeed}}.}
+#'    \item{unodes}{a list of length \code{n.seeds} where each element is a
+#'          \code{numeric} vector containing the seed's id and
+#'          the unique ids of all nodes that were snowball sampled from
+#'          that seed using \code{\link{sampleneighAroundOneSeed}}
+#'          (one vector per seed).}
+#'    \item{nodes.waves}{A list of length \code{n.seeds} where each element is
+#'          a list of length \code{n.neigh} (Note: these lists are the output
+#'          object \code{$nodes.waves} from
+#'          \code{\link{sampleneighAroundOneSeed}}) that contains vectors of
+#'          numeric id's of the nodes reached in each respective wave from the
+#'          respective seed.}
 #' @export
 sampleneighSequential <- function(net, n.seeds = 10, n.neigh = 1, seeds = NULL) {
-      # this function returns the nodes samples by snowball up to wave n.neigh. net is object network (what is important is
-      # the component $edges and the length of $degree) this function randomly sample n.seeds and then select the neighbours up
-      # to wave n.neigh also give the index of those nodes last added and for which in the next stages of the sampling we
-      # assume we do not have their complete degree information. seed0 are the original seed sampleN are the possibly repeated
-      # elements in the sample unodes are the no repeated elements in the sample nodes.waves are the nodes added in each
-      # wave. nodes may be present in more that one wave and more that once in a single wave. last.added are the nodes
-      # that are the most recently added into the set.
-
 
       unodes <- nodes.waves <- as.list(rep(0, n.seeds))
       # Seed selection: is without replacement and at random

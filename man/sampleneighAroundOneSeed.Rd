@@ -7,10 +7,12 @@
 sampleneighAroundOneSeed(net, seed0, n.neigh = 1)
 }
 \arguments{
-\item{net}{a list that must contain elements $edges (\code{matrix}. a two column matrix),
-$n (\code{num}. network order), and $degree (\code{int} of length n).
- The object can be created by \code{\link{local.network.MR.new5}} or
- it can be imported.}
+\item{net}{a list that must contain elements
+\code{$n} (\code{integer}. network order),
+\code{$edges} (\code{matrix}. a \code{n}x\code{2} matrix),
+and \code{$degree} (\code{integer} vector of length n).
+The object can be created by \code{\link{local.network.MR.new5}} or
+it can be imported.}
 
 \item{seed0}{\code{num}. Id of a seed to be sampled around.}
 
@@ -27,11 +29,14 @@ a list containing:
          duplicates, since the algorithm allows for multiple inclusions.}
    \item{unode}{A vector containing the unique values in \code{$sampleN}.}
    \item{nodes.waves}{A list of length \code{n.neigh} containing vectors where
-         each vector reprots numeric ids of nodes sampled in a particular wave.}
+         each vector reports numeric ids of nodes sampled in a particular wave.}
 }
 \description{
 This function performs snowball sampling with multiple inclusions (LSMI) around a
-single seed. #move to Remark: The functions main purpose is to be called from
+single seed.
+}
+\note{
+The functions main purpose is to be called from
 \code{\link{sampleneighSequential}.}
 }
 

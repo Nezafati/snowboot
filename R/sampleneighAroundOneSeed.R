@@ -1,17 +1,13 @@
 #' Snowball sampling with multiple inclusion around a single seed
 #'
 #' This function performs snowball sampling with multiple inclusions (LSMI) around a
-#' single seed. #move to Remark: The functions main purpose is to be called from
+#' single seed.
+#'
+#' @note The functions main purpose is to be called from
 #' \code{\link{sampleneighSequential}.}
-#' @param net a list that must contain elements $edges (\code{matrix}. a two column matrix),
-#'    $n (\code{num}. network order), and $degree (\code{int} of length n).
-#'     The object can be created by \code{\link{local.network.MR.new5}} or
-#'     it can be imported.
+#'
 #' @param seed0 \code{num}. Id of a seed to be sampled around.
-#' @param n.neigh a number of waves to be sampled around each seed in LSMI.
-#'    For example, n.neigh = 0 corresponds to seeds only, and n.neigh = 1
-#'    corresponds to sampling seeds and their first neighbors).
-#'    Note that the algorithm allow for mutiple inclusions.
+#' @inheritParams Oempdegreedistrib
 #' @return a list containing:
 #'    \item{seed}{seed0 \code{num}. Id of a seed to be sampled around.}
 #'    \item{sampleN}{A vector of numeric ids of the nodes from
@@ -19,15 +15,9 @@
 #'          duplicates, since the algorithm allows for multiple inclusions.}
 #'    \item{unode}{A vector containing the unique values in \code{$sampleN}.}
 #'    \item{nodes.waves}{A list of length \code{n.neigh} containing vectors where
-#'          each vector reprots numeric ids of nodes sampled in a particular wave.}
+#'          each vector reports numeric ids of nodes sampled in a particular wave.}
 #' @export
 sampleneighAroundOneSeed <- function(net, seed0, n.neigh = 1) {
-      # this function returns the nodes samples by snowball up to wave n.neigh around a single seed net is object network
-      # (what is important is the component $edges and the length of $degree) this function randomly sample n.seeds and then
-      # select the neighbours up to wave n.neigh seed0 the id of the seed sampleN are the possibly repeated elements in the
-      # sample unodes are the no repeated elements in the sample nodes.waves are the nodes added in each wave. nodes may
-      # be present in more that one wave and more that once in a single wave. last.added are the nodes that are the most
-      # recently added into the set.
 
       sampleN <- nodes <- seed0
       nodes.waves <- as.list(rep(0, n.neigh))
@@ -35,19 +25,22 @@ sampleneighAroundOneSeed <- function(net, seed0, n.neigh = 1) {
       more <- TRUE
       nn <- n.neigh
       new.nodes <- 0
-      # if(n.neigh==0) we only keep the seeds
 
       wave <- 1
       while (wave <= n.neigh & more) {
-            a <- is.element(effEdges, nodes)  #'nodes' will be accumulating all included nodes (non repeated)
+            a <- is.element(effEdges, nodes)
+            # ^ 'nodes' will be accumulating all included nodes (non repeated)
             if (any(a))
             {
-                  eedges <- which(matrix(a, dim(effEdges)[1], 2), arr.ind = TRUE)  #now it is the row number and column where they are in the edges matrix
+                  eedges <- which(matrix(a, dim(effEdges)[1], 2), arr.ind = TRUE)
+                  #^ now it is the row number and column where they are in the edges matrix
                   nodes.waves[[wave]] <- arr.nodes <- sort(effEdges[cbind(eedges[, 1], sapply(eedges[, 2], FUN = switch, 2,
-                                                                                              1))])  #the nodes we arrived to (duplicity is allowed)
+                                                                                              1))])
+                  # ^ the nodes we arrived to (duplicity is allowed)
                   # I need this specially to know which nodes were the last added:
                   if (!anyDuplicated(eedges[, 1])) {
-                        new.nodes <- arr.nodes  #all the nodes we arrive to weren't already included in 'nodes'
+                        new.nodes <- arr.nodes
+                        #^ all the nodes we arrive to weren't already included in 'nodes'
                   } else {
                         new.nodes <- setdiff(arr.nodes, nodes)
                   }  #Then, already included nodes are not considered new because of inclusion of edge connecting them
@@ -64,13 +57,13 @@ sampleneighAroundOneSeed <- function(net, seed0, n.neigh = 1) {
                   # we do not 'arrive' to a node more times than edges it has.
                   if (length(effEdges) > 0) {
                         if (is.vector(effEdges))
-                              effEdges <- t(effEdges)  #I have to this very often in R to make sure effEdges is a matrix and not a vector
+                              effEdges <- t(effEdges)
+                        #I have to this very often in R to make sure effEdges is a matrix and not a vector
                   } else {
                         more <- FALSE
                   }  #when it reduces to become a matrix with one row.
             }  #end if(any(a))
             wave <- wave + 1
       }  #end while
-      # browser() list(seed=seed0,sampleN=sampleN,unodes=nodes,nodes.waves=nodes.waves,last.added=sort(new.nodes))
       list(seed = seed0, sampleN = sampleN, unodes = nodes, nodes.waves = nodes.waves)
 }
