@@ -9,7 +9,7 @@ real.parameters(net)
 \arguments{
 \item{net}{a list that must contain elements
 \code{$n} (\code{integer}. network order),
-\code{$edges} (\code{matrix}. a \code{n}x\code{2} matrix),
+\code{$edges} (\code{matrix}. a \code{n} x \code{2} matrix),
 and \code{$degree} (\code{integer} vector of length n).
 The object can be created by \code{\link{local.network.MR.new5}} or
 it can be imported.}
