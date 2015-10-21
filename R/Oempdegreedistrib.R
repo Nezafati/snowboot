@@ -6,7 +6,7 @@
 #'
 #' @param net a list that must contain elements
 #'    \code{$n} (\code{integer}. network order),
-#'    \code{$edges} (\code{matrix}. a \code{n}x\code{2} matrix),
+#'    \code{$edges} (\code{matrix}. a \code{n} x \code{2} matrix),
 #'    and \code{$degree} (\code{integer} vector of length n).
 #'    The object can be created by \code{\link{local.network.MR.new5}} or
 #'    it can be imported.
@@ -17,7 +17,7 @@
 #'    corresponds to sampling seeds and their first neighbors).
 #'    Note that the algorithm allow for mutiple inclusions.
 #' @param num.sam a number for the LSMI repititions. Default value is one.
-#' @param A matrix of dimension \code{num.sam}x\code{n.seeds} containing the
+#' @param A matrix of dimension \code{num.sam} x \code{n.seeds} containing the
 #'    numeric ids of the seeds to initiate sampling. Each row of the matrix
 #'    corresponds to one LSMI sample. Note that this is an optional parameter.
 #'    WARNING: As of now, this feature is only supported when
@@ -55,7 +55,7 @@
 #'    \item{ekseed}{a list of length \code{num.sam} where each
 #'          element is the sample mean of the seeds.
 #'          Note that This is unreported when n.neigh equals zero.}
-#'    \item{seeds1}{a matrix of dimension \code{num.sam}x\code{n.seeds} with
+#'    \item{seeds1}{a matrix of dimension \code{num.sam} x \code{n.seeds} with
 #'          the numeric seed ids. Each row corresponds to one LSMI.}
 #' @export
 Oempdegreedistrib <- function(net, n.seeds, n.neigh, num.sam = 1, seeds = NULL) {
