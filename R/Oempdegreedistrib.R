@@ -57,6 +57,10 @@
 #'          Note that This is unreported when n.neigh equals zero.}
 #'    \item{seeds1}{a matrix of dimension \code{num.sam} x \code{n.seeds} with
 #'          the numeric seed ids. Each row corresponds to one LSMI.}
+#'    \item{nodes_of_LSMI}{a list of length \code{num.sam} where each element is
+#'          vector containing the numeric ids of the nodes sampled using LSMI
+#'          (One element per LSMI). Note: nodes_of_LSMI is unreported when
+#'          n.neigh equals zero.}
 #' @export
 Oempdegreedistrib <- function(net, n.seeds, n.neigh, num.sam = 1, seeds = NULL) {
       if (n.neigh == 0) {

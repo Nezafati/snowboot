@@ -4,6 +4,7 @@ OempdegreedistribK <- function(net, n.seeds, n.neigh, num.sam, seeds) {
       # number of different samples taken from the same network idname is to identify from which nets we are sampling and
       # resampling.
       seeds1 <- matrix(0, num.sam, n.seeds)
+      nodes_of_LSMI <- list()
       p0.seed.array <- Oempd <- ekseed.array <- values.array <- val.seed.array <- val.nonseed.array <- samples <- as.list(rep(NA,
                                                                                                                               num.sam))
 
@@ -21,6 +22,7 @@ OempdegreedistribK <- function(net, n.seeds, n.neigh, num.sam, seeds) {
             # nodes<-neigh$sampleN[!is.element(neigh$sampleN,neigh$last.added)] #vertices that are not included last (with their
             # duplicities)
             nodes <- neigh$sampleN  #vertices up to distance n.neigh(with their duplicities)!!!!!!!!!!!!!!
+            nodes_of_LSMI <- c(nodes_of_LSMI, list(nodes))
             tab.nodes <- table(nodes)  #now it has the info of seeds and non-seed
             # Now we want to distinguish between seeds and non seeds. Remember that some seeds can also be non seed if they were also
             # selected by following one edge.
@@ -84,5 +86,5 @@ OempdegreedistribK <- function(net, n.seeds, n.neigh, num.sam, seeds) {
       # browser()
       list(samples = samples, values = values.array, Oempd = Oempd, num.sam = num.sam, val.seed = val.seed.array,
            val.nonseed = val.nonseed.array, n.seeds = n.seeds, n.neigh = n.neigh, p0.real = p0.real, p0.seed = p0.seed.array,
-           ekseed = ekseed.array, seeds1 = seeds1)
+           ekseed = ekseed.array, seeds1 = seeds1, nodes_of_LSMI=nodes_of_LSMI)
 }
