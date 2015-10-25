@@ -76,5 +76,7 @@ BempdegreedistribK <- function(sam.out, num.sam, n.boot) {
             }
             empd[[m]] <- list(empd.w.p0s = empd.w.p0s, empd.nw.p0sEkb = empd.nw.p0sEkb, empd.nw.p0sEks = empd.nw.p0sEks)
       }
-      list(values = sam.out$values, empd = empd, num.sam = num.sam, n.boot = n.boot, n.neigh = n.neigh)
+      list(values = sam.out$values, empd = empd, num.sam = num.sam,
+           n.boot = n.boot, n.neigh = n.neigh, seeds1 = sam.out$seeds1[num.sam,],
+           nodes_of_LSMI = sam.out$nodes_of_LSMI[num.sam])
 }

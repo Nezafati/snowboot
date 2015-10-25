@@ -21,5 +21,6 @@ Bempdegreedistrib0 <- function(sam.out, num.sam, n.boot) {
             empd.seed <- Fseed/n.seeds
             empd[[m]] <- list(empd.seed = empd.seed)
       }  # for(m in num.sam)
-      list(values = sam.out$values, empd = empd, num.sam = num.sam, n.boot = n.boot, n.neigh = n.neigh)
+      list(values = sam.out$values, empd = empd, num.sam = num.sam,
+           n.boot = n.boot, n.neigh = n.neigh, seeds1 = sam.out$seeds1[num.sam,])
 }

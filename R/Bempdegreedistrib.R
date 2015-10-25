@@ -22,6 +22,21 @@
 #'    \item{n.boot}{the same object as input argument \code{n.boot}.}
 #'    \item{n.neigh}{the number of waves carried out by the snowball sample.
 #'          This is the same value from \code{sam.out$n.neigh}.}
+#'    \item{seeds1}{a matrix of dimension \code{num.sam} x \code{n.seeds} with
+#'          the numeric seed ids. Each row corresponds to one LSMI. However,
+#'          when \code{num.sam} is a vector of the desired LSMI, the matrix has
+#'          dimension \code{length(num.sam)} x \code{n.seeds}. In this case,
+#'          each row corresponds to the LSMIs denoted in the vector
+#'          \code{num.sam}, and the rows are present in the same order as the
+#'          ids in \code{num.sam}.}
+#'    \item{nodes_of_LSMI}{a list of length \code{num.sam} where each element is
+#'          vector containing the numeric ids of the nodes sampled using LSMI
+#'          (One element per LSMI). However, when \code{num.sam} is a vector of
+#'          the desired LSMI, the list has length \code{length(num.sam)}.
+#'          In this case, each element corresponds to the LSMIs denoted in
+#'          the vector \code{num.sam}, and the elements are present in the same
+#'          order as the ids in \code{num.sam}.
+#'          Note: nodes_of_LSMI is unreported when n.neigh equals zero.}
 #' @export
 Bempdegreedistrib <- function(sam.out, num.sam = sam.out$num.sam, n.boot = 1) {
       if (sam.out$n.neigh == 0) {
