@@ -15,8 +15,9 @@
 #'          4 (respectively).}
 #'    \item{rdeci}{a numeric vector of lenth nine containing the deciles of
 #'          of degree sequence \code{realdd} in increasing order.}
-#' @export
-real.parameters <- function(net) {
+#' @export summary.net
+#' @usage summary.net(net)
+summary.net <- function(net) {
       # this function obtains the real parameters in a network
       realdd <- net$degree - net$degree.left
       rmean <- mean(realdd)

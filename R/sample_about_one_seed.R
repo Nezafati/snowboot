@@ -17,7 +17,7 @@
 #'    \item{nodes.waves}{A list of length \code{n.neigh} containing vectors where
 #'          each vector reports numeric ids of nodes sampled in a particular wave.}
 #' @export
-sampleneighAroundOneSeed <- function(net, seed0, n.neigh = 1) {
+sample_about_one_seed <- function(net, seed0, n.neigh = 1) {
 
       sampleN <- nodes <- seed0
       nodes.waves <- as.list(rep(0, n.neigh))

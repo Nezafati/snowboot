@@ -1,4 +1,4 @@
-Bempdegreedistrib0 <- function(sam.out, num.sam, n.boot) {
+bootdeg0 <- function(sam.out, num.sam, n.boot) {
       # This function obtains the bootstrap samples for each sample from a network sam.out is the output of Oempdegreedistrib
       # num.sam is the number of different samples taken from the same network (Scalar or vector) n.boot is the number of
       # bootstrap samples taken from each sample

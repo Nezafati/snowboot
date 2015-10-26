@@ -1,5 +1,5 @@
 fallInsi <- function(intsi, rpari, n.boot, n.dist) {
-      # intsi is output of Bintervalsi (for quarts, rfreq or deciles) rpari is the parameter(s) of interes from real.parameters
+      # intsi is output of Bintervalsi (for quarts, rfreq or deciles) rpari is the parameter(s) of interes from summary.net
       # (either:rquart,rfreq,rdeci) n.dist is the number of empirical distributions considered
 
       if (n.dist > 1) {

@@ -1,5 +1,5 @@
-BempdegreedistribK <- function(sam.out, num.sam, n.boot) {
-      #see Bempdegreedistrib for description.
+bootdegK <- function(sam.out, num.sam, n.boot) {
+      #see bootdeg for description.
       n.seeds <- sam.out$n.seeds
       n.neigh <- sam.out$n.neigh
       if (length(num.sam) == 1)
@@ -8,8 +8,6 @@ BempdegreedistribK <- function(sam.out, num.sam, n.boot) {
       empd <- as.list(rep(NA, length(num.sam)))
       i <- 1
       for (m in num.sam) {
-            # if(i%%100==1)#cat('Processing bootstrap samples of sample=',i,'\n') #print every 100
-            i <- i + 1
             # Boostrap samples of seed, nonseeds-noWeighted and nonseeds-Weighted:
             val.seed <- sam.out$val.seed[[m]]
             val.nonseed <- sam.out$val.nonseed[[m]]
@@ -74,7 +72,8 @@ BempdegreedistribK <- function(sam.out, num.sam, n.boot) {
                   empd.nw.p0sEkb <- cbind(`0` = p0.B, empd.nw.p0sEkb)
                   empd.nw.p0sEks <- cbind(`0` = p0.B, empd.nw.p0sEks)
             }
-            empd[[m]] <- list(empd.w.p0s = empd.w.p0s, empd.nw.p0sEkb = empd.nw.p0sEkb, empd.nw.p0sEks = empd.nw.p0sEks)
+            empd[[i]] <- list(empd.w.p0s = empd.w.p0s, empd.nw.p0sEkb = empd.nw.p0sEkb, empd.nw.p0sEks = empd.nw.p0sEks)
+            i <- i + 1
       }
       list(values = sam.out$values, empd = empd, num.sam = num.sam,
            n.boot = n.boot, n.neigh = n.neigh, seeds1 = sam.out$seeds1[num.sam,],

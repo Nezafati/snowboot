@@ -4,7 +4,7 @@ B.Bias.RMSE.ij.S <- function(net, n.seeds, n.neigh, sam.size, n.boot, otherNetPa
       seeds2 <- array(0, dim = c(length(as.vector(n.neigh)), length(as.vector(n.seeds)), sam.size, max(n.seeds)))
       All.biasRMSE <- 1
       Mean.intervals.list <- Mean.fallins <- B.mean <- as.list(rep(NA, length(n.seeds) * length(n.neigh)))
-      realparam <- real.parameters(net)
+      realparam <- summary.net(net)
       OtherPar.intervals.list <- NULL
       if (otherNetParameters) {
             OtherPar.intervals.list <- OtherPar.fallins <- as.list(rep(NA, length(n.seeds) * length(n.neigh)))
@@ -31,7 +31,7 @@ B.Bias.RMSE.ij.S <- function(net, n.seeds, n.neigh, sam.size, n.boot, otherNetPa
                   # browser()
                   seeds2[which(n.neigh == j), which(n.seeds == i), , 1:dim(Obs.distrib$seeds1)[2]] <- Obs.distrib$seeds1
 
-                  B.distrib <- Bempdegreedistrib(Obs.distrib, num.sam = sam.size, n.boot = n.boot)
+                  B.distrib <- bootdeg(Obs.distrib, num.sam = sam.size, n.boot = n.boot)
                   Bparam <- BparametersEst(B.distrib)
                   # browser()
                   B.mean[[b]] <- Bparam$mean

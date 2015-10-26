@@ -2,7 +2,7 @@ Oempdegreedistrib0 <- function(net, n.seeds, n.neigh, num.sam, seeds) {
       p0.seed.array <- Oempd <- values.array <- val.seed.array <- samples <- as.list(rep(NA, num.sam))
       seeds1 <- matrix(NA, num.sam, n.seeds)
       ## -------the 'real' parameters in the network:-------##
-      real <- real.parameters(net)
+      real <- summary.net(net)
       realdd <- real$realdd
       ## ---------------------------------------------------##
       for (m in 1:num.sam) {

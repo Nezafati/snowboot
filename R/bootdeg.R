@@ -38,12 +38,12 @@
 #'          order as the ids in \code{num.sam}.
 #'          Note: nodes_of_LSMI is unreported when n.neigh equals zero.}
 #' @export
-Bempdegreedistrib <- function(sam.out, num.sam = sam.out$num.sam, n.boot = 1) {
+bootdeg <- function(sam.out, num.sam = sam.out$num.sam, n.boot = 1) {
       if (sam.out$n.neigh == 0) {
             # only information from the seeds
-            res <- Bempdegreedistrib0(sam.out, num.sam, n.boot)
+            res <- bootdeg0(sam.out, num.sam, n.boot)
       } else {
-            res <- BempdegreedistribK(sam.out, num.sam, n.boot)
+            res <- bootdegK(sam.out, num.sam, n.boot)
       }
       res
 }

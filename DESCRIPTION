@@ -15,4 +15,4 @@ Description: This package analyzes network objects, which are imported or
 Depends: R (>= 3.2.2)
 License: GPL-3
 LazyData: TRUE
-Imports: VGAM
+Imports: VGAM, igraph

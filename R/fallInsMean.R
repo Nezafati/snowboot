@@ -1,5 +1,5 @@
 fallInsMean <- function(ints, rpar, n.dist) {
-      # ints in output of Bintervals (mean.int, mean.int1,mean.int2,mean.int3) rpar is output of real.parameters rpar$rmean
+      # ints in output of Bintervals (mean.int, mean.int1,mean.int2,mean.int3) rpar is output of summary.net rpar$rmean
       # n.dist is the number of empirical distributions browser()
       if (n.dist > 1) {
             fi.mean <- fi1.mean <- fi2.mean <- fi3.mean <- rep(0, 3)

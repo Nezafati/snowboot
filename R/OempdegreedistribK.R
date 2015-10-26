@@ -9,7 +9,7 @@ OempdegreedistribK <- function(net, n.seeds, n.neigh, num.sam, seeds) {
                                                                                                                               num.sam))
 
       ## -------the 'real' parameters in the network:-------##
-      real <- real.parameters(net)
+      real <- summary.net(net)
       realdd <- real$realdd
       # rmeand<-real$mean(realdd) rquart<-real$rquart
       rfreq <- real$rfreq
@@ -17,7 +17,7 @@ OempdegreedistribK <- function(net, n.seeds, n.neigh, num.sam, seeds) {
 
       for (m in 1:num.sam) {
             # if(m%%100==1)#cat('Obtaining empd of sample ',m,'\n') browser()
-            neigh <- sampleneighSequential(net, n.seeds = n.seeds, n.neigh = n.neigh, seed = seeds[m, ])
+            neigh <- LSMI(net, n.seeds = n.seeds, n.neigh = n.neigh, seed = seeds[m, ])
             seeds1[m, ] <- neigh$seeds
             # nodes<-neigh$sampleN[!is.element(neigh$sampleN,neigh$last.added)] #vertices that are not included last (with their
             # duplicities)

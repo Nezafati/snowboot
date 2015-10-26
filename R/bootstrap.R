@@ -4,7 +4,7 @@
 #
 #
 # # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
-# sampleneighSequential <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
+# LSMI <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
 #   # this function returns the vertices samples by snowball up to wave n.neigh.
 #   # net is object network (what is important is the component $edges and the length of $degree)
 #   # this function randomly sample n.seeds and then select the neighbours up
@@ -27,7 +27,7 @@
 #   }
 #   sampleN <- NULL
 #   for (i in 1:n.seeds) {
-#     res <- sampleneighAroundOneSeed(net, seed0[i], n.neigh)
+#     res <- sample_about_one_seed(net, seed0[i], n.neigh)
 #     sampleN <- c(sampleN, res$sampleN)
 #     unodes[[i]] <- res$unodes
 #     nodes.waves[[i]] <- res$nodes.waves
@@ -38,12 +38,12 @@
 # # we are not really interested in running this function directly,
 # # but within the next function called empdegree
 # # distrib6 net<-local.network.MR.new5(n=100,distrib='pois',param=2)
-# # a<-sampleneighSequential(net,n.seeds=3,n.neigh=3,seed=NULL)
+# # a<-LSMI(net,n.seeds=3,n.neigh=3,seed=NULL)
 # # a<-sampleneigh(net,n.seeds=3,n.neigh=3,seed=NULL)
 #
 # # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
 #
-# sampleneighAroundOneSeed <- function(net, seed0, n.neigh = 1) {
+# sample_about_one_seed <- function(net, seed0, n.neigh = 1) {
 #   # this function returns the vertices samples by snowball up to wave n.neigh around a single seed net is object network
 #   # (what is important is the component $edges and the length of $degree) this function randomly sample n.seeds and then
 #   # select the neighbours up to wave n.neigh seed0 the id of the seed sampleN are the possibly repeated elements in the
@@ -182,7 +182,7 @@
 #   p0.seed.array <- Oempd <- values.array <- val.seed.array <- samples <- as.list(rep(NA, num.sam))
 #   seeds1 <- matrix(NA, num.sam, n.seeds)
 #   ## -------the 'real' parameters in the network:-------##
-#   real <- real.parameters(net)
+#   real <- summary.net(net)
 #   realdd <- real$realdd
 #   ## ---------------------------------------------------##
 #   for (m in 1:num.sam) {
@@ -220,7 +220,7 @@
 #     num.sam))
 #
 #   ## -------the 'real' parameters in the network:-------##
-#   real <- real.parameters(net)
+#   real <- summary.net(net)
 #   realdd <- real$realdd
 #   # rmeand<-real$mean(realdd) rquart<-real$rquart
 #   rfreq <- real$rfreq
@@ -228,7 +228,7 @@
 #
 #   for (m in 1:num.sam) {
 #     # if(m%%100==1)#cat('Obtaining empd of sample ',m,'\n') browser()
-#     neigh <- sampleneighSequential(net, n.seeds = n.seeds, n.neigh = n.neigh, seed = seeds[m, ])
+#     neigh <- LSMI(net, n.seeds = n.seeds, n.neigh = n.neigh, seed = seeds[m, ])
 #     seeds1[m, ] <- neigh$seeds
 #     # nodes<-neigh$sampleN[!is.element(neigh$sampleN,neigh$last.added)] #vertices that are not included last (with their
 #     # duplicities)
@@ -301,17 +301,17 @@
 #
 # ###################################################################### BOOTSTRAP SAMPLES ######################################
 #
-# Bempdegreedistrib <- function(sam.out, num.sam, n.boot, idname = "Temp") {
+# bootdeg <- function(sam.out, num.sam, n.boot, idname = "Temp") {
 #   if (sam.out$n.neigh == 0) {
 #     # only information from the seeds
-#     res <- Bempdegreedistrib0(sam.out, num.sam, n.boot, idname = "Temp")
+#     res <- bootdeg0(sam.out, num.sam, n.boot, idname = "Temp")
 #   } else {
-#     res <- BempdegreedistribK(sam.out, num.sam, n.boot, idname = "Temp")
+#     res <- bootdegK(sam.out, num.sam, n.boot, idname = "Temp")
 #   }
 #   res
 # }
 # # ----------------------------------------------------------------------#
-# Bempdegreedistrib0 <- function(sam.out, num.sam, n.boot, idname = "Temp") {
+# bootdeg0 <- function(sam.out, num.sam, n.boot, idname = "Temp") {
 #   # This function obtains the bootstrap samples for each sample from a network sam.out is the output of Oempdegreedistrib
 #   # num.sam is the number of different samples taken from the same network (Scalar or vector) n.boot is the number of
 #   # bootstrap samples taken from each sample
@@ -339,7 +339,7 @@
 #
 # # ---------------------------------------------------------------------------------------#
 #
-# BempdegreedistribK <- function(sam.out, num.sam, n.boot, idname = "Temp") {
+# bootdegK <- function(sam.out, num.sam, n.boot, idname = "Temp") {
 #   # This function obtains the bootstrap samples for each sample from a network sam.out is the output of Oempdegreedistrib
 #   # num.sam is the number of different samples taken from the same network. Scalar o vector. n.boot is the number of
 #   # bootstrap samples taken from each sample
@@ -514,7 +514,7 @@
 #
 # # ---------------------------------------------------------------------------------------#
 #
-# real.parameters <- function(net) {
+# summary.net <- function(net) {
 #   # this function obtains the real parameters in a network
 #   realdd <- net$degree - net$degree.left
 #   rmean <- mean(realdd)
@@ -564,7 +564,7 @@
 # # ---------------------------------------------------------------------------------------#
 #
 # BparametersEst <- function(outBempd) {
-#   # outBempd is output of Bempdegreedistrib
+#   # outBempd is output of bootdeg
 #   tn.sam <- length(outBempd$num.sam)
 #   if (outBempd$n.neigh == 0) {
 #     n.dist <- 1  #n.dist is the number of different emp distr.
@@ -776,7 +776,7 @@
 #   seeds2 <- array(0, dim = c(length(as.vector(n.neigh)), length(as.vector(n.seeds)), sam.size, max(n.seeds)))
 #   All.biasRMSE <- 1
 #   Mean.intervals.list <- Mean.fallins <- B.mean <- as.list(rep(NA, length(n.seeds) * length(n.neigh)))
-#   realparam <- real.parameters(net)
+#   realparam <- summary.net(net)
 #   OtherPar.intervals.list <- NULL
 #   if (otherNetParameters) {
 #     OtherPar.intervals.list <- OtherPar.fallins <- as.list(rep(NA, length(n.seeds) * length(n.neigh)))
@@ -803,7 +803,7 @@
 #       # browser()
 #       seeds2[which(n.neigh == j), which(n.seeds == i), , 1:dim(Obs.distrib$seeds1)[2]] <- Obs.distrib$seeds1
 #
-#       B.distrib <- Bempdegreedistrib(Obs.distrib, num.sam = sam.size, n.boot = n.boot)
+#       B.distrib <- bootdeg(Obs.distrib, num.sam = sam.size, n.boot = n.boot)
 #       Bparam <- BparametersEst(B.distrib)
 #       # browser()
 #       B.mean[[b]] <- Bparam$mean
@@ -858,7 +858,7 @@
 # # ---------------------------------------------------------------------------------------#
 #
 # fallInsMean <- function(ints, rpar, n.dist) {
-#   # ints in output of Bintervals (mean.int, mean.int1,mean.int2,mean.int3) rpar is output of real.parameters rpar$rmean
+#   # ints in output of Bintervals (mean.int, mean.int1,mean.int2,mean.int3) rpar is output of summary.net rpar$rmean
 #   # n.dist is the number of empirical distributions browser()
 #   if (n.dist > 1) {
 #     fi.mean <- fi1.mean <- fi2.mean <- fi3.mean <- rep(0, 3)
@@ -921,7 +921,7 @@
 #
 # # ---------------------------------------------------------------------#
 # fallInsi <- function(intsi, rpari, n.boot, n.dist) {
-#   # intsi is output of Bintervalsi (for quarts, rfreq or deciles) rpari is the parameter(s) of interes from real.parameters
+#   # intsi is output of Bintervalsi (for quarts, rfreq or deciles) rpari is the parameter(s) of interes from summary.net
 #   # (either:rquart,rfreq,rdeci) n.dist is the number of empirical distributions considered
 #
 #   if (n.dist > 1) {
@@ -963,7 +963,7 @@
 # # for (mc in (n * MC + 1):(n * MC + MC)) {
 # #   # mc=1
 # #   net <- networks[[mc]]
-# #   # rp<-real.parameters(net) OBSME<-OBSME+Bias.SMSE.ij.S(net,rp,n.seeds,n.neigh,nsam)/MC
+# #   # rp<-summary.net(net) OBSME<-OBSME+Bias.SMSE.ij.S(net,rp,n.seeds,n.neigh,nsam)/MC
 # #
 # #   # Bootstrap
 # #   BBRMSE <- B.Bias.RMSE.ij.S(net, n.seeds, n.neigh, nsam, n.boot)
