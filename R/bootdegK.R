@@ -8,40 +8,38 @@ bootdegK <- function(sam.out, num.sam, n.boot) {
       empd <- as.list(rep(NA, length(num.sam)))
       i <- 1
       for (m in num.sam) {
-            # Boostrap samples of seed, nonseeds-noWeighted and nonseeds-Weighted:
-            val.seed <- sam.out$val.seed[[m]]
-            val.nonseed <- sam.out$val.nonseed[[m]]
-            freq.deg.seed <- sam.out$samples[[m]]$freq.deg.seed
-            freq.deg.nonseed <- sam.out$samples[[m]]$freq.deg.nonseed
+            # Boostrap samples of seeds, nonseeds-noWeighted and nonseeds-Weighted:
+            val.seeds <- sam.out$val.seeds[[m]]
+            val.nonseeds <- sam.out$val.nonseeds[[m]]
+            freq.deg.seeds <- sam.out$samples[[m]]$freq.deg.seeds
+            freq.deg.nonseeds <- sam.out$samples[[m]]$freq.deg.nonseeds
 
-            bsam.seed <- myBsample(val.seed, n.seeds, n.boot, prob = freq.deg.seed)  #matrix n.boot x n.seeds
-            bsam.nonseed.nw <- myBsample(val.nonseed, sum(freq.deg.nonseed), n.boot, prob = freq.deg.nonseed)  #matrix n.boot x sum(freq.deg.nonseed)
-            bsam.nonseed.w <- myBsample(val.nonseed, sum(freq.deg.nonseed), n.boot, prob = freq.deg.nonseed/val.nonseed)  #matrix
+            bsam.seeds <- myBsample(val.seeds, n.seeds, n.boot, prob = freq.deg.seeds)  #matrix n.boot x n.seeds
+            bsam.nonseeds.nw <- myBsample(val.nonseeds, sum(freq.deg.nonseeds), n.boot, prob = freq.deg.nonseeds)  #matrix n.boot x sum(freq.deg.nonseeds)
+            bsam.nonseeds.w <- myBsample(val.nonseeds, sum(freq.deg.nonseeds), n.boot, prob = freq.deg.nonseeds/val.nonseeds)  #matrix
 
             p0.B <- rep(0, n.boot)
-            if (any(val.seed == 0)) {
-                  # if any seed has degree zero
-                  p0.B <- rowSums(bsam.seed == 0)/n.seeds
+            if (any(val.seeds == 0)) {
+                  # if any seeds has degree zero
+                  p0.B <- rowSums(bsam.seeds == 0)/n.seeds
                   #^the estimation from the bootstrap samples
             }
 
             values <- sam.out$values[[m]]
             # ^all the possible degree values to resample
 
-
             ###################### Frequency ##### (Not the relative frequency)
-            Fseed <- t(apply(bsam.seed, 1, table.row, vect = values))
-            # browser()
-            if (is.null(bsam.nonseed.nw)) {
+            Fseeds <- t(apply(bsam.seeds, 1, table.row, vect = values))
+            if (is.null(bsam.nonseeds.nw)) {
                   # browser()
-                  Fnonseed.nw <- 0
+                  Fnonseeds.nw <- 0
             } else {
-                  Fnonseed.nw <- t(apply(as.matrix(bsam.nonseed.nw), 1, table.row, vect = values))
+                  Fnonseeds.nw <- t(apply(as.matrix(bsam.nonseeds.nw), 1, table.row, vect = values))
             }
-            if (is.null(bsam.nonseed.w)) {
-                  Fnonseed.n <- 0
+            if (is.null(bsam.nonseeds.w)) {
+                  Fnonseeds.w <- 0
             } else {
-                  Fnonseed.w <- t(apply(as.matrix(bsam.nonseed.w), 1, table.row, vect = values))
+                  Fnonseeds.w <- t(apply(as.matrix(bsam.nonseeds.w), 1, table.row, vect = values))
             }
 
             ############### combining information from seeds and nonseeds ######
@@ -53,19 +51,19 @@ bootdegK <- function(sam.out, num.sam, n.boot) {
             if (any(values == 0)) {
                   colzero <- which(values == 0)
                   vals <- values[-colzero]
-                  f.seed <- Fseed[, -colzero]
-                  f.nonseed.nw <- Fnonseed.nw[, -colzero]
-                  f.nonseed.w <- Fnonseed.w[, -colzero]
+                  f.seeds <- Fseeds[, -colzero]
+                  f.nonseeds.nw <- Fnonseeds.nw[, -colzero]
+                  f.nonseeds.w <- Fnonseeds.w[, -colzero]
             } else {
                   vals <- values
-                  f.seed <- Fseed
-                  f.nonseed.nw <- Fnonseed.nw
-                  f.nonseed.w <- Fnonseed.w
+                  f.seeds <- Fseeds
+                  f.nonseeds.nw <- Fnonseeds.nw
+                  f.nonseeds.w <- Fnonseeds.w
             }
-            empd.w.p0s <- (f.seed + f.nonseed.w * (1 - p0.B))/(n.seeds + sum(freq.deg.nonseed))
-            empd.nw.p0sEkb <- (f.seed + t(t(f.nonseed.nw)/vals) * (1 - p0.B) * apply(bsam.seed, 1, FUN = mean))/(n.seeds + rowSums(t(t(f.nonseed.nw)/vals)) *
-                                                                                                                       apply(bsam.seed, 1, FUN = mean))
-            empd.nw.p0sEks <- (f.seed + ekseed * t(t(f.nonseed.nw)/vals) * (1 - p0.B))/(n.seeds + ekseed * rowSums(t(t(f.nonseed.nw)/vals)))
+            empd.w.p0s <- (f.seeds + f.nonseeds.w * (1 - p0.B))/(n.seeds + sum(freq.deg.nonseeds))
+            empd.nw.p0sEkb <- (f.seeds + t(t(f.nonseeds.nw)/vals) * (1 - p0.B) * apply(bsam.seeds, 1, FUN = mean))/(n.seeds + rowSums(t(t(f.nonseeds.nw)/vals)) *
+                                                                                                                       apply(bsam.seeds, 1, FUN = mean))
+            empd.nw.p0sEks <- (f.seeds + ekseed * t(t(f.nonseeds.nw)/vals) * (1 - p0.B))/(n.seeds + ekseed * rowSums(t(t(f.nonseeds.nw)/vals)))
 
             if (any(values == 0)) {
                   empd.w.p0s <- cbind(`0` = p0.B, empd.w.p0s)
