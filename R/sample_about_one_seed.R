@@ -4,7 +4,7 @@
 #' single seed.
 #'
 #' @note The functions main purpose is to be called from
-#' \code{\link{sampleneighSequential}.}
+#' \code{\link{LSMI}.}
 #'
 #' @param seed0 \code{num}. Id of a seed to be sampled around.
 #' @inheritParams Oempdegreedistrib

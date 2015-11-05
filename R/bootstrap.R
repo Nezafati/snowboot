@@ -4,13 +4,13 @@
 #
 #
 # # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
-# LSMI <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
+# LSMI <- function(net, n.seeds = 10, n.neigh = 1, seeds = NULL) {
 #   # this function returns the vertices samples by snowball up to wave n.neigh.
 #   # net is object network (what is important is the component $edges and the length of $degree)
 #   # this function randomly sample n.seeds and then select the neighbours up
 #   # to wave n.neigh also give the index of those nodes last added
 #   # and for which in the next stages of the sampling we assume we do not
-#   # have their complete degree information. seed0 are the original seed.
+#   # have their complete degree information. seed0 are the original seeds.
 #   # sampleN are the possibly repeated elements in the sample.
 #   # unodes are the no repeated elements in the sample.
 #   # nodes.waves are the vertices added in each wave.
@@ -19,11 +19,11 @@
 #
 #
 #   unodes <- nodes.waves <- as.list(rep(0, n.seeds))
-#   # Seed selection: is without replacement and at random
-#   if (is.null(seed)) {
+#   # seeds selection: is without replacement and at random
+#   if (is.null(seeds)) {
 #     seed0 <- sort(sample(1:length(net$degree), n.seeds, rep = FALSE))
 #   } else {
-#     seed0 <- seed
+#     seed0 <- seeds
 #   }
 #   sampleN <- NULL
 #   for (i in 1:n.seeds) {
@@ -38,15 +38,15 @@
 # # we are not really interested in running this function directly,
 # # but within the next function called empdegree
 # # distrib6 net<-local.network.MR.new5(n=100,distrib='pois',param=2)
-# # a<-LSMI(net,n.seeds=3,n.neigh=3,seed=NULL)
-# # a<-sampleneigh(net,n.seeds=3,n.neigh=3,seed=NULL)
+# # a<-LSMI(net,n.seeds=3,n.neigh=3,seeds=NULL)
+# # a<-sampleneigh(net,n.seeds=3,n.neigh=3,seeds=NULL)
 #
 # # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
 #
 # sample_about_one_seed <- function(net, seed0, n.neigh = 1) {
-#   # this function returns the vertices samples by snowball up to wave n.neigh around a single seed net is object network
+#   # this function returns the vertices samples by snowball up to wave n.neigh around a single seeds net is object network
 #   # (what is important is the component $edges and the length of $degree) this function randomly sample n.seeds and then
-#   # select the neighbours up to wave n.neigh seed0 the id of the seed sampleN are the possibly repeated elements in the
+#   # select the neighbours up to wave n.neigh seed0 the id of the seeds sampleN are the possibly repeated elements in the
 #   # sample unodes are the no repeated elements in the sample nodes.waves are the vertices added in each wave. Vertices may
 #   # be present in more that one wave and more that once in a single wave. last.added are the vertices that are the most
 #   # recently added into the set.
@@ -76,8 +76,8 @@
 #         ### subEdges<-effEdges[unique(a),] #the subset of edges. The repeated just have to be included once. maybe we are arriving
 #         ### to the nodes more than once (due to small cycles) or we can get again to already included vertices (due to larger
 #         ### cycles).  We want to include them as may times as they are neighbours of already included vertices. That is why I
-#         ### consider arr.nodes.if a originally seed vertex is included more than once, it is because it was selected also by
-#         ### following one edge and then it also has the category of non seed.
+#         ### consider arr.nodes.if a originally seeds vertex is included more than once, it is because it was selected also by
+#         ### following one edge and then it also has the category of non seeds.
 #
 #         sampleN <- sort(c(sampleN, arr.nodes))
 #         nodes <- unique(sampleN)
@@ -93,25 +93,25 @@
 #       }  #end if(any(a))
 #     wave <- wave + 1
 #   }  #end while
-#   # browser() list(seed=seed0,sampleN=sampleN,unodes=nodes,nodes.waves=nodes.waves,last.added=sort(new.nodes))
-#   list(seed = seed0, sampleN = sampleN, unodes = nodes, nodes.waves = nodes.waves)
+#   # browser() list(seeds=seed0,sampleN=sampleN,unodes=nodes,nodes.waves=nodes.waves,last.added=sort(new.nodes))
+#   list(seeds = seed0, sampleN = sampleN, unodes = nodes, nodes.waves = nodes.waves)
 # }
 #
 # # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
 #
 # ###### Simulataneously sampling ......interfererence among patches
-# sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
+# sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seeds = NULL) {
 #   # this function returns the vertices samples by snowball up to wave n.neigh. net is object network (what is important is
 #   # the component $edges and the length of $degree) this function randomly sample n.seeds and then select the neighbours up
 #   # to wave n.neigh also give the index of those nodes last added and for which in the next stages of the sampling we
-#   # assume we do not have their complete degree information. seed0 are the original seed sampleN are the possibly repeated
+#   # assume we do not have their complete degree information. seed0 are the original seeds sampleN are the possibly repeated
 #   # elements in the sample unodes are the no repeated elements in the sample nodes.waves are the vertices added in each
 #   # wave. Vertices may be present in more that one wave and more that once in a single wave. last.added are the vertices
 #   # that are the most recently added into the set.
 #
 #
-#   # Seed selection: is without replacement and at random
-#   if (is.null(seed)) {
+#   # seeds selection: is without replacement and at random
+#   if (is.null(seeds)) {
 #     seed0 <- sort(sample(1:length(net$degree), n.seeds, rep = FALSE))
 #   }
 #   sampleN <- nodes <- seed0
@@ -138,8 +138,8 @@
 #         ### subEdges<-effEdges[unique(a),] #the subset of edges. The repeated just have to be included once. maybe we are arriving
 #         ### to the nodes more than once (due to small cycles) or we can get again to already included vertices (due to larger
 #         ### cycles).  We want to include them as may times as they are neighbours of already included vertices. That is why I
-#         ### consider arr.nodes.if a originally seed vertex is included more than once, it is because it was selected also by
-#         ### following one edge and then it also has the category of non seed.
+#         ### consider arr.nodes.if a originally seeds vertex is included more than once, it is because it was selected also by
+#         ### following one edge and then it also has the category of non seeds.
 #
 #         sampleN <- sort(c(sampleN, arr.nodes))
 #         nodes <- unique(sampleN)
@@ -159,8 +159,8 @@
 #   list(seeds = seed0, sampleN = sampleN, unodes = nodes, nodes.waves = nodes.waves, last.added = sort(new.nodes))
 # }
 # # Examples #we are not really interested in running this function directly but within the next function called empdegree
-# # distrib6 net<-local.network.MR.new5(n=100,distrib='pois',param=2) a<-sampleneigh(net,n.seeds=3,n.neigh=1,seed=NULL)
-# # a<-sampleneigh(net,n.seeds=3,n.neigh=3,seed=NULL)
+# # distrib6 net<-local.network.MR.new5(n=100,distrib='pois',param=2) a<-sampleneigh(net,n.seeds=3,n.neigh=1,seeds=NULL)
+# # a<-sampleneigh(net,n.seeds=3,n.neigh=3,seeds=NULL)
 #
 # # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
 #
@@ -179,7 +179,7 @@
 # # ----------------------------------------------------------------------#
 #
 # Oempdegreedistrib0 <- function(net, n.seeds, n.neigh, num.sam, idname = "Temp", seeds) {
-#   p0.seed.array <- Oempd <- values.array <- val.seed.array <- samples <- as.list(rep(NA, num.sam))
+#   p0.seeds.array <- Oempd <- values.array <- val.seeds.array <- samples <- as.list(rep(NA, num.sam))
 #   seeds1 <- matrix(NA, num.sam, n.seeds)
 #   ## -------the 'real' parameters in the network:-------##
 #   real <- summary.net(net)
@@ -191,32 +191,32 @@
 #     tab.seeds <- table(neigh.seeds)  #id seeds
 #     seeds1[m, ] <- neigh.seeds
 #     ###### degrees #####
-#     deg.seed <- realdd[rep(as.integer(names(tab.seeds)), tab.seeds)]  #duplicities allowed
+#     deg.seeds <- realdd[rep(as.integer(names(tab.seeds)), tab.seeds)]  #duplicities allowed
 #     # --------------------#
-#     samples[[m]] <- list(freq.deg.seed = freq.deg.seed <- table(deg.seed))
+#     samples[[m]] <- list(freq.deg.seeds = freq.deg.seeds <- table(deg.seeds))
 #     ##### resample and extract the degree of selected vertices######
-#     values.array[[m]] <- values <- val.seed.array[[m]] <- val.seed <- sort(unique(deg.seed))
-#     p0.seed.array[[m]] <- sum(deg.seed == 0)/n.seeds
+#     values.array[[m]] <- values <- val.seeds.array[[m]] <- val.seeds <- sort(unique(deg.seeds))
+#     p0.seeds.array[[m]] <- sum(deg.seeds == 0)/n.seeds
 #     #### Frequency ##### (Not the relative frequency)
-#     OFseed <- table.row(deg.seed, values)
+#     OFseed <- table.row(deg.seeds, values)
 #     #### Empirical degree distribution ########
-#     Oempd.seed <- OFseed/n.seeds
-#     Oempd[[m]] <- list(Oempd = Oempd.seed)
+#     Oempd.seeds <- OFseed/n.seeds
+#     Oempd[[m]] <- list(Oempd = Oempd.seeds)
 #   }  # for(m in 1:num.sam)
 #   # browser()
-#   list(idname = idname, samples = samples, values = values.array, Oempd = Oempd, num.sam = num.sam, val.seed = val.seed.array,
-#     n.seeds = n.seeds, n.neigh = n.neigh, p0.seed = p0.seed.array, seeds1 = seeds1)
+#   list(idname = idname, samples = samples, values = values.array, Oempd = Oempd, num.sam = num.sam, val.seeds = val.seeds.array,
+#     n.seeds = n.seeds, n.neigh = n.neigh, p0.seeds = p0.seeds.array, seeds1 = seeds1)
 # }
 #
 # # ----------------------------------------------------------------------#
 #
 # OempdegreedistribK <- function(net, n.seeds, n.neigh, num.sam, idname = "Temp", seeds) {
 #   # This function obtains the empirical degree distribution from num.sam samples net is the network (only one) n.seeds is
-#   # the number of seed to set the neighbourhood sample n.neigh is the neighbouhood size around each seed num.sam is the
+#   # the number of seeds to set the neighbourhood sample n.neigh is the neighbouhood size around each seeds num.sam is the
 #   # number of different samples taken from the same network idname is to identify from which nets we are sampling and
 #   # resampling.
 #   seeds1 <- matrix(0, num.sam, n.seeds)
-#   p0.seed.array <- Oempd <- ekseed.array <- values.array <- val.seed.array <- val.nonseed.array <- samples <- as.list(rep(NA,
+#   p0.seeds.array <- Oempd <- ekseed.array <- values.array <- val.seeds.array <- val.nonseed.array <- samples <- as.list(rep(NA,
 #     num.sam))
 #
 #   ## -------the 'real' parameters in the network:-------##
@@ -228,13 +228,13 @@
 #
 #   for (m in 1:num.sam) {
 #     # if(m%%100==1)#cat('Obtaining empd of sample ',m,'\n') browser()
-#     neigh <- LSMI(net, n.seeds = n.seeds, n.neigh = n.neigh, seed = seeds[m, ])
+#     neigh <- LSMI(net, n.seeds = n.seeds, n.neigh = n.neigh, seeds = seeds[m, ])
 #     seeds1[m, ] <- neigh$seeds
 #     # nodes<-neigh$sampleN[!is.element(neigh$sampleN,neigh$last.added)] #vertices that are not included last (with their
 #     # duplicities)
 #     nodes <- neigh$sampleN  #vertices up to distance n.neigh(with their duplicities)!!!!!!!!!!!!!!
-#     tab.nodes <- table(nodes)  #now it has the info of seeds and non-seed
-#     # Now we want to distinguish between seeds and non seeds. Remember that some seeds can also be non seed if they were also
+#     tab.nodes <- table(nodes)  #now it has the info of seeds and non-seeds
+#     # Now we want to distinguish between seeds and non seeds. Remember that some seeds can also be non seeds if they were also
 #     # selected by following one edge.
 #     tab.seeds <- table(neigh$seeds)  #id seeds
 #     a <- is.element(names(tab.nodes), names(tab.seeds))
@@ -246,56 +246,56 @@
 #     }
 #     tab.nodes <- tab.nodes[tab.nodes > 0]  #now I have only the id of non-seeds
 #     ###################### degrees #####
-#     deg.seed <- realdd[rep(as.integer(names(tab.seeds)), tab.seeds)]  #in case seed are present more than once as seeds
+#     deg.seeds <- realdd[rep(as.integer(names(tab.seeds)), tab.seeds)]  #in case seeds are present more than once as seeds
 #     deg.nonseed <- realdd[rep(as.integer(names(tab.nodes)), tab.nodes)]  #to incorporate their duplicity
 #     deg.nonseedU <- realdd[as.integer(names(tab.nodes))]  #it contains the non seeds only one time (I do not use in the rest of the code)
 #     # --------------------#
-#     samples[[m]] <- list(freq.deg.seed = freq.deg.seed <- table(deg.seed), freq.deg.nonseed = freq.deg.nonseed <- table(deg.nonseed),
+#     samples[[m]] <- list(freq.deg.seeds = freq.deg.seeds <- table(deg.seeds), freq.deg.nonseed = freq.deg.nonseed <- table(deg.nonseed),
 #       freq.deg.nonseedU = freq.deg.nonseedU <- table(deg.nonseedU))
 #     ##### resample and extract the degree of selected vertices######
-#     val.seed.array[[m]] <- val.seed <- sort(unique(deg.seed))  #as.numeric(names(freq.deg.seed))
+#     val.seeds.array[[m]] <- val.seeds <- sort(unique(deg.seeds))  #as.numeric(names(freq.deg.seeds))
 #     val.nonseed.array[[m]] <- val.nonseed <- sort(unique(deg.nonseed))  #as.numeric(names(freq.deg.nonseed))
 #     val.nonseedU <- sort(unique(deg.nonseedU))  #as.numeric(names(freq.deg.nonseedU))
 #
 #     p0.real <- rfreq[1]
-#     p0.seed <- 0
-#     if (any(val.seed == 0)) {
-#       # if any seed has degree zero
-#       p0.seed <- sum(deg.seed == 0)/n.seeds
+#     p0.seeds <- 0
+#     if (any(val.seeds == 0)) {
+#       # if any seeds has degree zero
+#       p0.seeds <- sum(deg.seeds == 0)/n.seeds
 #     }
-#     p0.seed.array[[m]] <- p0.seed
-#     values <- sort(union(val.seed, val.nonseed))  #all the possible degree values toresample
+#     p0.seeds.array[[m]] <- p0.seeds
+#     values <- sort(union(val.seeds, val.nonseed))  #all the possible degree values toresample
 #     values.array[[m]] <- values
 #
 #     ###################### Frequency ##### (Not the relative frequency)
-#     OFseed <- table.row(deg.seed, values)
+#     OFseed <- table.row(deg.seeds, values)
 #     OFnonseed <- table.row(deg.nonseed, values)
 #     #################################################################### combining information from seeds and nonseeds ###### mean degree computed from the original sampled seeds:
-#     ekseed.array[[m]] <- ekseed <- sum(as.numeric(names(freq.deg.seed)) * freq.deg.seed)/n.seeds
+#     ekseed.array[[m]] <- ekseed <- sum(as.numeric(names(freq.deg.seeds)) * freq.deg.seeds)/n.seeds
 #     colzero <- NULL
 #     if (any(values == 0)) {
 #       colzero <- which(values == 0)
 #       vals <- values[-colzero]
-#       Of.seed <- OFseed[-colzero]
+#       Of.seeds <- OFseed[-colzero]
 #       Of.nonseed.nw <- OFnonseed[-colzero]
 #     } else {
 #       vals <- values
-#       Of.seed <- OFseed
+#       Of.seeds <- OFseed
 #       Of.nonseed.nw <- OFnonseed
 #     }
 #     ################################################ NWB # seeds and non weighted nonseeds #### p0 estimated from orginal sampled seeds#
-#     Oempd.nw.p0sEks <- (Of.seed + (1 - p0.seed) * ekseed * Of.nonseed.nw/vals)/(n.seeds + ekseed * sum(Of.nonseed.nw/vals))
+#     Oempd.nw.p0sEks <- (Of.seeds + (1 - p0.seeds) * ekseed * Of.nonseed.nw/vals)/(n.seeds + ekseed * sum(Of.nonseed.nw/vals))
 #     ######################################### p0 taken as known #
-#     Oempd.nw.p0rEks <- (Of.seed + (1 - p0.real) * ekseed * Of.nonseed.nw/vals)/(n.seeds + ekseed * sum(Of.nonseed.nw/vals))
+#     Oempd.nw.p0rEks <- (Of.seeds + (1 - p0.real) * ekseed * Of.nonseed.nw/vals)/(n.seeds + ekseed * sum(Of.nonseed.nw/vals))
 #     if (any(values == 0)) {
-#       Oempd.nw.p0sEks <- c(p0.seed, Oempd.nw.p0sEks)  #5
+#       Oempd.nw.p0sEks <- c(p0.seeds, Oempd.nw.p0sEks)  #5
 #       Oempd.nw.p0rEks <- c(p0.real, Oempd.nw.p0rEks)  #8
 #     }
 #     Oempd[[m]] <- list(Oempd = Oempd.nw.p0sEks, Oempd.nw.p0rEks = Oempd.nw.p0rEks)
 #   }  # for(m in 1:num.sam)
 #   # browser()
-#   list(idname = idname, samples = samples, values = values.array, Oempd = Oempd, num.sam = num.sam, val.seed = val.seed.array,
-#     val.nonseed = val.nonseed.array, n.seeds = n.seeds, n.neigh = n.neigh, p0.real = p0.real, p0.seed = p0.seed.array,
+#   list(idname = idname, samples = samples, values = values.array, Oempd = Oempd, num.sam = num.sam, val.seeds = val.seeds.array,
+#     val.nonseed = val.nonseed.array, n.seeds = n.seeds, n.neigh = n.neigh, p0.real = p0.real, p0.seeds = p0.seeds.array,
 #     ekseed = ekseed.array, seeds1 = seeds1)
 # }
 #
@@ -324,15 +324,15 @@
 #   for (m in num.sam) {
 #     # if(i%%100==1)#cat('Processing bootstrap samples of sample=',i,'\n') #print every 100
 #     i <- i + 1
-#     val.seed <- sam.out$val.seed[[m]]
-#     freq.deg.seed <- sam.out$samples[[m]]$freq.deg.seed
-#     bsam.seed <- myBsample(val.seed, n.seeds, n.boot, prob = freq.deg.seed)
+#     val.seeds <- sam.out$val.seeds[[m]]
+#     freq.deg.seeds <- sam.out$samples[[m]]$freq.deg.seeds
+#     bsam.seeds <- myBsample(val.seeds, n.seeds, n.boot, prob = freq.deg.seeds)
 #     values <- sam.out$values[[m]]  #all the possible degree values toresample
 #     #### Frequency ##### (Not the relative frequency)
-#     Fseed <- t(apply(bsam.seed, 1, table.row, vect = values))  #freq (sorted according to values)
+#     Fseed <- t(apply(bsam.seeds, 1, table.row, vect = values))  #freq (sorted according to values)
 #     # browser()
-#     empd.seed <- Fseed/n.seeds
-#     empd[[m]] <- list(empd.seed = empd.seed)
+#     empd.seeds <- Fseed/n.seeds
+#     empd[[m]] <- list(empd.seeds = empd.seeds)
 #   }  # for(m in num.sam)
 #   list(idname = idname, values = sam.out$values, empd = empd, num.sam = num.sam, n.boot = n.boot, n.neigh = n.neigh)
 # }
@@ -353,29 +353,29 @@
 #   for (m in num.sam) {
 #     # if(i%%100==1)#cat('Processing bootstrap samples of sample=',i,'\n') #print every 100
 #     i <- i + 1
-#     # Boostrap samples of seed, nonseeds-noWeighted and nonseeds-Weighted:
-#     val.seed <- sam.out$val.seed[[m]]
+#     # Boostrap samples of seeds, nonseeds-noWeighted and nonseeds-Weighted:
+#     val.seeds <- sam.out$val.seeds[[m]]
 #     val.nonseed <- sam.out$val.nonseed[[m]]
-#     freq.deg.seed <- sam.out$samples[[m]]$freq.deg.seed
+#     freq.deg.seeds <- sam.out$samples[[m]]$freq.deg.seeds
 #     freq.deg.nonseed <- sam.out$samples[[m]]$freq.deg.nonseed
 #
-#     bsam.seed <- myBsample(val.seed, n.seeds, n.boot, prob = freq.deg.seed)  #matrix n.boot x n.seeds
+#     bsam.seeds <- myBsample(val.seeds, n.seeds, n.boot, prob = freq.deg.seeds)  #matrix n.boot x n.seeds
 #     bsam.nonseed.nw <- myBsample(val.nonseed, sum(freq.deg.nonseed), n.boot, prob = freq.deg.nonseed)  #matrix n.boot x sum(freq.deg.nonseed)
 #     bsam.nonseed.w <- myBsample(val.nonseed, sum(freq.deg.nonseed), n.boot, prob = freq.deg.nonseed/val.nonseed)  #matrix
 #
 #     p0.B <- rep(0, n.boot)
-#     if (any(val.seed == 0)) {
-#       # if any seed has degree zero
-#       p0.B <- rowSums(bsam.seed == 0)/n.seeds  #the estimation from the bootstrap samples
+#     if (any(val.seeds == 0)) {
+#       # if any seeds has degree zero
+#       p0.B <- rowSums(bsam.seeds == 0)/n.seeds  #the estimation from the bootstrap samples
 #     }
 #     p0.real <- sam.out$p0.real
-#     p0.seed <- sam.out$p0.seed[[m]]
+#     p0.seeds <- sam.out$p0.seeds[[m]]
 #
 #     values <- sam.out$values[[m]]  #all the possible degree values to resample
 #     # if (all(values==0)) {values<-0.1}
 #
 #     ###################### Frequency ##### (Not the relative frequency)
-#     Fseed <- t(apply(bsam.seed, 1, table.row, vect = values))  #frequency (sorted according to values)
+#     Fseed <- t(apply(bsam.seeds, 1, table.row, vect = values))  #frequency (sorted according to values)
 #     # browser()
 #     if (is.null(bsam.nonseed.nw)) {
 #       # browser()
@@ -401,32 +401,32 @@
 #     if (any(values == 0)) {
 #       colzero <- which(values == 0)
 #       vals <- values[-colzero]
-#       f.seed <- Fseed[, -colzero]
+#       f.seeds <- Fseed[, -colzero]
 #       f.nonseed.nw <- Fnonseed.nw[, -colzero]
 #       f.nonseed.w <- Fnonseed.w[, -colzero]
 #     } else {
 #       vals <- values
-#       f.seed <- Fseed
+#       f.seeds <- Fseed
 #       f.nonseed.nw <- Fnonseed.nw
 #       f.nonseed.w <- Fnonseed.w
 #     }
-#     # browser() WB # seeds and weighted nonseeds ###### consider the p0 fixed from the seed information:
-#     # empd.w.p0s<-(f.seed+(1-p0.seed)*f.nonseed.w)/(n.seeds+sum(freq.deg.nonseed))
-#     empd.w.p0s <- (f.seed + f.nonseed.w * (1 - p0.B))/(n.seeds + sum(freq.deg.nonseed))
+#     # browser() WB # seeds and weighted nonseeds ###### consider the p0 fixed from the seeds information:
+#     # empd.w.p0s<-(f.seeds+(1-p0.seeds)*f.nonseed.w)/(n.seeds+sum(freq.deg.nonseed))
+#     empd.w.p0s <- (f.seeds + f.nonseed.w * (1 - p0.B))/(n.seeds + sum(freq.deg.nonseed))
 #     #### consider the p0 fixed from the real information:
-#     #### empd.w.p0r<-(f.seed+(1-p0.real)*f.nonseed.w)/(n.seeds+sum(freq.deg.nonseed)) NWB # seeds and non weighted nonseeds ####
+#     #### empd.w.p0r<-(f.seeds+(1-p0.real)*f.nonseed.w)/(n.seeds+sum(freq.deg.nonseed)) NWB # seeds and non weighted nonseeds ####
 #     #### p0 estimated from orginal sampled seeds# E(K) estimated from bootstrap samples from the seeds
-#     #### empd.nw.p0sEkb<-(f.seed+(1-p0.seed)*apply(bsam.seed,1,FUN=mean)*t(t(f.nonseed.nw)/vals))/(n.seeds+
-#     #### apply(bsam.seed,1,FUN=mean)*rowSums(t(t(f.nonseed.nw)/vals)))
-#     empd.nw.p0sEkb <- (f.seed + t(t(f.nonseed.nw)/vals) * (1 - p0.B) * apply(bsam.seed, 1, FUN = mean))/(n.seeds + rowSums(t(t(f.nonseed.nw)/vals)) *
-#       apply(bsam.seed, 1, FUN = mean))
+#     #### empd.nw.p0sEkb<-(f.seeds+(1-p0.seeds)*apply(bsam.seeds,1,FUN=mean)*t(t(f.nonseed.nw)/vals))/(n.seeds+
+#     #### apply(bsam.seeds,1,FUN=mean)*rowSums(t(t(f.nonseed.nw)/vals)))
+#     empd.nw.p0sEkb <- (f.seeds + t(t(f.nonseed.nw)/vals) * (1 - p0.B) * apply(bsam.seeds, 1, FUN = mean))/(n.seeds + rowSums(t(t(f.nonseed.nw)/vals)) *
+#       apply(bsam.seeds, 1, FUN = mean))
 #     # E(K) estimated from the original seeds sample
-#     # empd.nw.p0sEks<-(f.seed+(1-p0.seed)*ekseed*t(t(f.nonseed.nw)/vals))/(n.seeds+ ekseed*rowSums(t(t(f.nonseed.nw)/vals)))
-#     empd.nw.p0sEks <- (f.seed + ekseed * t(t(f.nonseed.nw)/vals) * (1 - p0.B))/(n.seeds + ekseed * rowSums(t(t(f.nonseed.nw)/vals)))
+#     # empd.nw.p0sEks<-(f.seeds+(1-p0.seeds)*ekseed*t(t(f.nonseed.nw)/vals))/(n.seeds+ ekseed*rowSums(t(t(f.nonseed.nw)/vals)))
+#     empd.nw.p0sEks <- (f.seeds + ekseed * t(t(f.nonseed.nw)/vals) * (1 - p0.B))/(n.seeds + ekseed * rowSums(t(t(f.nonseed.nw)/vals)))
 #     ######################################### p0 taken as known # E(K) estimated from bootstrap samples from the seeds
-#     ######################################### empd.nw.p0rEkb<-(f.seed+(1-p0.real)*apply(bsam.seed,1,FUN=mean)*t(t(f.nonseed.nw)/vals))/
-#     ######################################### (n.seeds+apply(bsam.seed,1,FUN=mean)*rowSums(t(t(f.nonseed.nw)/vals))) E(K) estimated from the original seeds sample
-#     ######################################### empd.nw.p0rEks<-(f.seed+(1-p0.real)*ekseed*t(t(f.nonseed.nw)/vals))/(n.seeds+ ekseed*rowSums(t(t(f.nonseed.nw)/vals)))
+#     ######################################### empd.nw.p0rEkb<-(f.seeds+(1-p0.real)*apply(bsam.seeds,1,FUN=mean)*t(t(f.nonseed.nw)/vals))/
+#     ######################################### (n.seeds+apply(bsam.seeds,1,FUN=mean)*rowSums(t(t(f.nonseed.nw)/vals))) E(K) estimated from the original seeds sample
+#     ######################################### empd.nw.p0rEks<-(f.seeds+(1-p0.real)*ekseed*t(t(f.nonseed.nw)/vals))/(n.seeds+ ekseed*rowSums(t(t(f.nonseed.nw)/vals)))
 #
 #     if (any(values == 0)) {
 #       empd.w.p0s <- cbind(`0` = p0.B, empd.w.p0s)  #1
@@ -582,7 +582,7 @@
 #     in.while <- TRUE
 #     while (in.while) {
 #       if (outBempd$n.neigh == 0) {
-#         empd <- outBempd$empd[[m]]$empd.seed
+#         empd <- outBempd$empd[[m]]$empd.seeds
 #         in.while <- FALSE
 #       } else {
 #         if (w == 1) {

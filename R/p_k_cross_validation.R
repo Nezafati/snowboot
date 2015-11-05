@@ -16,7 +16,7 @@ B.EmpDistrib <-function(net,n.seeds,n.neigh,sam.size=1,n.boot,otherNetParameters
                 Obs.distrib<-Oempdegreedistrib(net,n.seeds=i,n.neigh=j,num.sam=sam.size)
                 TMP <- Obs.distrib$seeds1
             }else{
-                Obs.distrib<-Oempdegreedistrib(net,n.seeds=i,n.neigh=j,num.sam=sam.size, seed=NULL)
+                Obs.distrib<-Oempdegreedistrib(net,n.seeds=i,n.neigh=j,num.sam=sam.size, seeds=NULL)
             }
             Oparam<-OparametersEst(Obs.distrib)
             #B.distrib<-Bempdegreedistrib(Obs.distrib, num.sam=sam.size,n.boot=n.boot)
@@ -80,7 +80,7 @@ closestCoverNDX <- function(x,coverage=.95){
 }
 
 #' A function that sorts a matrix of tied optimal seed-wave combinations so that
-#' the first is the largest seeds among the smallest waves.
+#' the first is the largest number of seeds among the smallest waves.
 #'
 #' The function takes a matrix containing tied optimal seed-wave combinations
 #' from the training proxy and sorts the rows of this matrix so that the
@@ -111,7 +111,7 @@ p_k_cross_validation <- function(networks, distrib, param,
       # be 1/4 the max k in LSMI
       # param <- c(.1,2)
 
-      #sort seed waves to assist in optimal seed-wave selection
+      #sort seed-waves to assist in optimal seed-wave selection
 
       n.seeds <- sort(n.seeds)
       n.neigh <- sort(n.neigh)

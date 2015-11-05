@@ -7,12 +7,16 @@
 LSMI(net, n.seeds = 10, n.neigh = 1, seeds = NULL)
 }
 \arguments{
-\item{net}{a list that must contain elements
-\code{$n} (\code{integer}. network order),
-\code{$edges} (\code{matrix}. a \code{n} x \code{2} matrix),
-and \code{$degree} (\code{integer} vector of length n).
-The object can be created by \code{\link{local.network.MR.new5}} or
-it can be imported.}
+\item{net}{a network object that is list containing:
+\describe{
+  \item{edges}{the edgelist of the network. A two column
+    \code{matrix} where each row is an edge.}
+  \item{degree}{the degree sequence of the network, which is
+    an \code{integer} vector of length n.}
+  \item{n}{the network order. The order for every network is 2000.}
+}
+  The object can be created by \code{\link{local.network.MR.new5}} or
+  it can be imported.}
 
 \item{n.seeds}{a number of seeds in the snowball sample.
 It must be a positive integer.}
@@ -22,9 +26,11 @@ For example, n.neigh = 0 corresponds to seeds only, and n.neigh = 1
 corresponds to sampling seeds and their first neighbors).
 Note that the algorithm allow for mutiple inclusions.}
 
-\item{seeds}{A vector of length \code{n.seeds} containing the
-numeric ids of the seeds to initiate sampling. Note that this is an
-optional parameter.}
+\item{seeds}{A matrix of dimension \code{num.sam} x \code{n.seeds} containing the
+   numeric ids of the seeds to initiate sampling. Each row of the matrix
+   corresponds to one LSMI sample. Note that this is an optional parameter.
+   WARNING: As of now, this feature is only supported when
+   parameter \code{n.neigh} is greater than zero.}
 }
 \value{
 A list containing the following elements:

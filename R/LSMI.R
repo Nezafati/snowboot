@@ -1,22 +1,7 @@
 #' Snowball sampling with multiple inclusion.
 #'
 #' The function will conduct snowball sampling.
-#'
-#' @param net a list that must contain elements
-#'    \code{$n} (\code{integer}. network order),
-#'    \code{$edges} (\code{matrix}. a \code{n} x \code{2} matrix),
-#'    and \code{$degree} (\code{integer} vector of length n).
-#'    The object can be created by \code{\link{local.network.MR.new5}} or
-#'    it can be imported.
-#' @param n.seeds a number of seeds in the snowball sample.
-#'    It must be a positive integer.
-#' @param n.neigh a number of waves to be sampled around each seed in LSMI.
-#'    For example, n.neigh = 0 corresponds to seeds only, and n.neigh = 1
-#'    corresponds to sampling seeds and their first neighbors).
-#'    Note that the algorithm allow for mutiple inclusions.
-#' @param seeds A vector of length \code{n.seeds} containing the
-#'    numeric ids of the seeds to initiate sampling. Note that this is an
-#'    optional parameter.
+#' @inheritParams Oempdegreedistrib
 #' @return A list containing the following elements:
 #'    \item{seeds}{A \code{numeric} a vector containing the numerics ids of
 #'          sampled seeds.}
@@ -55,4 +40,4 @@ LSMI <- function(net, n.seeds = 10, n.neigh = 1, seeds = NULL) {
 }
 # Examples #we are not really interested in running this function directly but within the next function called empdegree
 # distrib6 net<-local.network.MR.new5(n=100,distrib='pois',param=2)
-# a<-LSMI(net,n.seeds=3,n.neigh=3,seed=NULL) a<-sampleneigh(net,n.seeds=3,n.neigh=3,seeds=NULL)
+# a<-LSMI(net,n.seeds=3,n.neigh=3,seed=NULL)

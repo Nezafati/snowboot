@@ -19,7 +19,10 @@
 #' @usage summary.net(net)
 summary.net <- function(net) {
       # this function obtains the real parameters in a network
-      realdd <- net$degree - net$degree.left
+      if("degree.left"%in%names(net)){
+        realdd <- net$degree - net$degree.left
+      } else realdd <- net$degree
+
       rmean <- mean(realdd)
       rquart <- quantile(realdd, prob = c(0.25, 0.5, 0.75))
       rfreq <- c(sum(realdd == 0), sum(realdd == 1), sum(realdd == 2), sum(realdd == 3), sum(realdd == 4))/length(net$degree)

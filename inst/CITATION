@@ -1,0 +1,8 @@
+citHeader("To cite snowboot in publications use:")
+
+citEntry(entry = "Article",
+  title        = "Network Analysis with Non-Parametric Methods that Emerge from Snowball and Bootstrap Sampling with {snowboot}",
+  author       = personList(as.person("Leticia Ram\u00edrez-Ram\u00edrez"),
+                   as.person("Vyacheslav Lyubchich"), as.person("Kusha Nezafati")),
+
+)

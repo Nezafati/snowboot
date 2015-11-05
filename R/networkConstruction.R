@@ -467,7 +467,7 @@ table.mult.degree <- function(vector, place, m, freq = TRUE) {
 
 ###################################################################### NETWORK SAMPLING FUNCTION ###############################
 
-sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
+sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seeds = NULL) {
   # net is object network (what is important is the component $edges and the length of $degree) this function randomly
   # sample n.seeds o sample around the seeds specified by "seed" and obtain for each, their n.neigh neighbourhood (set of
   # nodes with distance to the seed at most =n.neigh) also give the index of those nodes last added and for which we do not
@@ -475,11 +475,11 @@ sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
   # sampleN are the possibly repeated elements in the sample last.added are the vertices that are the most recently added
   # into the set.
 
-  if (is.null(seed))
+  if (is.null(seeds))
     {
-      seed <- sort(sample(1:length(net$degree), n.seeds, rep = FALSE))
+      seeds <- sort(sample(1:length(net$degree), n.seeds, rep = FALSE))
     }  #the seed selection is random
-  sampleN <- seed0 <- seed
+  sampleN <- seed0 <- seeds
   # neighEdges<-NULL
   effEdges <- net$edges
   more <- TRUE
@@ -487,7 +487,7 @@ sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
   new.nodes <- 0
   if (n.neigh == 0) {
     # only keep the subgraph originated from the seeds
-    a <- is.element(effEdges, seed)
+    a <- is.element(effEdges, seeds)
     if (any(a)) {
       a <- which(matrix(a, dim(effEdges)[1], 2), arr.ind = TRUE)[, 1]
       # now it is the row where they are in the edges matrix
@@ -498,7 +498,7 @@ sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
     }
   } else {
     while (nn > 0 & more) {
-      a <- is.element(effEdges, seed)  # "seed" will be accumulating
+      a <- is.element(effEdges, seeds)  # "seed" will be accumulating
                                        # all included vertices (non repeated)
       if (any(a))
         {
@@ -512,7 +512,7 @@ sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
           new.nodes <- arr.nodes  # all the vertices we arrive to weren't already
                                   # included in "seed"
           } else {
-          new.nodes <- setdiff(arr.nodes, seed)
+          new.nodes <- setdiff(arr.nodes, seeds)
           }
           # Then, already included vertices are not considered new because of
           # inclusion of edge connecting them
@@ -527,7 +527,7 @@ sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
           # was selected also by following one edge and then it also has the category of non seed.
 
           sampleN <- sort(c(sampleN, arr.nodes))
-          seed <- unique(sampleN)
+          seeds <- unique(sampleN)
 
           if (nn > 1)
           effEdges <- effEdges[-unique(a), ]
@@ -548,13 +548,13 @@ sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seed = NULL) {
       nn <- nn - 1
     }  #end while
   }
-  list(seeds = seed0, nodes = seed, sampleN = sampleN, last.added = sort(new.nodes))
+  list(seeds = seed0, nodes = seeds, sampleN = sampleN, last.added = sort(new.nodes))
   # neighEdges=neighEdges,
   # Examples:
   # we are not really interested in running this function directly,
   # but within the next function called empdegreedistrib6
   # net<-local.network.MR.new5(n=100,distrib="pois",param=2)
-  # a<-sampleneigh(net,n.seeds=3,n.neigh=1,seed=NULL)
-  # a<-sampleneigh(net,n.seeds=3,n.neigh=3,seed=NULL)
+  # a<-sampleneigh(net,n.seeds=3,n.neigh=1,seeds=NULL)
+  # a<-sampleneigh(net,n.seeds=3,n.neigh=3,seeds=NULL)
 }
 

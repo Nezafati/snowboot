@@ -9,18 +9,19 @@ bootdeg0 <- function(sam.out, num.sam, n.boot) {
       empd <- as.list(rep(NA, length(num.sam)))
       i <- 1
       for (m in num.sam) {
-            # if(i%%100==1)#cat('Processing bootstrap samples of sample=',i,'\n') #print every 100
+
             i <- i + 1
-            val.seed <- sam.out$val.seed[[m]]
-            freq.deg.seed <- sam.out$samples[[m]]$freq.deg.seed
-            bsam.seed <- myBsample(val.seed, n.seeds, n.boot, prob = freq.deg.seed)
+            val.seeds <- sam.out$val.seeds[[m]]
+            freq.deg.seeds <- sam.out$samples[[m]]$freq.deg.seeds
+            bsam.seeds <- myBsample(val.seeds, n.seeds, n.boot, prob = freq.deg.seeds)
             values <- sam.out$values[[m]]  #all the possible degree values toresample
             #### Frequency ##### (Not the relative frequency)
-            Fseed <- t(apply(bsam.seed, 1, table.row, vect = values))  #freq (sorted according to values)
+            Fseed <- t(apply(bsam.seeds, 1, table.row, vect = values))  #freq (sorted according to values)
             # browser()
-            empd.seed <- Fseed/n.seeds
-            empd[[m]] <- list(empd.seed = empd.seed)
+            empd.seeds <- Fseed/n.seeds
+            empd[[i]] <- list(empd.seeds = empd.seeds)
+            i <- i + 1
       }  # for(m in num.sam)
-      list(values = sam.out$values, empd = empd, num.sam = num.sam,
+      list(values = sam.out$values[num.sam], empd = empd, num.sam = num.sam,
            n.boot = n.boot, n.neigh = n.neigh, seeds1 = sam.out$seeds1[num.sam,])
 }

@@ -1,5 +1,5 @@
 Oempdegreedistrib0 <- function(net, n.seeds, n.neigh, num.sam, seeds) {
-      p0.seed.array <- Oempd <- values.array <- val.seed.array <- samples <- as.list(rep(NA, num.sam))
+      p0.seeds.array <- Oempd <- values.array <- val.seeds.array <- samples <- as.list(rep(NA, num.sam))
       seeds1 <- matrix(NA, num.sam, n.seeds)
       ## -------the 'real' parameters in the network:-------##
       real <- summary.net(net)
@@ -11,19 +11,19 @@ Oempdegreedistrib0 <- function(net, n.seeds, n.neigh, num.sam, seeds) {
             tab.seeds <- table(neigh.seeds)  #id seeds
             seeds1[m, ] <- neigh.seeds
             ###### degrees #####
-            deg.seed <- realdd[rep(as.integer(names(tab.seeds)), tab.seeds)]  #duplicities allowed
+            deg.seeds <- realdd[rep(as.integer(names(tab.seeds)), tab.seeds)]  #duplicities allowed
             # --------------------#
-            samples[[m]] <- list(freq.deg.seed = freq.deg.seed <- table(deg.seed))
+            samples[[m]] <- list(freq.deg.seeds = freq.deg.seeds <- table(deg.seeds))
             ##### resample and extract the degree of selected vertices######
-            values.array[[m]] <- values <- val.seed.array[[m]] <- val.seed <- sort(unique(deg.seed))
-            p0.seed.array[[m]] <- sum(deg.seed == 0)/n.seeds
+            values.array[[m]] <- values <- val.seeds.array[[m]] <- val.seeds <- sort(unique(deg.seeds))
+            p0.seeds.array[[m]] <- sum(deg.seeds == 0)/n.seeds
             #### Frequency ##### (Not the relative frequency)
-            OFseed <- table.row(deg.seed, values)
+            OFseed <- table.row(deg.seeds, values)
             #### Empirical degree distribution ########
-            Oempd.seed <- OFseed/n.seeds
-            Oempd[[m]] <- list(Oempd = Oempd.seed)
+            Oempd.seeds <- OFseed/n.seeds
+            Oempd[[m]] <- list(Oempd = Oempd.seeds)
       }  # for(m in 1:num.sam)
       # browser()
-      list(samples = samples, values = values.array, Oempd = Oempd, num.sam = num.sam, val.seed = val.seed.array,
-           n.seeds = n.seeds, n.neigh = n.neigh, p0.seed = p0.seed.array, seeds1 = seeds1)
+      list(samples = samples, values = values.array, Oempd = Oempd, num.sam = num.sam, val.seeds = val.seeds.array,
+           n.seeds = n.seeds, n.neigh = n.neigh, p0.seeds = p0.seeds.array, seeds1 = seeds1)
 }

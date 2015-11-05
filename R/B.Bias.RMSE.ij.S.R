@@ -1,4 +1,23 @@
-B.Bias.RMSE.ij.S <- function(net, n.seeds, n.neigh, sam.size, n.boot, otherNetParameters = FALSE) {
+#' Estimating Bias
+#'
+#' A function that estimates the bias.
+#' @param net a network object that is list containing:
+#'  \describe{
+#'    \item{edges}{the edgelist of the network. A two column
+#'      \code{matrix} where each row is an edge.}
+#'    \item{degree}{the degree sequence of the network, which is
+#'      an \code{integer} vector of length n.}
+#'    \item{n}{the network order. The order for every network is 2000.}
+#'  }
+#'    The object can be created by \code{\link{local.network.MR.new5}} or
+#'    it can be imported.
+#' @param n.seeds A vector containing the number of seeds to select during each
+#'    snowball sample. All values must be a positive integer.
+#' @param n.neigh A vector containing the number of waves to select during each
+#'    snowball sample. All values must be a positive integer.
+#' @param sam.size A number for the LSMI repititions. Default value is one.
+#' @param n.boot A positive integer number, the number of bootstrap replications.
+B.Bias.RMSE.ij.S <- function(net, n.seeds, n.neigh, sam.size = 1, n.boot, otherNetParameters = FALSE) {
       # sam.size is the number of different samples taken from the network for each i and j otherNetParameters is true if
       # intervals and fallins for the rest of the parmeters (other than mean) are required.
       seeds2 <- array(0, dim = c(length(as.vector(n.neigh)), length(as.vector(n.seeds)), sam.size, max(n.seeds)))

@@ -2,16 +2,16 @@
 % Please edit documentation in R/p_k_cross_validation.R
 \name{sort_tied_opti}
 \alias{sort_tied_opti}
-\title{A function that sorts a matrix of tied optimal seed-wave combinations so that
+\title{A function that sorts a matrix of tied optimal seeds-wave combinations so that
 the first is the largest seeds among the smallest waves.}
 \usage{
 sort_tied_opti(inMat)
 }
 \arguments{
-\item{inMat}{is a matrix of tied seed-wave indices.}
+\item{inMat}{is a matrix of tied seeds-wave indices.}
 }
 \description{
-The function takes a matrix containing tied optimal seed-wave combinations
+The function takes a matrix containing tied optimal seeds-wave combinations
 from the training proxy and sorts the rows of this matrix so that the
 largest number of seeds for the lowest number of waves is on top
 }

@@ -8,12 +8,16 @@ Sampling with Multiple Inclusion (LSMI).}
 Oempdegreedistrib(net, n.seeds, n.neigh, num.sam = 1, seeds = NULL)
 }
 \arguments{
-\item{net}{a list that must contain elements
-\code{$n} (\code{integer}. network order),
-\code{$edges} (\code{matrix}. a \code{n} x \code{2} matrix),
-and \code{$degree} (\code{integer} vector of length n).
-The object can be created by \code{\link{local.network.MR.new5}} or
-it can be imported.}
+\item{net}{a network object that is list containing:
+\describe{
+  \item{edges}{the edgelist of the network. A two column
+    \code{matrix} where each row is an edge.}
+  \item{degree}{the degree sequence of the network, which is
+    an \code{integer} vector of length n.}
+  \item{n}{the network order. The order for every network is 2000.}
+}
+  The object can be created by \code{\link{local.network.MR.new5}} or
+  it can be imported.}
 
 \item{n.seeds}{a number of seeds in the snowball sample.
 It must be a positive integer.}
@@ -25,7 +29,7 @@ Note that the algorithm allow for mutiple inclusions.}
 
 \item{num.sam}{a number for the LSMI repititions. Default value is one.}
 
-\item{A}{matrix of dimension \code{num.sam} x \code{n.seeds} containing the
+\item{seeds}{A matrix of dimension \code{num.sam} x \code{n.seeds} containing the
    numeric ids of the seeds to initiate sampling. Each row of the matrix
    corresponds to one LSMI sample. Note that this is an optional parameter.
    WARNING: As of now, this feature is only supported when
@@ -45,7 +49,7 @@ a list consisting of
          estimating the empirical distribution from the network sample
          (One list per LSMI).}
    \item{num.sam}{num.sam a number for the LSMI repititions.}
-   \item{val.seed}{a list of length \code{num.sam} where each element
+   \item{val.seeds}{a list of length \code{num.sam} where each element
          is a vector of unique degree values sampled solely from seeds
          (One vector per LSMI).}
    \item{val.nonseed}{a list of length \code{num.sam} where each
@@ -58,7 +62,7 @@ a list consisting of
          input argument for details.}
    \item{p0.real}{proportion of nodes from the network with degree zero.
          Note: p0.real is unreported when n.neigh equals zero.}
-   \item{p0.seed}{a list of length \code{num.sam} where each
+   \item{p0.seeds}{a list of length \code{num.sam} where each
          element is the proportion of seeds with degree zero.
          (One element per LSMI).}
    \item{ekseed}{a list of length \code{num.sam} where each

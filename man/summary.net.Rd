@@ -7,12 +7,16 @@
 summary.net(net)
 }
 \arguments{
-\item{net}{a list that must contain elements
-\code{$n} (\code{integer}. network order),
-\code{$edges} (\code{matrix}. a \code{n} x \code{2} matrix),
-and \code{$degree} (\code{integer} vector of length n).
-The object can be created by \code{\link{local.network.MR.new5}} or
-it can be imported.}
+\item{net}{a network object that is list containing:
+\describe{
+  \item{edges}{the edgelist of the network. A two column
+    \code{matrix} where each row is an edge.}
+  \item{degree}{the degree sequence of the network, which is
+    an \code{integer} vector of length n.}
+  \item{n}{the network order. The order for every network is 2000.}
+}
+  The object can be created by \code{\link{local.network.MR.new5}} or
+  it can be imported.}
 }
 \value{
 a list consisting of:
