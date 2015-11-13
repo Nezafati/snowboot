@@ -5,15 +5,17 @@
 #' \code{0.025} and an upper-bound of \code{0.975}.
 #'
 #' @inheritParams BparametersEst
+#' @param bootstrap_mean a boolean option to return the bootstrap confidence
+#'  interval for the mean.
 #' @return A list of two elements
-#'  \itme{p_k_CI}{This a list of length \code{length(outBootdeg$num.sam)}, one
+#'  \item{p_k_CI}{This a list of length \code{length(outBootdeg$num.sam)}, one
 #'    element per LSMI. Each element is contains three sets of bootstrap confidence
 #'    intervals for \eqn{\hat{p}_k^*} corresponding to the three estimation
-#'    methods. See \code{\link{bootdeg} for more on the three estimation methods.}
+#'    methods. See \code{\link{bootdeg}} for more on the three estimation methods.}
 #'  \item{mean_CI}{This a list of length \code{length(outBootdeg$num.sam)}, one
 #'    element per LSMI. Each element is contains three sets of bootstrap confidence
 #'    intervals for \eqn{\hat{\mu}} corresponding to the three estimation
-#'    methods. See \code{\link{bootdeg} for more on the three estimation methods.}
+#'    methods. See \code{\link{bootdeg}} for more on the three estimation methods.}
 bootCI <- function(outBootdeg, bootstrap_mean=T){
   # inception apply
   # take each "list" in empd, apply CI function to each distribution in "list".
