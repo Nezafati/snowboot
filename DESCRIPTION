@@ -10,9 +10,13 @@ Authors@R: c(
     person("Kusha", "Nezafati", email = "kusha.nezafati@gmail.com", role = "cre" ))
 Maintainer: Kusha Nezafati <kusha.nezafati@gmail.com>
 Description: This package analyzes network objects, which are imported or
-      simulated by the package. The non-parametric methods of analysis center
-      around snowball and bootstrap sampling.
-Depends: R (>= 3.2.2)
+    simulated by the package. The non-parametric methods of analysis center
+    around snowball and bootstrap sampling.
+Depends:
+    R (>= 3.2.2)
 License: GPL-3
 LazyData: TRUE
-Imports: VGAM, igraph
+Imports:
+    VGAM,
+    igraph
+RoxygenNote: 5.0.0

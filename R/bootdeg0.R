@@ -9,8 +9,6 @@ bootdeg0 <- function(sam.out, num.sam, n.boot) {
       empd <- as.list(rep(NA, length(num.sam)))
       i <- 1
       for (m in num.sam) {
-
-            i <- i + 1
             val.seeds <- sam.out$val.seeds[[m]]
             freq.deg.seeds <- sam.out$samples[[m]]$freq.deg.seeds
             bsam.seeds <- myBsample(val.seeds, n.seeds, n.boot, prob = freq.deg.seeds)

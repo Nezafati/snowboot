@@ -13,16 +13,16 @@ B.EmpDistrib <-function(net,n.seeds,n.neigh,sam.size=1,n.boot,otherNetParameters
             }else{n.dist<-3}
 
             if(j==0){
-                Obs.distrib<-Oempdegreedistrib(net,n.seeds=i,n.neigh=j,num.sam=sam.size)
+                Obs.distrib<-Oempdegreedistrib(net, n.seeds=i, n.neigh=j, num.sam=sam.size)
                 TMP <- Obs.distrib$seeds1
             }else{
-                Obs.distrib<-Oempdegreedistrib(net,n.seeds=i,n.neigh=j,num.sam=sam.size, seeds=NULL)
+                Obs.distrib<-Oempdegreedistrib(net, n.seeds=i,n.neigh=j, num.sam=sam.size, seeds=NULL)
             }
             Oparam<-OparametersEst(Obs.distrib)
-            #B.distrib<-Bempdegreedistrib(Obs.distrib, num.sam=sam.size,n.boot=n.boot)
+            #B.distrib<-bootdeg(Obs.distrib, num.sam=sam.size,n.boot=n.boot)
             #return(B.distrib)
             #browser()
-            tmp <- Bempdegreedistrib(Obs.distrib, num.sam=sam.size,n.boot=n.boot)$empd[[1]]
+            tmp <- bootdeg(Obs.distrib, num.sam=sam.size,n.boot=n.boot)$empd[[1]]
             Obs.distrib.out[[counter]] <-Obs.distrib
             w.p0s[[counter]] <- tmp$empd.nw.p0sEkb
             nw.p0sEkb[[counter]] <- tmp$empd.nw.p0sEks
@@ -34,28 +34,11 @@ B.EmpDistrib <-function(net,n.seeds,n.neigh,sam.size=1,n.boot,otherNetParameters
     return(list(Obs.distrib.out=Obs.distrib.out, w.p0s=w.p0s, nw.p0sEkb=nw.p0sEkb, nw.p0sEks=nw.p0sEks))
 }
 
-kmax_in_LSMI <- function(bootEmpD){
-      res <- numeric()
-      for(i in 1:length(bootEmpD[[1]])){
-            res <- c(res,max(bootEmpD[[1]][[i]]$values[[1]]))
-      }
-      res
-}
-
 estimable_k <- function(bootEmpD){
-      w.p0s <- intersect(dimnames(bootEmpD$w.p0s[[1]])[[2]],dimnames(bootEmpD$w.p0s[[2]])[[2]])
+      res <- intersect(dimnames(bootEmpD$w.p0s[[1]])[[2]],dimnames(bootEmpD$w.p0s[[2]])[[2]])
       for(i in 3:length(bootEmpD$w.p0s)){
-            w.p0s <- intersect(w.p0s,dimnames(bootEmpD$w.p0s[[i]])[[2]])
+            res <- intersect(res,dimnames(bootEmpD$w.p0s[[i]])[[2]])
       }
-      nw.p0sEkb <- intersect(dimnames(bootEmpD$nw.p0sEkb[[1]])[[2]],dimnames(bootEmpD$nw.p0sEkb[[2]])[[2]])
-      for(i in 3:length(bootEmpD$nw.p0sEkb)){
-            nw.p0sEkb <- intersect(nw.p0sEkb,dimnames(bootEmpD$nw.p0sEkb[[i]])[[2]])
-      }
-      nw.p0sEks <- intersect(dimnames(bootEmpD$nw.p0sEks[[1]])[[2]],dimnames(bootEmpD$nw.p0sEks[[2]])[[2]])
-      for(i in 3:length(bootEmpD$nw.p0sEks)){
-            nw.p0sEks <- intersect(nw.p0sEks,dimnames(bootEmpD$nw.p0sEks[[i]])[[2]])
-      }
-      res <- list(w.p0s, nw.p0sEkb, nw.p0sEks)
       res
 }
 
@@ -127,14 +110,15 @@ p_k_cross_validation <- function(networks, distrib, param,
 
 
 
-
+# make arrays for fallins (dim:c(length(n.seeds), length(n.neigh), kmax,2))
       fallin.trudDist.w.p0s <- fallin.trudDist.nw.p0sEkb <- fallin.trudDist.nw.p0sEks <- array(0, c(length(n.seeds), length(n.neigh), kmax,2))
+      # make arrays for CI-widths (dim: c(length(n.seeds), length(n.neigh), MC, kmax))
       confidenceIntervalWidth.w.p0s <- confidenceIntervalWidth.nw.p0sEkb <- confidenceIntervalWidth.nw.p0sEks <- array(NA, c(length(n.seeds), length(n.neigh), MC, kmax))
+      estimable_k_from_boot <- 1:kmax
       for (mc in 1:MC){#mc=1
-
-            bootEmpD=B.EmpDistrib(networks[[mc]],n.seeds,n.neigh,sam.size,n.boot)
-            if (kmax > min(kmax_in_LSMI(bootEmpD)))
-                  kmax <-  min(kmax_in_LSMI(bootEmpD))
+      #make bootEmpD list for seed-wave combos
+        bootEmpD=B.EmpDistrib(networks[[mc]],n.seeds,n.neigh,sam.size,n.boot)
+            estimable_k_from_boot <- intersect(estimable_k_from_boot,estimable_k(bootEmpD))
             used <- unique(combineLSMINodes(bootEmpD))
             count <- 1
             fallin.proxy.w.p0s <- fallin.proxy.nw.p0sEkb <- fallin.proxy.nw.p0sEks <- array(0, c(length(n.seeds), length(n.neigh), proxyRep, kmax))
@@ -193,27 +177,29 @@ p_k_cross_validation <- function(networks, distrib, param,
 
             if (is.list(opti.cover.w.p0s)){
 
-                  for(kDegree in 1:kmax){
-                        sortedOpti.cover.w.p0s <- sort_tied_opti(opti.cover.w.p0s[[kDegree]])
+                  for(kDegree in estimable_k_from_boot){
+                    kDegree_num <- as.numeric(kDegree)
+                        sortedOpti.cover.w.p0s <- sort_tied_opti(opti.cover.w.p0s[[kDegree_num]])
                         #browser()
                         optimalSeedNDX <-  sortedOpti.cover.w.p0s[1, ][1]
                         optimalNeighNDX <- sortedOpti.cover.w.p0s[1, ][2]
                         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
                         CI <- quantile(bootEmpD$w.p0s[[listLocation]][, kDegree], probs=c(0.025, 0.975))
-                        fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX,kDegree,2]=fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree, 2]+1
-                        if((CI[1]<trueDist[kDegree]) & (trueDist[kDegree]<CI[2])){
-                              fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree, 1]=fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree, 1]+1
+                        fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX,kDegree_num,2]=fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree_num, 2]+1
+                        if((CI[1]<trueDist[kDegree_num]) & (trueDist[kDegree_num]<CI[2])){
+                              fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree_num, 1]=fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree_num, 1]+1
                         }
                   }
             }else if(is.matrix(opti.cover.w.p0s)){
-                  for(kDegree in 1:kmax){
-                        optimalSeedNDX = opti.cover.w.p0s[1, kDegree]
-                        optimalNeighNDX <- opti.cover.w.p0s[2, kDegree]
+              for(kDegree in estimable_k_from_boot){
+                kDegree_num <- as.numeric(kDegree)
+                        optimalSeedNDX = opti.cover.w.p0s[1, kDegree_num]
+                        optimalNeighNDX <- opti.cover.w.p0s[2, kDegree_num]
                         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
                         CI <- quantile(bootEmpD$w.p0s[[listLocation]][, kDegree], probs=c(0.025, 0.975))
-                        fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree, 2]=fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree, 2]+1
-                        if((CI[1]<trueDist[kDegree]) & (trueDist[kDegree]<CI[2])){
-                              fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree, 1]=fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree, 1]+1
+                        fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree_num, 2]=fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree_num, 2]+1
+                        if((CI[1]<trueDist[kDegree_num]) & (trueDist[kDegree_num]<CI[2])){
+                              fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree_num, 1]=fallin.trudDist.w.p0s[optimalSeedNDX, optimalNeighNDX, kDegree_num, 1]+1
                         }
                   }
             }else print("unknown data type output from optimal function")
@@ -223,26 +209,28 @@ p_k_cross_validation <- function(networks, distrib, param,
 
             if (is.list(opti.cover.nw.p0sEkb)){
 
-                  for(kDegree in 1:kmax){
-                        sortedOpti.cover.nw.p0sEkb <- sort_tied_opti(opti.cover.nw.p0sEkb[[kDegree]])
+              for(kDegree in estimable_k_from_boot){
+                kDegree_num <- as.numeric(kDegree)
+                        sortedOpti.cover.nw.p0sEkb <- sort_tied_opti(opti.cover.nw.p0sEkb[[kDegree_num]])
                         optimalSeedNDX <-  sortedOpti.cover.nw.p0sEkb[1, ][1]
                         optimalNeighNDX <- sortedOpti.cover.nw.p0sEkb[1, ][2]
                         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
                         CI <- quantile(bootEmpD$nw.p0sEkb[[listLocation]][,kDegree], probs=c(0.025, 0.975))
-                        fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree,2]=fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree,2]+1
-                        if((CI[1]<trueDist[kDegree]) & (trueDist[kDegree]<CI[2])){
-                              fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree,1]=fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree,1]+1
+                        fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree_num,2]=fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree_num,2]+1
+                        if((CI[1]<trueDist[kDegree_num]) & (trueDist[kDegree_num]<CI[2])){
+                              fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree_num,1]=fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree_num,1]+1
                         }
                   }
             }else if(is.matrix(opti.cover.nw.p0sEkb)){
-                  for(kDegree in 1:kmax){
-                        optimalSeedNDX = opti.cover.nw.p0sEkb[1,kDegree]
-                        optimalNeighNDX <- opti.cover.nw.p0sEkb[2,kDegree]
+              for(kDegree in estimable_k_from_boot){
+                kDegree_num <- as.numeric(kDegree)
+                        optimalSeedNDX = opti.cover.nw.p0sEkb[1,kDegree_num]
+                        optimalNeighNDX <- opti.cover.nw.p0sEkb[2,kDegree_num]
                         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
                         CI <- quantile(bootEmpD$nw.p0sEkb[[listLocation]][,kDegree], probs=c(0.025, 0.975))
-                        fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree,2]=fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree,2]+1
-                        if((CI[1]<trueDist[kDegree]) & (trueDist[kDegree]<CI[2])){
-                              fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree,1]=fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree,1]+1
+                        fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree_num,2]=fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree_num,2]+1
+                        if((CI[1]<trueDist[kDegree_num]) & (trueDist[kDegree_num]<CI[2])){
+                              fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree_num,1]=fallin.trudDist.nw.p0sEkb[optimalSeedNDX, optimalNeighNDX,kDegree_num,1]+1
                         }
                   }
             }else print("unknown data type output from optimal function")
@@ -250,26 +238,28 @@ p_k_cross_validation <- function(networks, distrib, param,
 
             if (is.list(opti.cover.nw.p0sEks)){
 
-                  for(kDegree in 1:kmax){
-                        sortedOpti.cover.nw.p0sEks <- sort_tied_opti(opti.cover.nw.p0sEks[[kDegree]])
+              for(kDegree in estimable_k_from_boot){
+                kDegree_num <- as.numeric(kDegree)
+                        sortedOpti.cover.nw.p0sEks <- sort_tied_opti(opti.cover.nw.p0sEks[[kDegree_num]])
                         optimalSeedNDX <-  sortedOpti.cover.nw.p0sEks[1, ][1]
                         optimalNeighNDX <- sortedOpti.cover.nw.p0sEks[1, ][2]
                         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
                         CI <- quantile(bootEmpD$nw.p0sEks[[listLocation]][,kDegree], probs=c(0.025, 0.975))
-                        fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree,2]=fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree,2]+1
-                        if((CI[1]<trueDist[kDegree]) & (trueDist[kDegree]<CI[2])){
-                              fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree,1]=fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree,1]+1
+                        fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree_num,2]=fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree_num,2]+1
+                        if((CI[1]<trueDist[kDegree_num]) & (trueDist[kDegree_num]<CI[2])){
+                              fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree_num,1]=fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree_num,1]+1
                         }
                   }
             }else if(is.matrix(opti.cover.nw.p0sEks)){
-                  for(kDegree in 1:kmax){
-                        optimalSeedNDX = opti.cover.nw.p0sEks[1,kDegree]
-                        optimalNeighNDX <- opti.cover.nw.p0sEks[2,kDegree]
+              for(kDegree in estimable_k_from_boot){
+                kDegree_num <- as.numeric(kDegree)
+                        optimalSeedNDX = opti.cover.nw.p0sEks[1,kDegree_num]
+                        optimalNeighNDX <- opti.cover.nw.p0sEks[2,kDegree_num]
                         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
                         CI <- quantile(bootEmpD$nw.p0sEks[[listLocation]][,kDegree], probs=c(0.025, 0.975))
-                        fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree,2]=fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree,2]+1
-                        if((CI[1]<trueDist[kDegree]) & (trueDist[kDegree]<CI[2])){
-                              fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree,1]=fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree,1]+1
+                        fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree_num,2]=fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree_num,2]+1
+                        if((CI[1]<trueDist[kDegree_num]) & (trueDist[kDegree_num]<CI[2])){
+                              fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree_num,1]=fallin.trudDist.nw.p0sEks[optimalSeedNDX, optimalNeighNDX,kDegree_num,1]+1
                         }
                   }
             }else print("unknown data type output from optimal function")
