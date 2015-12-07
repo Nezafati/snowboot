@@ -3,7 +3,7 @@ Type: Package
 Title: Network Analysis with Non-Parametric Methods that
     Emerge from Snowball and Bootstrap Sampling
 Version: 0.5.0
-Date: 2015-12-6
+Date: 2015-12-7
 Author: Leticia Ramirez-Ramirez, Kusha Nezafati, Vyacheslav Lyubchich, Yulia Gel
 Maintainer: Kusha Nezafati <kusha.nezafati@gmail.com>
 Description: Functions for analysis of network objects, which are imported or
