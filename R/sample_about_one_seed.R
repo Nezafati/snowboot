@@ -7,6 +7,9 @@
 #' \code{\link{LSMI}.}
 #'
 #' @param seed0 \code{num}. Id of a seed to be sampled around.
+#' @references Thompson, M. E., Ramirez Ramirez, L. L., Lyubchich, V. and
+#'  Gel, Y. R. (2015), Using the bootstrap for statistical inference
+#'  on random graphs. Can J Statistics. doi: 10.1002/cjs.11271
 #' @inheritParams Oempdegreedistrib
 #' @return a list containing:
 #'    \item{seed}{seed0 \code{num}. Id of a seed to be sampled around.}
@@ -17,6 +20,9 @@
 #'    \item{nodes.waves}{A list of length \code{n.neigh} containing vectors where
 #'          each vector reports numeric ids of nodes sampled in a particular wave.}
 #' @export
+#' @examples
+#' net <- artificial_networks[[1]]
+#' a <- sample_about_one_seed(net = net, seed0 = 1, n.neigh = 2)
 sample_about_one_seed <- function(net, seed0, n.neigh = 1) {
 
       sampleN <- nodes <- seed0

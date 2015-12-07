@@ -1,21 +1,24 @@
-#' Bootstraping Empirical Degree Distribution
+#' Create a "Network" Object from an igraph Object
 #'
-#' This function delivers a boostrap estimate of network degree distribution
-#' based on a LSMI sample. Default is one bootstrap replication.
+#' This function will take an igraph object and output a "network" which is the
+#' compatible object for using snowboot functions.
 #'
-#' @param in_graph an igraph object. To create igraph objects from field data,
+#' @param in_graph An igraph object. To create igraph objects from field data,
 #'      see \code{\link[igraph]{graph_from_edgelist}},
 #'      \code{\link[igraph]{graph_from_data_frame}},
 #'      \code{\link[igraph]{graph_from_adjacency_matrix}}, or
 #'      \code{\link[igraph]{read_graph}}.
 #' @references \url{http://igraph.org/}
-#' @return a list that contain elements:
-#'    \item{edges}{the edgelist of the network. A two column
+#' @return A list that contain elements:
+#'    \item{edges}{The edgelist of the network. A two column
 #'      \code{matrix} where each row is an edge.}
-#'    \item{degree}{the degree sequence of the network, which is
+#'    \item{degree}{The degree sequence of the network, which is
 #'      an \code{integer} vector of length n.}
-#'    \item{n}{the network order.}
+#'    \item{n}{The network order.}
 #' @export
+#' @examples
+#' hex_ring <- igraph::make_ring(6, directed = FALSE, mutual = FALSE, circular = TRUE)
+#' net <- igraph_to_network(hex_ring)
 igraph_to_network <- function(in_graph){
       if(igraph::is.directed(in_graph))
             stop('Only undirected graphs are supported at the moment.

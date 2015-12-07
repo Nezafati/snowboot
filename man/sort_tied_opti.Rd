@@ -10,6 +10,10 @@ sort_tied_opti(inMat)
 \arguments{
 \item{inMat}{is a matrix of tied seed-wave indices.}
 }
+\value{
+A matrix with rows such that the indices for the largest number of
+seeds (first column) for the lowest number of waves (second column) is on top.
+}
 \description{
 The function takes a matrix containing tied optimal seed-wave combinations
 from the training proxy and sorts the rows of this matrix so that the

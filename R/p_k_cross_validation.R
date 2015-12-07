@@ -69,6 +69,8 @@ closestCoverNDX <- function(x,coverage=.95){
 #' from the training proxy and sorts the rows of this matrix so that the
 #' largest number of seeds for the lowest number of waves is on top
 #' @param inMat is a matrix of tied seed-wave indices.
+#' @return A matrix with rows such that the indices for the largest number of
+#' seeds (first column) for the lowest number of waves (second column) is on top.
 sort_tied_opti <- function(inMat){
       if(dim(inMat)[1] == 1)
             return(inMat)

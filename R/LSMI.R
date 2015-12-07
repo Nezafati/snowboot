@@ -2,13 +2,16 @@
 #'
 #' The function will conduct snowball sampling.
 #' @inheritParams Oempdegreedistrib
+#' @references Thompson, M. E., Ramirez Ramirez, L. L., Lyubchich, V. and
+#'  Gel, Y. R. (2015), Using the bootstrap for statistical inference
+#'  on random graphs. Can J Statistics. doi: 10.1002/cjs.11271
 #' @return A list containing the following elements:
-#'    \item{seeds}{A \code{numeric} a vector containing the numerics ids of
+#'    \item{seeds}{A \code{numeric} a vector containing the numeric ids of
 #'          sampled seeds.}
-#'    \item{sampleN}{A \code{numeric} vector containg ids of the nodes from
+#'    \item{sampleN}{A \code{numeric} vector containing ids of the nodes from
 #'          the snowball sampling and the intial seeds' ids. This vector may have
 #'          duplicates, since the algorithm allows for multiple inclusions.}
-#'    \item{unodes}{a list of length \code{n.seeds} where each element is a
+#'    \item{unodes}{A list of length \code{n.seeds} where each element is a
 #'          \code{numeric} vector containing the seed's id and
 #'          the unique ids of all nodes that were snowball sampled from
 #'          that seed using \code{\link{sample_about_one_seed}}
@@ -20,12 +23,16 @@
 #'          numeric id's of the nodes reached in each respective wave from the
 #'          respective seed.}
 #' @export
+#' @examples
+#' net <- artificial_networks[[1]]
+#' a <- LSMI(net, n.seeds = 20, n.neigh = 2)
+
 LSMI <- function(net, n.seeds = 10, n.neigh = 1, seeds = NULL) {
 
       unodes <- nodes.waves <- as.list(rep(0, n.seeds))
       # Seed selection: is without replacement and at random
       if (is.null(seeds)) {
-            seed0 <- sort(sample(1:length(net$degree), n.seeds, rep = FALSE))
+            seed0 <- sort(sample(1:length(net$degree), n.seeds, replace = FALSE))
       } else {
             seed0 <- seeds
       }

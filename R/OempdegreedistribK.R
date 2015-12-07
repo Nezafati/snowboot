@@ -10,7 +10,7 @@ OempdegreedistribK <- function(net, n.seeds, n.neigh, num.sam, seeds) {
                                                                                                                               num.sam))
 
       ## -------the 'real' parameters in the network:-------##
-      real <- summary.net(net)
+      real <- summary_net(net)
       realdd <- real$realdd
       # rmeand<-real$mean(realdd) rquart<-real$rquart
       rfreq <- real$rfreq

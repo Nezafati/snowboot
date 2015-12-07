@@ -2,9 +2,14 @@
 #'
 #' This function provides summary statistics of a bootstrap degree
 #' distribution.
-#' @param outBootdeg a list that is the output of \code{\link{bootdeg}}
-#' @return a list consisting of:
-#'    \item{mean}{an array of dimension \code{length(outBootdeg$num.sam) x
+#' @param outBootdeg A list that is the output of \code{\link{bootdeg}}
+#' @references Efron, B. (1979). Bootstrap methods: another look at the
+#'  jackknife. The annals of Statistics, 1-26.
+#' @references Thompson, M. E., Ramirez Ramirez, L. L., Lyubchich, V. and
+#'  Gel, Y. R. (2015), Using the bootstrap for statistical inference
+#'  on random graphs. Can J Statistics. doi: 10.1002/cjs.11271
+#' @return A list consisting of:
+#'    \item{mean}{An array of dimension \code{length(outBootdeg$num.sam) x
 #'          outBootdeg$n.boot x 3}. The last dimension, of 3, is for the three
 #'          different methods of obtaining the empirical degree distribution
 #'          from \code{outBootdeg$empd}
@@ -12,7 +17,7 @@
 #'          The (i,j,k)-th element in the array is an estimate of mean degree for the
 #'          i-th LSMI sample, j-th bootstrap replication, and k-th empirical distribution
 #'          from \code{outBootdeg$empd}.}
-#'    \item{quartiles}{an array of dimension \code{length(outBootdeg$num.sam) x 3 x
+#'    \item{quartiles}{An array of dimension \code{length(outBootdeg$num.sam) x 3 x
 #'          outBootdeg$n.boot x 3}. The last dimension, of 3, is for the three
 #'          different methods of estimation from \code{outBootdeg$empd}
 #'          (see output empd from \code{\link{bootdeg}} for details). The second
@@ -20,7 +25,7 @@
 #'          The (i,j,k,l)-th element in the array is an estimate of j-th
 #'          quartile for the i-th LSMI sample, k-th bootstrap replication,
 #'          and l-th empirical distribution from \code{outBootdeg$empd}.}
-#'    \item{rfreq}{an array of dimension \code{length(outBootdeg$num.sam) x 5 x
+#'    \item{rfreq}{An array of dimension \code{length(outBootdeg$num.sam) x 5 x
 #'          outBootdeg$n.boot x 3}. The last dimension, of 3, is for the three
 #'          different methods of estimation from \code{outBootdeg$empd}
 #'          (see output empd from \code{\link{bootdeg}} for details.). The second
@@ -28,7 +33,7 @@
 #'          The (i,j,k,l)-th element in the array is the proportion of nodes
 #'          with degree j in the i-th LSMI sample, k-th bootstrap replication,
 #'          and l-th empirical distribution from \code{outBootdeg$empd}.}
-#'    \item{deciles}{an array of dimension \code{length(outBootdeg$num.sam) x 9 x
+#'    \item{deciles}{An array of dimension \code{length(outBootdeg$num.sam) x 9 x
 #'          outBootdeg$n.boot x 3}. The last dimension, of 3, is for the three
 #'          different methods of estimation from \code{outBootdeg$empd}
 #'          (see output empd from \code{\link{bootdeg}} for details.). The second
@@ -36,19 +41,24 @@
 #'          The (i,j,k,l)-th element in the array is an estimate of j-th
 #'          decile for the i-th LSMI sample, k-th bootstrap replication,
 #'          and l-th empirical distribution from \code{outBootdeg$empd}.}
-#'    \item{num.sam}{numeric indices corresponding to LSMI samples used for bootstrap.
+#'    \item{num.sam}{Numeric indices corresponding to LSMI samples used for bootstrap.
 #'          See value \code{num.sam} from \code{\link{bootdeg}}}
-#'    \item{seeds1}{a matrix of dimension \code{lenght(num.sam)} x \code{n.seeds} with
+#'    \item{seeds1}{A matrix of dimension \code{length(num.sam)} x \code{n.seeds} with
 #'          the numeric seed ids. Each row corresponds to one LSMI. The rows are
 #'          present in the same order as the ids in \code{num.sam}.
 #'          See value \code{seeds1} from \code{\link{bootdeg}}}
-#'    \item{nodes_of_LSMI}{a list of length \code{length(num.sam)} where each
+#'    \item{nodes_of_LSMI}{A list of length \code{length(num.sam)} where each
 #'          element is vector containing the numeric ids of the nodes sampled
 #'          using the respective LSMI. The elements are present in the same
 #'          order as the ids in \code{num.sam}.
 #'          Note: nodes_of_LSMI is unreported when n.neigh equals zero.
 #'          See value \code{nodes_of_LSMI} from \code{\link{bootdeg}}}
 #' @export
+#' @examples
+#' net <- artificial_networks[[1]]
+#' sam.out <- Oempdegreedistrib(net = net, n.seeds = 40, n.neigh = 1, num.sam = 1)
+#' outBootdeg <- bootdeg(sam.out = sam.out, n.boot = 50)
+#' a <- BparametersEst(outBootdeg)
 
 BparametersEst <- function(outBootdeg) {
       # outBootdeg is output of bootdeg

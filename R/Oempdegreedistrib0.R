@@ -2,12 +2,12 @@ Oempdegreedistrib0 <- function(net, n.seeds, n.neigh, num.sam, seeds) {
       p0.seeds.array <- Oempd <- values.array <- val.seeds.array <- samples <- as.list(rep(NA, num.sam))
       seeds1 <- matrix(NA, num.sam, n.seeds)
       ## -------the 'real' parameters in the network:-------##
-      real <- summary.net(net)
+      real <- summary_net(net)
       realdd <- real$realdd
       ## ---------------------------------------------------##
       for (m in 1:num.sam) {
             # if(m%%100==1)#cat('Obtaining empd of sample ',m,'\n')
-            neigh.seeds <- sort(sample(1:length(net$degree), n.seeds, rep = FALSE))  #n.neigh=0!!!!!!!
+            neigh.seeds <- sort(sample(1:length(net$degree), n.seeds, replace = FALSE))  #n.neigh=0!!!!!!!
             tab.seeds <- table(neigh.seeds)  #id seeds
             seeds1[m, ] <- neigh.seeds
             ###### degrees #####
