@@ -6,7 +6,7 @@ Version: 0.5.0
 Date: 2015-12-6
 Author: Leticia Ramirez-Ramirez, Kusha Nezafati, Vyacheslav Lyubchich, Yulia Gel
 Maintainer: Kusha Nezafati <kusha.nezafati@gmail.com>
-Description: This package analyzes network objects, which are imported or
+Description: Functions for analysis of network objects, which are imported or
     simulated by the package. The non-parametric methods of analysis center
     around snowball and bootstrap sampling.
 Depends:
