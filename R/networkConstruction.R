@@ -79,7 +79,7 @@ newrexp <- function(n, p) {
     if (n != length(p))
       stop("dimensions do not match in newrexp")
     a <- rep(0, n)
-    a[p > 0] <- rexp(length(p[p > 0]), p[p > 0])
+    a[p > 0] <- stats::rexp(length(p[p > 0]), p[p > 0])
     a[p == 0] <- Inf
   }
   a
