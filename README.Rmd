@@ -13,3 +13,17 @@ knitr::opts_chunk$set(
   fig.path = "README-"
 )
 ```
+
+# snowboot
+
+snowboot is a package for non-parameteric analysis of network data. The methods 
+are centered around snowball sampling and bootstrap estimation.
+
+## Installation
+
+Get the released version from CRAN:
+
+```{r, eval=FALSE}
+install.packages("snowboot")
+```
+
