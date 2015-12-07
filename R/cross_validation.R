@@ -92,7 +92,7 @@ sort_tied_opti <- function(inMat){
 #' A function that uses cross-validation to select seed-wave combination for
 #' estimation of a degree's frequency.
 #'
-#' The function’s inputs are a network, a vector of possible seed sample-sizes,
+#' The function's inputs are a network, a vector of possible seed sample-sizes,
 #' a vector of possible waves, and a few tuning parameters. The output will
 #' contain the best seed-wave combination for each degree and the width of the
 #' 95% bootstrap confidence intervals at each degree for
