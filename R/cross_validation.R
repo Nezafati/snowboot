@@ -155,15 +155,15 @@ cross_validation <- function(network, n.seeds, n.neigh, n.boot,
       for(j in 1:length(n.neigh)){
         # j=1
         # build proxy from bootEmpD$Obs.empd.out
-        tmp.w.p0s <- apply(bootEmpD$w.p0s[[count]], 2, quantile, probs=c(0.025, 0.975))
+        tmp.w.p0s <- apply(bootEmpD$w.p0s[[count]], 2, stats::quantile, probs=c(0.025, 0.975))
         tmp.w.p0s <- tmp.w.p0s[,match(1:kmax,dimnames(tmp.w.p0s)[[2]], nomatch = NA)]
         dimnames(tmp.w.p0s)[[2]] <- 1:kmax
 
-        tmp.nw.p0sEkb <- apply(bootEmpD$nw.p0sEkb[[count]], 2, quantile, probs=c(0.025, 0.975))
+        tmp.nw.p0sEkb <- apply(bootEmpD$nw.p0sEkb[[count]], 2, stats::quantile, probs=c(0.025, 0.975))
         tmp.nw.p0sEkb <- tmp.nw.p0sEkb[,match(1:kmax,dimnames(tmp.nw.p0sEkb)[[2]], nomatch = NA)]
         dimnames(tmp.nw.p0sEkb)[[2]] <- 1:kmax
 
-        tmp.nw.p0sEks <- apply(bootEmpD$nw.p0sEks[[count]], 2, quantile, probs=c(0.025, 0.975))
+        tmp.nw.p0sEks <- apply(bootEmpD$nw.p0sEks[[count]], 2, stats::quantile, probs=c(0.025, 0.975))
         tmp.nw.p0sEks <- tmp.nw.p0sEks[,match(1:kmax,dimnames(tmp.nw.p0sEks)[[2]], nomatch = NA)]
         dimnames(tmp.nw.p0sEks)[[2]] <- 1:kmax
 
@@ -217,7 +217,7 @@ cross_validation <- function(network, n.seeds, n.neigh, n.boot,
         opti.seed_wave.w.p0s[1, kDegree] <- n.seeds[optimalSeedNDX]
         opti.seed_wave.w.p0s[2, kDegree] <- n.neigh[optimalNeighNDX]
         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
-        opti.CI.w.p0s[,kDegree] <- quantile(bootEmpD$w.p0s[[listLocation]][, kDegree], probs=c(0.025, 0.975))
+        opti.CI.w.p0s[,kDegree] <- stats::quantile(bootEmpD$w.p0s[[listLocation]][, kDegree], probs=c(0.025, 0.975))
 
       }
     }else if(is.matrix(opti.cover.w.p0s)){
@@ -228,7 +228,7 @@ cross_validation <- function(network, n.seeds, n.neigh, n.boot,
         opti.seed_wave.w.p0s[1, kDegree] <- n.seeds[optimalSeedNDX]
         opti.seed_wave.w.p0s[2, kDegree] <- n.neigh[optimalNeighNDX]
         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
-        opti.CI.w.p0s[,kDegree] <- quantile(bootEmpD$w.p0s[[listLocation]][, kDegree], probs=c(0.025, 0.975))
+        opti.CI.w.p0s[,kDegree] <- stats::quantile(bootEmpD$w.p0s[[listLocation]][, kDegree], probs=c(0.025, 0.975))
         }
     }else print("unknown data type output from optimal function")
 
@@ -244,7 +244,7 @@ cross_validation <- function(network, n.seeds, n.neigh, n.boot,
         opti.seed_wave.nw.p0sEkb[1, kDegree] <- n.seeds[optimalSeedNDX]
         opti.seed_wave.nw.p0sEkb[2, kDegree] <- n.neigh[optimalNeighNDX]
         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
-        opti.CI.nw.p0sEkb[,kDegree] <- quantile(bootEmpD$nw.p0sEkb[[listLocation]][, kDegree], probs=c(0.025, 0.975))
+        opti.CI.nw.p0sEkb[,kDegree] <- stats::quantile(bootEmpD$nw.p0sEkb[[listLocation]][, kDegree], probs=c(0.025, 0.975))
 
       }
     }else if(is.matrix(opti.cover.nw.p0sEkb)){
@@ -255,7 +255,7 @@ cross_validation <- function(network, n.seeds, n.neigh, n.boot,
         opti.seed_wave.nw.p0sEkb[1, kDegree] <- n.seeds[optimalSeedNDX]
         opti.seed_wave.nw.p0sEkb[2, kDegree] <- n.neigh[optimalNeighNDX]
         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
-        opti.CI.nw.p0sEkb[,kDegree] <- quantile(bootEmpD$nw.p0sEkb[[listLocation]][, kDegree], probs=c(0.025, 0.975))
+        opti.CI.nw.p0sEkb[,kDegree] <- stats::quantile(bootEmpD$nw.p0sEkb[[listLocation]][, kDegree], probs=c(0.025, 0.975))
       }
     }else print("unknown data type output from optimal function")
 
@@ -271,7 +271,7 @@ cross_validation <- function(network, n.seeds, n.neigh, n.boot,
         opti.seed_wave.nw.p0sEks[1, kDegree] <- n.seeds[optimalSeedNDX]
         opti.seed_wave.nw.p0sEks[2, kDegree] <- n.neigh[optimalNeighNDX]
         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
-        opti.CI.nw.p0sEks[,kDegree] <- quantile(bootEmpD$nw.p0sEks[[listLocation]][, kDegree], probs=c(0.025, 0.975))
+        opti.CI.nw.p0sEks[,kDegree] <- stats::quantile(bootEmpD$nw.p0sEks[[listLocation]][, kDegree], probs=c(0.025, 0.975))
 
       }
     }else if(is.matrix(opti.cover.nw.p0sEks)){
@@ -282,7 +282,7 @@ cross_validation <- function(network, n.seeds, n.neigh, n.boot,
         opti.seed_wave.nw.p0sEks[1, kDegree] <- n.seeds[optimalSeedNDX]
         opti.seed_wave.nw.p0sEks[2, kDegree] <- n.neigh[optimalNeighNDX]
         listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
-        opti.CI.nw.p0sEks[,kDegree] <- quantile(bootEmpD$w.p0s[[listLocation]][, kDegree], probs=c(0.025, 0.975))
+        opti.CI.nw.p0sEks[,kDegree] <- stats::quantile(bootEmpD$w.p0s[[listLocation]][, kDegree], probs=c(0.025, 0.975))
       }
     }else print("unknown data type output from optimal function")
     CI_selected_seed_wave <- list(opti.CI.w.p0s = opti.CI.w.p0s,

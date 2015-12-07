@@ -148,8 +148,8 @@ rztpois <- function(n, lambda) {
   # Function so simulate random numbers from: Zero-truncated Poisson distribution
   # P(N=k)=(lambda^k*exp^{-lambda})/(k!*(1-e^{-lambda})), for k=1,2,3,..
   maxval <- max(50, lambda + 10 * sqrt(lambda))
-  cdf <- (cumsum(dpois(1:maxval, lambda)))/(1 - exp(-lambda))
-  cut(runif(n), unique(c(0, cdf, 1)), labels = FALSE, right = FALSE)
+  cdf <- (cumsum(stats::dpois(1:maxval, lambda)))/(1 - exp(-lambda))
+  cut(stats::runif(n), unique(c(0, cdf, 1)), labels = FALSE, right = FALSE)
 }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
 
@@ -160,7 +160,7 @@ rlog <- function(n, param) {
   if (length(param) != 1 | param < 0)
     stop("the Logarithmic parameter must be a positive real number") else {
     pdf.s <- (1:500)^(-1) * exp(-(1:500)/param)/(-log(1 - exp(-1/param)))
-    sim <- cut(runif(n), unique(c(0, cumsum(pdf.s))), labels = FALSE, right = FALSE)
+    sim <- cut(stats::runif(n), unique(c(0, cumsum(pdf.s))), labels = FALSE, right = FALSE)
   }
   sim
 }
@@ -172,7 +172,7 @@ rpower.law <- function(n, param) {
   if (length(param) != 1 | param <= 1)
     stop("the power law parameter must be a real number grater than one") else {
     pdf.s <- (1:1000)^(-param) * (VGAM::zeta(param))^(-1)
-    sim <- cut(runif(n), unique(c(0, cumsum(pdf.s))), labels = FALSE, right = FALSE)
+    sim <- cut(stats::runif(n), unique(c(0, cumsum(pdf.s))), labels = FALSE, right = FALSE)
   }
   sim
 }
@@ -196,7 +196,7 @@ rpoly.log <- function(n, param) {
   # with: c=(li_lambda(e^{-1/lambda})) param=c(delta,lambda)
   if (length(param) != 2)
     stop("the Gutenber-Richter law parameter is wrong") else {
-          sim <- cut(runif(n), unique(c(0, cumsum(dpoly.log(1:1000, param)))),
+          sim <- cut(stats::runif(n), unique(c(0, cumsum(dpoly.log(1:1000, param)))),
                      labels = FALSE, right = FALSE)
     }
   sim
@@ -228,13 +228,13 @@ sdegree <- function(n, distrib, param = 0) {
              and the sum of degree must to be even")
       degree <- param
     } else if (distrib == "pois")
-      degree <- rpois(n, param) else if (distrib == "ztpois")
+      degree <- stats::rpois(n, param) else if (distrib == "ztpois")
       degree <- rztpois(n, param) else if (distrib == "geom")
-      degree <- rgeom(n, 1/(param + 1))  # sometimes called exponential graph.
+      degree <- stats::rgeom(n, 1/(param + 1))  # sometimes called exponential graph.
                                          # param is then the expected value
  else if (distrib == "ztgeom")
-      degree <- rgeom(n, 1/(param + 1)) + 1 else if (distrib == "nbinom" && length(param) == 2)
-      degree <- rnbinom(size = param[1], prob = param[2]) else if (distrib == "poly.log")
+      degree <- stats::rgeom(n, 1/(param + 1)) + 1 else if (distrib == "nbinom" && length(param) == 2)
+      degree <- stats::rnbinom(size = param[1], prob = param[2]) else if (distrib == "poly.log")
       degree <- rpoly.log(n, param) else if (distrib == "logarithmic")
       degree <- rlog(n, param) else if (distrib == "power.law")
       degree <- rpower.law(n, param) else if (distrib == "full")

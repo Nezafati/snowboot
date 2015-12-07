@@ -38,12 +38,12 @@ bootCI <- function(outBootdeg, bootstrap_mean=T, lower_bound = 0.025, upper_boun
                      FUN <- function(x) {
                        lapply(x,
                               FUN <- function(df)
-                                apply(df, 2, quantile, c(lower_bound, upper_bound)))})
+                                apply(df, 2, stats::quantile, c(lower_bound, upper_bound)))})
   mean_CI <- lapply(outBootdeg$empd,
                     FUN <- function(x) {
                       lapply(x,
                              FUN <- function(df) {
-                               quantile(bootmeans_from_bootdegdistrib(df),
+                               stats::quantile(bootmeans_from_bootdegdistrib(df),
                                         c(lower_bound, upper_bound))
                                })
                       })

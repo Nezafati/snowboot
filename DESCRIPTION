@@ -15,5 +15,6 @@ License: GPL-3
 LazyData: TRUE
 Imports:
     VGAM,
-    igraph
+    igraph,
+    stats
 RoxygenNote: 5.0.1
