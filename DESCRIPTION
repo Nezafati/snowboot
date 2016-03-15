@@ -9,12 +9,14 @@ Maintainer: Kusha Nezafati <kusha.nezafati@gmail.com>
 Description: Functions for analysis of network objects, which are imported or
     simulated by the package. The non-parametric methods of analysis center
     around snowball and bootstrap sampling.
-Depends:
+Depends: 
     R (>= 3.2.2)
 License: GPL-3
 LazyData: TRUE
-Imports:
+Imports: 
     VGAM,
     igraph,
-    stats
+    stats,
+    Rcpp
 RoxygenNote: 5.0.1
+LinkingTo: Rcpp
