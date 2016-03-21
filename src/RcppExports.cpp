@@ -5,15 +5,14 @@
 
 using namespace Rcpp;
 
-// get_density_function
-NumericVector get_density_function(IntegerMatrix m1, int N);
-RcppExport SEXP snowboot_get_density_function(SEXP m1SEXP, SEXP NSEXP) {
+// timesTwo
+NumericVector timesTwo(NumericVector x);
+RcppExport SEXP snowboot_timesTwo(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< IntegerMatrix >::type m1(m1SEXP);
-    Rcpp::traits::input_parameter< int >::type N(NSEXP);
-    __result = Rcpp::wrap(get_density_function(m1, N));
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    __result = Rcpp::wrap(timesTwo(x));
     return __result;
 END_RCPP
 }
