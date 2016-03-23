@@ -5,9 +5,5 @@
 ## R CMD check results
 There were no ERRORs or WARNINGs.
 
-There is 1 NOTE:
-
-* New submission.
-
 ## Downstream dependencies
 Currently, there are no downstream dependencies for this package.
