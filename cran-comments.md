@@ -7,3 +7,11 @@ There were no ERRORs or WARNINGs.
 
 ## Downstream dependencies
 Currently, there are no downstream dependencies for this package.
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Revised the DESCRIPTION title.
+
+* Revised the object documentation.
+
+* Linked with Rcpp
