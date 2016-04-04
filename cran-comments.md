@@ -14,4 +14,6 @@ This is a resubmission. In this version I have:
 
 * Revised the object documentation.
 
-* Linked with Rcpp
+* Linked with Rcpp.
+
+* Added new bootstrap method, vertex bootstrap.

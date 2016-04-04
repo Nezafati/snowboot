@@ -5,14 +5,15 @@
 
 using namespace Rcpp;
 
-// timesTwo
-NumericVector timesTwo(NumericVector x);
-RcppExport SEXP snowboot_timesTwo(SEXP xSEXP) {
+// vertboot_matrix_rcpp
+IntegerMatrix vertboot_matrix_rcpp(IntegerMatrix m1, IntegerVector blist);
+RcppExport SEXP snowboot_vertboot_matrix_rcpp(SEXP m1SEXP, SEXP blistSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    __result = Rcpp::wrap(timesTwo(x));
+    Rcpp::traits::input_parameter< IntegerMatrix >::type m1(m1SEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type blist(blistSEXP);
+    __result = Rcpp::wrap(vertboot_matrix_rcpp(m1, blist));
     return __result;
 END_RCPP
 }
