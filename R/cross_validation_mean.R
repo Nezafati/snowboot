@@ -1,16 +1,12 @@
-B.EmpDistrib <-function(net,n.seeds,n.neigh,sam.size=1,n.boot,otherNetParameters=FALSE){
+B.EmpDistrib <-function(net, n.seeds, n.neigh, sam.size=1, n.boot,
+                        method = "w", otherNetParameters=FALSE){
   #sam.size (==1 for LSMI1) is the number of different samples taken from the network for each i and j
   #otherNetParameters is true if intervals and fallins for the rest of the parmeters
   #  (other than mean) are required.
-  Obs.distrib.out <- w.p0s <- nw.p0sEkb <- nw.p0sEks <- as.list(rep(NA, length(n.seeds)*length(n.neigh)))
+  Obs.distrib.out <- empd <- as.list(rep(NA, length(n.seeds)*length(n.neigh)))
   counter <- 1
   for(i in n.seeds){
     for(j in n.neigh){
-
-      if(j==0){
-        n.dist <- 1
-        # ^ n.dist is the number of different emp distr.
-      }else{n.dist<-3}
 
       if(j==0){
         Obs.distrib<-Oempdegreedistrib(net, n.seeds=i, n.neigh=j, num.sam=sam.size)
@@ -22,16 +18,14 @@ B.EmpDistrib <-function(net,n.seeds,n.neigh,sam.size=1,n.boot,otherNetParameters
       #B.distrib<-bootdeg(Obs.distrib, num.sam=sam.size,n.boot=n.boot)
       #return(B.distrib)
       #browser()
-      tmp <- bootdeg(Obs.distrib, num.sam=sam.size,n.boot=n.boot)$empd[[1]]
+      tmp <- bootdeg(Obs.distrib, num.sam=sam.size,n.boot=n.boot, method = method)$empd[[1]]
       Obs.distrib.out[[counter]] <-Obs.distrib
-      w.p0s[[counter]] <- tmp$empd.w.p0s
-      nw.p0sEkb[[counter]] <- tmp$empd.nw.p0sEkb
-      nw.p0sEks[[counter]] <- tmp$empd.nw.p0sEks
+      empd[[counter]] <- tmp
       counter <- counter+1
     }
     #return(B.distrib)
   }
-  return(list(Obs.distrib.out=Obs.distrib.out, w.p0s=w.p0s, nw.p0sEkb=nw.p0sEkb, nw.p0sEks=nw.p0sEks))
+  return(list(Obs.distrib.out=Obs.distrib.out, empd = empd))
 }
 
 
@@ -41,13 +35,14 @@ combineLSMINodes <- function(bootEmpD){
   nodes <- NULL
   for(i in 1:length(bootEmpD$Obs.distrib.out)){
     if("nodes_of_LSMI"%in%names(bootEmpD$Obs.distrib.out[[i]])){
-      tmp=bootEmpD$Obs.distrib.out[[i]]$unodes
+      tmp=bootEmpD$Obs.distrib.out[[i]]$nodes_of_LSMI
     } else tmp=bootEmpD$Obs.distrib.out[[i]]$seeds1
     nodes=c(nodes,tmp)
   }
   unlist(nodes)
 }
-closestCoverNDX <- function(x,coverage=.95){
+closestCoverNDX <- function(x, alpha=alpha){
+  coverage <- 1-alpha
   which(abs(x-coverage)==min(abs(x-coverage)),arr.ind=T)
 }
 
@@ -106,88 +101,58 @@ sort_tied_opti <- function(inMat){
 #' @param n.neigh A numeric vector for the different waves to use
 #'  in cross-validation.
 #' @param n.boot The number of bootstrap sample.
-#' @param kmax The largest degree to preform cross-validation on.
+#' @param method Can be either "w" for weighted bootstrap or "nw" for
+#'    non-weighted bootstrap. "w" is recommended and set as the default method.
 #' @param proxyRep The number of time to sample a proxy. Default is 19.
 #' @param proxyOrder The size of the proxy sample. Default is 30.
 #' @return A list consisting of
-#'  \item{selected_seed_wave}{A list of 3 matrices (one per estimation method.
-#'    See supporting documentation \code{\link{bootdeg}}). Each matrix provides
+#'  \item{selected_seed_wave}{A matrices that provides
 #'    the best seed-wave combinations (obtained via cross-validation) for
 #'    the respective estimation method.}
-#'  \item{selected_seed_wave}{A list of 3 matrices (one per estimation method.
-#'    See supporting documentation \code{\link{bootdeg}}). Each matrix provides
-#'    the 95 percent bootstrap confidence intervals for the estimated degree frequency
+#'  \item{selected_seed_wave}{A vector of length 2 that provides
+#'    the bootstrap confidence intervals for the estimated mean degree
 #'    using the best seed-wave combinations (see above).}
 #' @export
 #' @examples
 #' net <- artificial_networks[[1]]
 #' a <- cross_validation_mean(network = net, n.seeds = c(10, 20, 30), n.neigh = c(1, 2),
-#'  n.boot = 200)
+#'  n.boot = 200, method = "w")
 
 cross_validation_mean <- function(network, n.seeds, n.neigh, n.boot,
-                             proxyRep = 19, proxyOrder = 30){
+                             proxyRep = 19, proxyOrder = 30, method = "w", alpha = .05){
   sam.size = 1
   n.seeds <- sort(n.seeds)
   n.neigh <- sort(n.neigh)
   net_order <- network$n
-    #make bootEmpD list for seed-wave combos
-    bootEmpD=B.EmpDistrib(net = network, n.seeds = n.seeds, n.neigh = n.neigh,
-                          sam.size = sam.size, n.boot = n.boot)
-    used <- unique(combineLSMINodes(bootEmpD))
-    count <- 1
-    fallin.proxy.w.p0s <- fallin.proxy.nw.p0sEkb <- fallin.proxy.nw.p0sEks <-
-      array(0, c(length(n.seeds), length(n.neigh), proxyRep))
-    for(i in 1:length(n.seeds)){
+  #make bootEmpD list for seed-wave combos
+  bootEmpD <- B.EmpDistrib(net = network, n.seeds = n.seeds, n.neigh = n.neigh,
+                          sam.size = sam.size, n.boot = n.boot, method = method)
+  used <- unique(combineLSMINodes(bootEmpD))
+  count <- 1
+  fallin.proxy <- array(0, c(length(n.seeds), length(n.neigh), proxyRep))
+  for(i in 1:length(n.seeds)){
       # i=1
-      for(j in 1:length(n.neigh)){
+    for(j in 1:length(n.neigh)){
         # j=1
         # build proxy from bootEmpD$Obs.empd.out
-        tmp.w.p0s <- bootEmpD$w.p0s[[count]]
+        tmp <- bootEmpD$empd[[count]][[1]]
         values <- bootEmpD$Obs.distrib.out[[count]]$values[[1]]
-        rowSums(tmp.w.p0s*rep(values,each=n.boot))
-        tmp.w.p0s <- tmp.w.p0s[,match(1:kmax,dimnames(tmp.w.p0s)[[2]], nomatch = NA)]
-        dimnames(tmp.w.p0s)[[2]] <- 1:kmax
-
-        tmp.nw.p0sEkb <- apply(bootEmpD$nw.p0sEkb[[count]], 2, stats::quantile, probs=c(0.025, 0.975))
-        tmp.nw.p0sEkb <- tmp.nw.p0sEkb[,match(1:kmax,dimnames(tmp.nw.p0sEkb)[[2]], nomatch = NA)]
-        dimnames(tmp.nw.p0sEkb)[[2]] <- 1:kmax
-
-        tmp.nw.p0sEks <- apply(bootEmpD$nw.p0sEks[[count]], 2, stats::quantile, probs=c(0.025, 0.975))
-        tmp.nw.p0sEks <- tmp.nw.p0sEks[,match(1:kmax,dimnames(tmp.nw.p0sEks)[[2]], nomatch = NA)]
-        dimnames(tmp.nw.p0sEks)[[2]] <- 1:kmax
-
-        tmp.w.p0s[is.na(tmp.w.p0s)] <- 0
-        tmp.nw.p0sEkb[is.na(tmp.nw.p0sEkb)] <- 0
-        tmp.nw.p0sEks[is.na(tmp.nw.p0sEks)] <- 0
-
+        est_means <- rowSums(tmp*rep(values,each=n.boot))
+        bootCI_mean <- quantile(est_means, c((alpha/2), 1-(alpha/2)))
         for(k in 1:proxyRep){
           # k=1
           proxyNodes <- sample(used, proxyOrder, replace = F)
-          proxyDegrees <- network$degree[proxyNodes]
-          proxyPMF <- table(proxyDegrees)/proxyOrder
-          #trasform into vector with "0" where no obs occur
-          PMFvector <- as.vector(proxyPMF[match(1:kmax, dimnames(proxyPMF)[[1]], nomatch=NA)])
-          PMFvector[is.na(PMFvector)] <- 0
-          #take first 5
-          firstK <- PMFvector[1:kmax]
-
-          fallin.proxy.w.p0s[i, j, k, ] <- ((tmp.w.p0s[1, 1:kmax]<firstK) & (firstK<tmp.w.p0s[2, 1:kmax]))
-          fallin.proxy.nw.p0sEkb[i, j, k, ] <- ((tmp.nw.p0sEkb[1, 1:kmax]<firstK) & (firstK<tmp.nw.p0sEkb[2, 1:kmax]))
-          fallin.proxy.nw.p0sEks[i, j, k, ] <- ((tmp.nw.p0sEks[1, 1:kmax]<firstK) & (firstK<tmp.nw.p0sEks[2, 1:kmax]))
+          proxy_mean <- mean(network$degree[proxyNodes])
+          fallin.proxy[i, j, k] <- ((bootCI_mean[1]<proxy_mean) & (proxy_mean<bootCI_mean[2]))
         }
         count <- count+1
-      }
     }
-    coverage.proxy.w.p0s <- apply(fallin.proxy.w.p0s, c(1, 2, 4), mean, na.rm=T)
-    coverage.proxy.nw.p0sEkb <- apply(fallin.proxy.nw.p0sEkb, c(1, 2, 4), mean, na.rm=T)
-    coverage.proxy.nw.p0sEks <- apply(fallin.proxy.nw.p0sEks, c(1, 2, 4), mean, na.rm=T)
+  }
 
-    opti.cover.w.p0s <- apply(coverage.proxy.w.p0s, 3, closestCoverNDX)
-    opti.cover.nw.p0sEkb <- apply(coverage.proxy.nw.p0sEkb, 3, closestCoverNDX)
-    opti.cover.nw.p0sEks <- apply(coverage.proxy.nw.p0sEks, 3, closestCoverNDX)
-    #output Matrices
+  coverage.proxy <- apply(fallin.proxy, c(1, 2), mean, na.rm=T)
 
-    opti.CI.w.p0s <- opti.CI.nw.p0sEkb <- opti.CI.nw.p0sEks <-
+  #output Matrices
+  opti.CI.w.p0s <- opti.CI.nw.p0sEkb <- opti.CI.nw.p0sEks <-
       matrix(nrow = 2, ncol = length(estimable_k_from_boot),
              dimnames = list(c("LB", "UB"), estimable_k_from_boot))
 
@@ -221,59 +186,6 @@ cross_validation_mean <- function(network, n.seeds, n.neigh, n.boot,
         }
     }else print("unknown data type output from optimal function")
 
-
-    if (is.list(opti.cover.nw.p0sEkb)){
-
-      for(kDegree in estimable_k_from_boot){
-        kDegree_num <- as.numeric(kDegree)
-        sortedOpti.cover.nw.p0sEkb <- sort_tied_opti(opti.cover.nw.p0sEkb[[kDegree_num]])
-        #browser()
-        optimalSeedNDX <-  sortedOpti.cover.nw.p0sEkb[1, ][1]
-        optimalNeighNDX <- sortedOpti.cover.nw.p0sEkb[1, ][2]
-        opti.seed_wave.nw.p0sEkb[1, kDegree] <- n.seeds[optimalSeedNDX]
-        opti.seed_wave.nw.p0sEkb[2, kDegree] <- n.neigh[optimalNeighNDX]
-        listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
-        opti.CI.nw.p0sEkb[,kDegree] <- stats::quantile(bootEmpD$nw.p0sEkb[[listLocation]][, kDegree], probs=c(0.025, 0.975))
-
-      }
-    }else if(is.matrix(opti.cover.nw.p0sEkb)){
-      for(kDegree in estimable_k_from_boot){
-        kDegree_num <- as.numeric(kDegree)
-        optimalSeedNDX = opti.cover.nw.p0sEkb[1, kDegree_num]
-        optimalNeighNDX <- opti.cover.nw.p0sEkb[2, kDegree_num]
-        opti.seed_wave.nw.p0sEkb[1, kDegree] <- n.seeds[optimalSeedNDX]
-        opti.seed_wave.nw.p0sEkb[2, kDegree] <- n.neigh[optimalNeighNDX]
-        listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
-        opti.CI.nw.p0sEkb[,kDegree] <- stats::quantile(bootEmpD$nw.p0sEkb[[listLocation]][, kDegree], probs=c(0.025, 0.975))
-      }
-    }else print("unknown data type output from optimal function")
-
-
-    if (is.list(opti.cover.nw.p0sEks)){
-
-      for(kDegree in estimable_k_from_boot){
-        kDegree_num <- as.numeric(kDegree)
-        sortedOpti.cover.nw.p0sEks <- sort_tied_opti(opti.cover.nw.p0sEks[[kDegree_num]])
-        #browser()
-        optimalSeedNDX <-  sortedOpti.cover.nw.p0sEks[1, ][1]
-        optimalNeighNDX <- sortedOpti.cover.nw.p0sEks[1, ][2]
-        opti.seed_wave.nw.p0sEks[1, kDegree] <- n.seeds[optimalSeedNDX]
-        opti.seed_wave.nw.p0sEks[2, kDegree] <- n.neigh[optimalNeighNDX]
-        listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
-        opti.CI.nw.p0sEks[,kDegree] <- stats::quantile(bootEmpD$nw.p0sEks[[listLocation]][, kDegree], probs=c(0.025, 0.975))
-
-      }
-    }else if(is.matrix(opti.cover.nw.p0sEks)){
-      for(kDegree in estimable_k_from_boot){
-        kDegree_num <- as.numeric(kDegree)
-        optimalSeedNDX = opti.cover.nw.p0sEks[1, kDegree_num]
-        optimalNeighNDX <- opti.cover.nw.p0sEks[2, kDegree_num]
-        opti.seed_wave.nw.p0sEks[1, kDegree] <- n.seeds[optimalSeedNDX]
-        opti.seed_wave.nw.p0sEks[2, kDegree] <- n.neigh[optimalNeighNDX]
-        listLocation <- (optimalSeedNDX-1)*length(n.neigh)+optimalNeighNDX
-        opti.CI.nw.p0sEks[,kDegree] <- stats::quantile(bootEmpD$w.p0s[[listLocation]][, kDegree], probs=c(0.025, 0.975))
-      }
-    }else print("unknown data type output from optimal function")
     CI_selected_seed_wave <- list(opti.CI.w.p0s = opti.CI.w.p0s,
                                   opti.CI.nw.p0sEkb = opti.CI.nw.p0sEkb,
                                   opti.CI.nw.p0sEks = opti.CI.nw.p0sEks)

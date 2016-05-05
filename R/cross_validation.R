@@ -130,7 +130,6 @@ sort_tied_opti <- function(inMat){
 #'    See supporting documentation \code{\link{bootdeg}}). Each matrix provides
 #'    the 95 percent bootstrap confidence intervals for the estimated degree frequency
 #'    using the best seed-wave combinations (see above).}
-#' @export
 #' @examples
 #' net <- artificial_networks[[1]]
 #' a <- cross_validation(network = net, n.seeds = c(10, 20, 30), n.neigh = c(1, 2),

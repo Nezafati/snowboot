@@ -1,4 +1,4 @@
-bootdegK <- function(sam.out, num.sam, n.boot) {
+bootdegK <- function(sam.out, num.sam, n.boot, method = "w") {
   n.seeds<-sam.out$n.seeds
   n.neigh<-sam.out$n.neigh
   if(length(num.sam)==1) num.sam<-1:num.sam
@@ -99,7 +99,14 @@ bootdegK <- function(sam.out, num.sam, n.boot) {
       empd.nw.p0sEkb<-cbind("0"=p0.B,empd.nw.p0sEkb)
       empd.nw.p0sEks<-cbind("0"=p0.B,empd.nw.p0sEks)
     }
-    empd[[i]]<-list(empd.w.p0s=empd.w.p0s,empd.nw.p0sEkb=empd.nw.p0sEkb, empd.nw.p0sEks= empd.nw.p0sEks)
+    if(method == "w"){
+      empd[[i]]<-list(empd.w.p0s=empd.w.p0s)
+    } else if(method == "nw"){
+      empd[[i]]<-list(empd.nw.p0sEkb=empd.nw.p0sEkb)
+    } else{
+      stop('Please set method to "w" or "nw".')
+    }
+
     i<-i+1
   }  # for(m in num.sam)
   list(values = sam.out$values[num.sam], empd = empd, num.sam = num.sam, n.boot = n.boot,
