@@ -24,9 +24,9 @@ B.EmpDistrib <-function(net,n.seeds,n.neigh,sam.size=1,n.boot,otherNetParameters
       #browser()
       tmp <- bootdeg(Obs.distrib, num.sam=sam.size,n.boot=n.boot)$empd[[1]]
       Obs.distrib.out[[counter]] <-Obs.distrib
-      w.p0s[[counter]] <- tmp$empd.nw.p0sEkb
-      nw.p0sEkb[[counter]] <- tmp$empd.nw.p0sEks
-      nw.p0sEks[[counter]] <- tmp$empd.w.p0s
+      w.p0s[[counter]] <- tmp$empd.w.p0s
+      nw.p0sEkb[[counter]] <- tmp$empd.nw.p0sEkb
+      nw.p0sEks[[counter]] <- tmp$empd.nw.p0sEks
       counter <- counter+1
     }
     #return(B.distrib)
@@ -35,24 +35,12 @@ B.EmpDistrib <-function(net,n.seeds,n.neigh,sam.size=1,n.boot,otherNetParameters
 }
 
 
-estimable_k <- function(bootEmpD){
-  res <- intersect(dimnames(bootEmpD$w.p0s[[1]])[[2]],dimnames(bootEmpD$w.p0s[[2]])[[2]])
-  for(i in 3:length(bootEmpD$w.p0s)){
-    res <- intersect(res,dimnames(bootEmpD$w.p0s[[i]])[[2]])
-  }
-  res
-}
-
 combineLSMINodes <- function(bootEmpD){
   #function combines the unodes(or seed1) from the elements of
   #Obs.distrib.out object, which is inside the bootEmpD list
-  if("unodes"%in%names(bootEmpD$Obs.distrib.out[[1]])){
-    nodes=bootEmpD$Obs.distrib.out[[1]]$unodes
-  } else nodes=bootEmpD$Obs.distrib.out[[1]]$seeds1
-
-
-  for(i in 2:length(bootEmpD$Obs.distrib.out)){
-    if("unodes"%in%names(bootEmpD$Obs.distrib.out[[i]])){
+  nodes <- NULL
+  for(i in 1:length(bootEmpD$Obs.distrib.out)){
+    if("nodes_of_LSMI"%in%names(bootEmpD$Obs.distrib.out[[i]])){
       tmp=bootEmpD$Obs.distrib.out[[i]]$unodes
     } else tmp=bootEmpD$Obs.distrib.out[[i]]$seeds1
     nodes=c(nodes,tmp)
@@ -76,8 +64,8 @@ closestCoverNDX <- function(x,coverage=.95){
 sort_tied_opti <- function(inMat){
   if(dim(inMat)[1] == 1)
     return(inMat)
-  largestSeedFirst <- inMat[order(inMat[,1],decreasing = T),]
-  outMat <- largestSeedFirst[order(largestSeedFirst[,2]),]
+  smallestSeedFirst <- inMat[order(inMat[,1],decreasing = F),]
+  outMat <- smallestSeedFirst[order(smallestSeedFirst[,2]),]
   outMat
 }
 # Alternative is to get the smallest sample size which is estimated with mean(degree)
@@ -133,29 +121,30 @@ sort_tied_opti <- function(inMat){
 #' @export
 #' @examples
 #' net <- artificial_networks[[1]]
-#' a <- cross_validation(network = net, n.seeds = c(10, 20, 30), n.neigh = c(1, 2),
-#'  n.boot = 200, kmax = 30)
+#' a <- cross_validation_mean(network = net, n.seeds = c(10, 20, 30), n.neigh = c(1, 2),
+#'  n.boot = 200)
 
-cross_validation <- function(network, n.seeds, n.neigh, n.boot,
-                             kmax, proxyRep = 19, proxyOrder = 30){
+cross_validation_mean <- function(network, n.seeds, n.neigh, n.boot,
+                             proxyRep = 19, proxyOrder = 30){
   sam.size = 1
   n.seeds <- sort(n.seeds)
   n.neigh <- sort(n.neigh)
   net_order <- network$n
-
     #make bootEmpD list for seed-wave combos
-    bootEmpD=B.EmpDistrib(network,n.seeds,n.neigh,sam.size,n.boot)
-    estimable_k_from_boot <- estimable_k(bootEmpD)
+    bootEmpD=B.EmpDistrib(net = network, n.seeds = n.seeds, n.neigh = n.neigh,
+                          sam.size = sam.size, n.boot = n.boot)
     used <- unique(combineLSMINodes(bootEmpD))
     count <- 1
     fallin.proxy.w.p0s <- fallin.proxy.nw.p0sEkb <- fallin.proxy.nw.p0sEks <-
-      array(0, c(length(n.seeds), length(n.neigh), proxyRep, kmax))
+      array(0, c(length(n.seeds), length(n.neigh), proxyRep))
     for(i in 1:length(n.seeds)){
       # i=1
       for(j in 1:length(n.neigh)){
         # j=1
         # build proxy from bootEmpD$Obs.empd.out
-        tmp.w.p0s <- apply(bootEmpD$w.p0s[[count]], 2, stats::quantile, probs=c(0.025, 0.975))
+        tmp.w.p0s <- bootEmpD$w.p0s[[count]]
+        values <- bootEmpD$Obs.distrib.out[[count]]$values[[1]]
+        rowSums(tmp.w.p0s*rep(values,each=n.boot))
         tmp.w.p0s <- tmp.w.p0s[,match(1:kmax,dimnames(tmp.w.p0s)[[2]], nomatch = NA)]
         dimnames(tmp.w.p0s)[[2]] <- 1:kmax
 
