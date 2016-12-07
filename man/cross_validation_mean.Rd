@@ -5,8 +5,8 @@
 \title{A function that uses cross-validation to select seed-wave combination for
 estimation of a degree's frequency.}
 \usage{
-cross_validation_mean(network, n.seeds, n.neigh, n.boot, proxyRep = 19,
-  proxyOrder = 30, method = "w")
+cross_validation_mean(network, n.seeds, n.neigh, n.boot, method = "w",
+  alpha = 0.05, proxyRep = 19, proxyOrder = 30)
 }
 \arguments{
 \item{network}{A network object that is list containing:
@@ -28,12 +28,12 @@ in cross-validation.}
 
 \item{n.boot}{The number of bootstrap sample.}
 
+\item{method}{Can be either "w" for weighted bootstrap or "nw" for
+non-weighted bootstrap. "w" is recommended and set as the default method.}
+
 \item{proxyRep}{The number of time to sample a proxy. Default is 19.}
 
 \item{proxyOrder}{The size of the proxy sample. Default is 30.}
-
-\item{method}{Can be either "w" for weighted bootstrap or "nw" for
-non-weighted bootstrap. "w" is recommended and set as the default method.}
 }
 \value{
 A list consisting of

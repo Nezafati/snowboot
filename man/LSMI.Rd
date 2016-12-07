@@ -4,7 +4,7 @@
 \alias{LSMI}
 \title{Snowball sampling with multiple inclusion.}
 \usage{
-LSMI(net, n.seeds = 10, n.neigh = 1, seeds = NULL)
+LSMI(net, n.seeds = 10, n.neigh = 1, seeds = NULL, classic = F)
 }
 \arguments{
 \item{net}{A network object that is list containing:

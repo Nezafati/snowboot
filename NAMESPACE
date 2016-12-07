@@ -3,6 +3,7 @@
 export(BparametersEst)
 export(LSMI)
 export(Oempdegreedistrib)
+export(Union_LSMI)
 export(bootCI)
 export(bootdeg)
 export(cross_validation_mean)

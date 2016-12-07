@@ -1,3 +1,24 @@
+#' Snowball sampling with multiple inclusion.
+#'
+#' The function will creat a list of LSMI objects. The function is primairly
+#' used in cross-validation.
+#' @note see \code{\link{LSMI}.}
+#' @references Thompson, M. E., Ramirez Ramirez, L. L., Lyubchich, V. and
+#'  Gel, Y. R. (2015), Using the bootstrap for statistical inference
+#'  on random graphs. Can J Statistics. doi: 10.1002/cjs.11271
+#' @param n.seeds A numeric vector of seeds for snowball sampling.
+#'    It must be a positive integers.
+#' @param n.neigh A numeric vector of waves to be sampled around each seed in LSMI.
+#'    For example, n.neigh = 0 corresponds to seeds only, and n.neigh = 1
+#'    corresponds to sampling seeds and their first neighbors).
+#'    Note that the algorithm allows for multiple inclusions.
+#' @inheritParams Oempdegreedistrib
+#'
+#' @return A list containing LSMI objects
+#' @export
+#' @examples
+#' net <- artificial_networks[[1]]
+#' a <- Union_LSMI(net, n.seeds = c(5,10), n.neigh = 1:2)
 Union_LSMI=function(net,n.seeds,n.neigh,seeds=NULL){
   max_seeds<-n.seeds[which.max(n.seeds)]
   sequence_seeds<-sort(n.seeds,decreasing = T)
@@ -32,5 +53,5 @@ Union_LSMI=function(net,n.seeds,n.neigh,seeds=NULL){
   }
   #
   return(Union_LSMI_output)
-  
+
 }
