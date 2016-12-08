@@ -31,6 +31,8 @@ numeric ids of the seeds to initiate sampling. Each row of the matrix
 corresponds to one LSMI sample. Note that this is an optional parameter.
 WARNING: As of now, this feature is only supported when
 parameter \code{n.neigh} is greater than zero.}
+
+\item{classic}{Option for neighborhoods, i.e. waves, without multiple inclusions.}
 }
 \value{
 A list containing the following elements:

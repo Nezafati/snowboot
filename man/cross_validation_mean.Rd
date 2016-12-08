@@ -31,6 +31,9 @@ in cross-validation.}
 \item{method}{Can be either "w" for weighted bootstrap or "nw" for
 non-weighted bootstrap. "w" is recommended and set as the default method.}
 
+\item{alpha}{Desided type I error for bootstrap confidence intervals, which
+are obtained using the quantile method.}
+
 \item{proxyRep}{The number of time to sample a proxy. Default is 19.}
 
 \item{proxyOrder}{The size of the proxy sample. Default is 30.}

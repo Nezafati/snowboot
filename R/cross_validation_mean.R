@@ -71,6 +71,8 @@ combineLSMINodes <- function(bootEmpD){
 #' @references Thompson, M. E., Ramirez Ramirez, L. L., Lyubchich, V. and
 #'  Gel, Y. R. (2015), Using the bootstrap for statistical inference
 #'  on random graphs. Can J Statistics. doi: 10.1002/cjs.11271
+#' @param alpha Desided type I error for bootstrap confidence intervals, which
+#'  are obtained using the quantile method.
 #' @param network A network object that is list containing:
 #'  \describe{
 #'    \item{edges}{The edgelist of the network. A two column
@@ -124,7 +126,7 @@ cross_validation_mean <- function(network, n.seeds, n.neigh, n.boot,
       tmp <- bootEmpD$empd[[count]][[1]]
       values <- bootEmpD$Obs.distrib.out[[count]]$values[[1]]
       est_means <- rowSums(tmp*rep(values,each=n.boot))
-      bootCI_mean <- quantile(est_means, c((alpha/2), 1-(alpha/2)))
+      bootCI_mean <- stats::quantile(est_means, c((alpha/2), 1-(alpha/2)))
       res[(i-1)*length(n.neigh)+j,]<-bootCI_mean
       count <- count+1
     }
