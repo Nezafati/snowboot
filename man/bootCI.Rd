@@ -2,10 +2,12 @@
 % Please edit documentation in R/bootCI.R
 \name{bootCI}
 \alias{bootCI}
-\title{Build Bootstrap Confidence Intervals for \eqn{\hat{p_k}}{p^_k}}
+\title{Build Bootstrap Confidence Intervals for \eqn{\hat{p_{k}}}
+
+The function will build bootstrap confidence intervals for the bootstrap
+estimate of \eqn{\mu}.}
 \usage{
-bootCI(outBootdeg, bootstrap_mean = T, lower_bound = 0.025,
-  upper_bound = 0.975)
+bootCI(outBootdeg, bootstrap_mean = TRUE, alpha = 0.05)
 }
 \arguments{
 \item{outBootdeg}{A list that is the output of \code{\link{bootdeg}}}
@@ -13,25 +15,23 @@ bootCI(outBootdeg, bootstrap_mean = T, lower_bound = 0.025,
 \item{bootstrap_mean}{A Boolean option to return the bootstrap confidence
 interval for the mean.}
 
-\item{lower_bound}{The lower quantile for the bootstrap confidence intervals.}
-
-\item{upper_bound}{The upper quantile for the bootstrap confidence intervals.}
+\item{alpha}{\eqn{\alpha}-level of desired significance for statistical
+inference. \eqn{\alpha < 0.5}.}
 }
 \value{
 A list of two elements
- \item{p_k_CI}{This a list of length \code{length(outBootdeg$num.sam)}, one
-   element per LSMI. Each element contains three sets of bootstrap confidence
-   intervals for \eqn{\hat{p}_k^*} corresponding to the three estimation
-   methods. See \code{\link{bootdeg}} for more on the three estimation methods.}
- \item{mean_CI}{This a list of length \code{length(outBootdeg$num.sam)}, one
-   element per LSMI. Each element contains three sets of bootstrap confidence
-   intervals for \eqn{\hat{\mu}} corresponding to the three estimation
-   methods. See \code{\link{bootdeg}} for more on the three estimation methods.}
-}
-\description{
-The function will build bootstrap confidence intervals for the bootstrap
-estimate of  and \eqn{\mu} with a lower-bound of
-\code{0.025} and an upper-bound of \code{0.975}.
+ \item{p_k_CI}{list of length \code{length(outBootdeg$num.sam)}, one
+   element per LSMI. Each element contains bootstrap confidence
+   intervals for \eqn{\hat{p}_k^*} built from the provided bootstrap  sample of
+   the degree distribution (supplied by the output of
+   the \code{\link{bootdeg}} function). See \code{\link{bootdeg}} for more
+   on the available estimation methods.}
+ \item{mean_CI}{list of length \code{length(outBootdeg$num.sam)}, one
+   element per LSMI. Each element contains a bootstrap confidence
+   intervals for \eqn{\hat{\mu}} built from the provided bootstrap sample of
+   the degree distribution (supplied by the output of
+   the \code{\link{bootdeg}} function). See \code{\link{bootdeg}} for more
+   on the available estimation methods.}
 }
 \examples{
 net <- artificial_networks[[1]]
@@ -40,11 +40,12 @@ outBootdeg <- bootdeg(sam.out = sam.out, n.boot = 50)
 a <- bootCI(outBootdeg)
 }
 \references{
-Efron, B. (1979). Bootstrap methods: another look at the
- jackknife. The annals of Statistics, 1-26.
+Efron, B. (1992). Bootstrap methods: another look at the jackknife.
+In Breakthroughs in statistics (pp. 569-593). Springer New York.
 
-Thompson, M. E., Ramirez Ramirez, L. L., Lyubchich, V. and
- Gel, Y. R. (2015), Using the bootstrap for statistical inference
- on random graphs. Can J Statistics. doi: 10.1002/cjs.11271
+Gel, Y. R., Lyubchich, V., & Ramirez Ramirez, L. L. (2017).
+Bootstrap quantification of estimation uncertainties in
+network degree distributions. Scientific Reports, 7, 5807.
+\url{http://doi.org/10.1038/s41598-017-05885-x}
 }
 

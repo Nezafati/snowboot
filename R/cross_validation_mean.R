@@ -179,7 +179,7 @@ else if(length(bigger_n.seeds_index)==(length(max_coverage_label[,1])-1)){
   best_bootCI_mean<-as.matrix(res[(((which(n.seeds==best_coverage_combination[[1]]))-1)*length(n.neigh)+(which(n.neigh==best_coverage_combination[[2]]))),])
   rownames(best_bootCI_mean)<-c("2.5%","97.5%")
   best_coverage_value<-coverage.proxy[(((which(n.seeds==best_coverage_combination[[1]]))-1)*length(n.neigh)+(which(n.neigh==best_coverage_combination[[2]])))]
-  return(list(best_combination=best_coverage_combination,best_bootCI_mean=best_bootCI_mean,best_proxy_coverage_value=best_coverage_value))
+  return(list(best_combination=best_coverage_combination,best_bootCI_mean=best_bootCI_mean))
   }
 ########################################over###########################################
 
