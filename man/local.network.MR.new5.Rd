@@ -40,4 +40,3 @@ Only 11 distributions are available.
 \examples{
 a <- local.network.MR.new5(1000,"poly.log",c(2,13))
 }
-

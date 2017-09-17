@@ -51,4 +51,3 @@ Thompson, M. E., Ramirez Ramirez, L. L., Lyubchich, V. and
  Gel, Y. R. (2015), Using the bootstrap for statistical inference
  on random graphs. Can J Statistics. doi: 10.1002/cjs.11271
 }
-

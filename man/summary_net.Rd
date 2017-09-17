@@ -40,4 +40,3 @@ distribution.
 net <- artificial_networks[[1]]
 a <- summary_net(net)
 }
-

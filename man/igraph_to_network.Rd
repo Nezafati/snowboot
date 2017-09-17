@@ -32,4 +32,3 @@ net <- igraph_to_network(hex_ring)
 \references{
 \url{http://igraph.org/}
 }
-

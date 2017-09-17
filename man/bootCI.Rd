@@ -48,4 +48,3 @@ Bootstrap quantification of estimation uncertainties in
 network degree distributions. Scientific Reports, 7, 5807.
 \url{http://doi.org/10.1038/s41598-017-05885-x}
 }
-

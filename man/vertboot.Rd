@@ -27,4 +27,3 @@ vertboot_out <- vertboot(m1,20)
 Tom A.B.Snijders., Stephen P.Borgatti. (1999). Non-Parametric Standard Errors
 and Tests for Network Statistics.
 }
-

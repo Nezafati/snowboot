@@ -37,4 +37,3 @@ Random graphs with arbitrary degree distributions and their applications.
 Physical review E, 64(2), 026118.
 }
 \keyword{datasets}
-
