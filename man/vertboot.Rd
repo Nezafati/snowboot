@@ -4,12 +4,12 @@
 \alias{vertboot}
 \title{Bootstrapping a network with vertex bootstrap}
 \usage{
-vertboot(m1, n.boot)
+vertboot(m1, boot_rep)
 }
 \arguments{
 \item{m1}{An adjacency matrix,the matrix represents the original network.}
 
-\item{n.boot}{A positive integer number, the number of bootstrap replications.}
+\item{boot_rep}{A positive integer number, the number of bootstrap replications.}
 }
 \value{
 A list of bootstrapped networks as adjacency matricies.
@@ -21,9 +21,8 @@ This function bootstraps the the original network using a vertex bootstrap techn
 graph_ex <- igraph::graph_from_edgelist(artificial_networks[[1]]$edges)
 m1 <- igraph::as_adjacency_matrix(graph_ex)
 m1 <- as.matrix(m1)
-vertboot_out <- vertboot(m1,20)
+vertboot_out <- vertboot(m1, 20)
 }
 \references{
-Tom A.B.Snijders., Stephen P.Borgatti. (1999). Non-Parametric Standard Errors
-and Tests for Network Statistics.
+\insertRef{snijders_non-parametric_1999}{snowboot}
 }

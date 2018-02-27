@@ -1,13 +1,12 @@
 ###################################################################
 #modify some places in old version
-B.EmpDistrib <-function(net, n.seeds, n.neigh, sam.size=1, n.boot,
-                        method = "w", seeds0=NULL,otherNetParameters=FALSE, grow = T){
-  #sam.size (==1 for LSMI1) is the number of different samples taken from the network for each i and j
+B.EmpDistrib <-function(net, n.seeds, n.neigh, sam.size=1, boot_rep,
+                        seeds0=NULL, otherNetParameters=FALSE, grow = TRUE){
   #otherNetParameters is true if intervals and fallins for the rest of the parmeters
   #  (other than mean) are required.
   Obs.distrib.out <- empd <- as.list(rep(NA, length(n.seeds)*length(n.neigh)))
-  #insert the Union_LSMI function to set the unchanged n.seeds id
-  union_seeds<-Union_LSMI(net,n.seeds,n.neigh,seeds=seeds0)
+  #insert the union_lsmi function to set the unchanged n.seeds id
+  union_seeds <- union_lsmi(net,n.seeds,n.neigh,seeds=seeds0)
   #num of n.seeds combination,is a vector rather than scalar
   num_n.seeds=length(n.seeds)
   num_n.neigh=length(n.neigh)
@@ -16,24 +15,23 @@ B.EmpDistrib <-function(net, n.seeds, n.neigh, sam.size=1, n.boot,
   counter <- 1
   for(i in n.seeds){
     for(j in n.neigh){
-      if(grow == T){
+      if(grow == TRUE){
         seeds<-union_seeds[[(i/i)+num_n.neigh*(num_n.seeds-which(sequence_n.seeds==i))]][[1]]
       } else {
         seeds = NULL
       }
       if(j==0){
-        Obs.distrib<-Oempdegreedistrib(net, n.seeds=i, n.neigh=j, num.sam=sam.size,seeds=seeds)
+        Obs.distrib<-empd_deg_lsmi(net, n.seeds=i, n.neigh=j, num_lsmi=sam.size,seeds=seeds)
         #Do we need use lower character tmp instead ?
         TMP <- Obs.distrib$seeds1
       }else{
         seeds<-union_seeds[[(i/i)+num_n.neigh*(num_n.seeds-which(sequence_n.seeds==i))]][[1]]
-        Obs.distrib<-Oempdegreedistrib(net, n.seeds=i,n.neigh=j, num.sam=sam.size, seeds=seeds)
+        Obs.distrib<-empd_deg_lsmi(net, n.seeds=i,n.neigh=j, num_lsmi=sam.size, seeds=seeds)
       }
-      Oparam<-OparametersEst(Obs.distrib)
-      #B.distrib<-bootdeg(Obs.distrib, num.sam=sam.size,n.boot=n.boot)
+      #B.distrib<-boot_deg(Obs.distrib, num_lsmi=sam.size,boot_rep=boot_rep)
       #return(B.distrib)
       #browser()
-      tmp <- bootdeg(Obs.distrib, num.sam=sam.size,n.boot=n.boot, method = method)$empd[[1]]
+      tmp <- boot_deg(Obs.distrib, num_lsmi=sam.size,boot_rep=boot_rep)$empd[[1]]
       Obs.distrib.out[[counter]] <-Obs.distrib
       empd[[counter]] <- tmp
       counter <- counter+1
@@ -44,33 +42,32 @@ B.EmpDistrib <-function(net, n.seeds, n.neigh, sam.size=1, n.boot,
   return(list(Obs.distrib.out=Obs.distrib.out, empd = empd))
 }
 ###################################################################
-combineLSMINodes <- function(bootEmpD){
+combine_lsmi_nodes <- function(bootEmpD){
   #function combines the unodes(or seed1) from the elements of
   #Obs.distrib.out object, which is inside the bootEmpD list
   nodes <- NULL
   for(i in 1:length(bootEmpD$Obs.distrib.out)){
-    if("nodes_of_LSMI"%in%names(bootEmpD$Obs.distrib.out[[i]])){
-      tmp=bootEmpD$Obs.distrib.out[[i]]$nodes_of_LSMI
+    if("nodes_of_lsmi"%in%names(bootEmpD$Obs.distrib.out[[i]])){
+      tmp=bootEmpD$Obs.distrib.out[[i]]$nodes_of_lsmi
     } else tmp=bootEmpD$Obs.distrib.out[[i]]$seeds1
     nodes=c(nodes,tmp)
   }
   unlist(nodes)
 }
 ########################################cross_validation###########
-#' A function that uses cross-validation to select seed-wave combination for
-#' estimation of a degree's frequency.
+#' A function that uses cross-validation to select seed-wave combination of LSMI
+#' for the estimated mean degree.
 #'
 #' The function's inputs are a network, a vector of possible seed sample-sizes,
 #' a vector of possible waves, and a few tuning parameters. The output will
-#' contain the best seed-wave combination for each degree and the width of the
-#' 95 percent bootstrap confidence intervals at each degree for
+#' contain the best seed-wave combination for the mean degree and the width of the
+#' bootstrap confidence intervals for the mean degree when using
 #' the best seed-wave combination.
 #' @note Only one LSMI per seed-wave combination is currently supported.
-#' @references Efron, B. (1979). Bootstrap methods: another look at the
-#'  jackknife. The annals of Statistics, 1-26.
-#' @references Thompson, M. E., Ramirez Ramirez, L. L., Lyubchich, V. and
-#'  Gel, Y. R. (2015), Using the bootstrap for statistical inference
-#'  on random graphs. Can J Statistics. doi: 10.1002/cjs.11271
+#' @references
+#' \insertRef{efron_bootstrap_1979}{snowboot}
+#' @references
+#' \insertRef{gel_bootstrap_2017}{snowboot}
 #' @param alpha Desided type I error for bootstrap confidence intervals, which
 #'  are obtained using the quantile method.
 #' @param network A network object that is list containing:
@@ -81,41 +78,39 @@ combineLSMINodes <- function(bootEmpD){
 #'      an \code{integer} vector of length n.}
 #'    \item{n}{The network order.}
 #'  }
-#'    The object can be created by \code{\link{local.network.MR.new5}} or
+#'    The object can be created by \code{\link{random_network}} or
 #'    it can be imported.
 #' @param n.seeds A numeric vector for the different sample sizes of seed to use
 #'  in cross-validation.
 #' @param n.neigh A numeric vector for the different waves to use
 #'  in cross-validation.
-#' @param n.boot The number of bootstrap sample.
-#' @param method Can be either "w" for weighted bootstrap or "nw" for
-#'    non-weighted bootstrap. "w" is recommended and set as the default method.
+#' @param boot_rep The number of bootstrap sample.
 #' @param proxyRep The number of time to sample a proxy. Default is 19.
 #' @param proxyOrder The size of the proxy sample. Default is 30.
 #' @return A list consisting of
-#'  \item{selected_seed_wave}{A matrices that provides
-#'    the best seed-wave combinations (obtained via cross-validation) for
-#'    the respective estimation method.}
-#'  \item{selected_seed_wave}{A vector of length 2 that provides
+#'  \item{best_combination}{A matrices that provides
+#'    the best seed-wave combinations for LSMI (obtained via cross-validation)
+#'    when estimating mean degree.}
+#'  \item{best_boot_ci_mean}{A vector of length 2 that provides
 #'    the bootstrap confidence intervals for the estimated mean degree
 #'    using the best seed-wave combinations (see above).}
 #' @export
 #' @examples
 #' net <- artificial_networks[[1]]
 #' a <- cross_validation_mean(network = net, n.seeds = c(10, 20, 30), n.neigh = c(1, 2),
-#'  n.boot = 200, method = "w")
+#'  boot_rep = 200)
 
-cross_validation_mean <- function(network, n.seeds, n.neigh, n.boot,
-                                  method = "w", alpha = .05,proxyRep=19,proxyOrder=30){
+cross_validation_mean <- function(network, n.seeds, n.neigh, boot_rep,
+                                  alpha = .05, proxyRep=19, proxyOrder=30){
   sam.size = 1
   n.seeds <- sort(n.seeds)
   n.neigh <- sort(n.neigh)
   net_order <- network$n
   #make bootEmpD list for seed-wave combos
   bootEmpD <- B.EmpDistrib(net = network, n.seeds = n.seeds, n.neigh = n.neigh,
-                           sam.size = sam.size, n.boot = n.boot, method = method)
+                           sam.size = sam.size, boot_rep = boot_rep)
   fallin.proxy <- array(0, c(length(n.seeds)*length(n.neigh), proxyRep))
-  used <- unique(combineLSMINodes(bootEmpD))
+  used <- unique(combine_lsmi_nodes(bootEmpD))
   count <- 1
   res<-matrix(NA,length(n.seeds)*length(n.neigh),2)
   for(i in 1:length(n.seeds)){
@@ -125,9 +120,9 @@ cross_validation_mean <- function(network, n.seeds, n.neigh, n.boot,
       # build proxy from bootEmpD$Obs.empd.out
       tmp <- bootEmpD$empd[[count]][[1]]
       values <- bootEmpD$Obs.distrib.out[[count]]$values[[1]]
-      est_means <- rowSums(tmp*rep(values,each=n.boot))
-      bootCI_mean <- stats::quantile(est_means, c((alpha/2), 1-(alpha/2)))
-      res[(i-1)*length(n.neigh)+j,]<-bootCI_mean
+      est_means <- rowSums(tmp*rep(values,each=boot_rep))
+      boot_ci_mean <- stats::quantile(est_means, c((alpha/2), 1-(alpha/2)))
+      res[(i-1)*length(n.neigh)+j,]<-boot_ci_mean
       count <- count+1
     }
   }
@@ -135,12 +130,12 @@ cross_validation_mean <- function(network, n.seeds, n.neigh, n.boot,
 for(p in 1:(length(n.seeds)*length(n.neigh))){
   for(k in 1:proxyRep){
   # k=1
-  proxyNodes <- sample(used, proxyOrder, replace = F)
+  proxyNodes <- sample(used, proxyOrder, replace = FALSE)
   proxy_mean <- mean(network$degree[proxyNodes])
   fallin.proxy[p, k] <- ((res[p,1]<proxy_mean) & (proxy_mean<res[p,2]))
 }
 }
-  coverage.proxy <- apply(fallin.proxy, 1, mean, na.rm=T)
+  coverage.proxy <- apply(fallin.proxy, 1, mean, na.rm = TRUE)
 #tranfer to matrix and make a transpose which will be convenient to pick up corresponding index
   matrix_coverage.proxy<-t(matrix(coverage.proxy,length(n.neigh),length(n.seeds)))
   colnames(matrix_coverage.proxy)<-n.neigh
@@ -176,10 +171,10 @@ else if(length(bigger_n.seeds_index)==(length(max_coverage_label[,1])-1)){
   best_coverage_combination<-data.frame(n.seeds.num=n.seeds[coverage_matrix[smaller_n.neigh_index,1]],n.neigh.num=n.neigh[coverage_matrix[smaller_n.neigh_index,2]])
 }
 }
-  best_bootCI_mean<-as.matrix(res[(((which(n.seeds==best_coverage_combination[[1]]))-1)*length(n.neigh)+(which(n.neigh==best_coverage_combination[[2]]))),])
-  rownames(best_bootCI_mean)<-c("2.5%","97.5%")
+  best_boot_ci_mean<-as.matrix(res[(((which(n.seeds==best_coverage_combination[[1]]))-1)*length(n.neigh)+(which(n.neigh==best_coverage_combination[[2]]))),])
+  rownames(best_boot_ci_mean)<-c("2.5%","97.5%")
   best_coverage_value<-coverage.proxy[(((which(n.seeds==best_coverage_combination[[1]]))-1)*length(n.neigh)+(which(n.neigh==best_coverage_combination[[2]])))]
-  return(list(best_combination=best_coverage_combination,best_bootCI_mean=best_bootCI_mean))
+  return(list(best_combination=best_coverage_combination,best_boot_ci_mean=best_boot_ci_mean))
   }
 ########################################over###########################################
 

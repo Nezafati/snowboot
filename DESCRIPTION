@@ -1,7 +1,7 @@
 Package: snowboot
 Type: Package
 Title: Bootstrap Methods for Network Inference
-Version: 0.5.2
+Version: 0.6.0
 Date: 2016-12-8
 Author: Leticia Ramirez-Ramirez, Kusha Nezafati, Yuzhou Chen, 
     Vyacheslav Lyubchich, Yulia Gel
@@ -17,6 +17,8 @@ Imports:
     VGAM,
     igraph,
     stats,
-    Rcpp
+    Rcpp,
+    Rdpack
+RdMacros: Rdpack
 RoxygenNote: 6.0.1
 LinkingTo: Rcpp

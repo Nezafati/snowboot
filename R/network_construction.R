@@ -11,11 +11,11 @@ li <- function(delta, b, lim = 10000) {
   res <- rep(0, length(b))
   if (length(delta) != 1)
     stop("delta debe ser escalar") else res[b == 1] <- VGAM::zeta(delta)
-  # else if(length(delta)==length(b))res[b==1]<-VGAM::zeta(delta[b==1])
-  a <- which(b != 1)
-  if (length(a))
-    for (j in a) res[j] <- sum(b[j]^(1:lim)/(1:lim)^delta)
-  res
+    # else if(length(delta)==length(b))res[b==1]<-VGAM::zeta(delta[b==1])
+    a <- which(b != 1)
+    if (length(a))
+      for (j in a) res[j] <- sum(b[j]^(1:lim)/(1:lim)^delta)
+    res
 }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
 
@@ -31,21 +31,13 @@ resample <- function(x, size, rep = FALSE, prob = NULL) {
 
 NDIM <- function(a, as.row = FALSE) {
   # I created NDIM,to use with either matrices or vectors takes a vector as
-  # column matrix if as.row=F and row matrix if as.row=T
+  # column matrix if as.row=FALSE and row matrix if as.row=TRUE
   if ((is.vector(a) | is.list(a)) & as.row)
     n.dim <- c(1, length(a)) else n.dim <- c(NROW(a), NCOL(a))
-  n.dim
+    n.dim
 }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
 
-vector.one <- function(n, q) {
-  # function that returns a vector of zeros and ones. The ones are in positions
-  # given by q when q==numeric(0) r is a vector of zeros
-  r <- rep(0, n)
-  r[q] <- 1
-  r
-}
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
 
 elements.matrix <- function(matrix, esc, cases = 0, rows.mat = 0,
                             as.row = FALSE, cols = FALSE) {
@@ -55,7 +47,7 @@ elements.matrix <- function(matrix, esc, cases = 0, rows.mat = 0,
   # b)transform the element "case"-th in the vector "matrix" into (row, column)
   # for "matrix" as a matrix if cols=FALSE only returns the rows
   # When "matrix" is a vector, it can be considered column (as.row=F)
-  # or row (as.row=T) cases is the position in the matrix of the elements
+  # or row (as.row=TRUE) cases is the position in the matrix of the elements
   # equal to esc (by columns)
   if (cases == 0)
     cases <- which(matrix == esc)
@@ -69,22 +61,6 @@ elements.matrix <- function(matrix, esc, cases = 0, rows.mat = 0,
   }
   result
 }
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
-
-newrexp <- function(n, p) {
-  # Function that deals with special cases for the function
-  # rexp (exponential disributed random numbers)
-  if (is.null(p) | n == 0)
-    a <- Inf else {
-    if (n != length(p))
-      stop("dimensions do not match in newrexp")
-    a <- rep(0, n)
-    a[p > 0] <- stats::rexp(length(p[p > 0]), p[p > 0])
-    a[p == 0] <- Inf
-  }
-  a
-}
-
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
 
 order.edges <- function(edges, ord.col = TRUE) {
@@ -127,20 +103,6 @@ concatenate <- function(edges.hist, vec.mat, constant = NULL) {
     edges.hist <- rbind(edges.hist, vec.mat)
   }
   edges.hist
-}
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
-
-grouping <- function(vec.mat, groups) {
-  # Function that creates a column of numbers telling to which group
-  # each element (row) belongs to vec.mat is a matrix
-  # and groups is a vector (numeric or character)
-  # with length=dim(vec.mat)[1] used to form the groups
-  cbind(vec.mat, match(groups, groups))
-}
-# I define this function us use it with "sapply".
-# Number of elements in column col that are equal to the value x.
-number.elements <- function(mat, col, x) {
-  length(mat[mat[, col] == x, col])
 }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
 
@@ -245,31 +207,6 @@ sdegree <- function(n, distrib, param = 0) {
 }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
 
-ccheck <- function(nodes.dl, edges.dl) {
-  # function that verify that if no other connexion is possible to
-  # construct a simple random graph and return a new edge if possible.
-  # nodes.dl is the sorted nodes for which its degree left is still greater than zero.
-  # They are sorted edges.dl is the subset of edges whose end points
-  # are elements of nodes.dl. They are sorted as in edges.
-  other <- 0
-  flag <- 1
-  # browser()
-  m <- length(nodes.dl)
-  indexes <- cbind(unlist(mapply(rep, 1:(m - 1), (m - 1):1)), unlist(mapply(seq, 2:m, m)))
-  a <- !is.element(paste(nodes.dl[indexes[, 1]], "-", nodes.dl[indexes[, 2]]),
-                   paste(edges.dl[, 1], "-", edges.dl[, 2]))
-  if (any(a)) {
-    new.edge <- sort(c(nodes.dl[indexes[a, 1]][1], nodes.dl[indexes[a, 2]][1]))
-    other <- 1
-  } else {
-    new.edge <- NULL
-    flag <- 0  #no more nodes can be connected
-  }
-  list(new.edge = new.edge, other = other, flag = flag)
-}
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
-
 edge.check <- function(edges, new.edge) {
   new.edge <- sort(new.edge)
   a <- which(edges == new.edge[1])
@@ -303,98 +240,3 @@ table.mult.degree <- function(vector, place, m, freq = TRUE) {
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
-
-
-###################################################################### NETWORK SAMPLING FUNCTION ###############################
-
-sampleneigh <- function(net, n.seeds = 10, n.neigh = 1, seeds = NULL) {
-  # net is object network (what is important is the component $edges and the length of $degree) this function randomly
-  # sample n.seeds o sample around the seeds specified by "seed" and obtain for each, their n.neigh neighbourhood (set of
-  # nodes with distance to the seed at most =n.neigh) also give the index of those nodes last added and for which we do not
-  # have their complete degree information. seed0 are the original seed nodes are the no repeated elements in the sample
-  # sampleN are the possibly repeated elements in the sample last.added are the vertices that are the most recently added
-  # into the set.
-
-  if (is.null(seeds))
-    {
-      seeds <- sort(sample(1:length(net$degree), n.seeds, replace = FALSE))
-    }  #the seed selection is random
-  sampleN <- seed0 <- seeds
-  # neighEdges<-NULL
-  effEdges <- net$edges
-  more <- TRUE
-  nn <- n.neigh
-  new.nodes <- 0
-  if (n.neigh == 0) {
-    # only keep the subgraph originated from the seeds
-    a <- is.element(effEdges, seeds)
-    if (any(a)) {
-      a <- which(matrix(a, dim(effEdges)[1], 2), arr.ind = TRUE)[, 1]
-      # now it is the row where they are in the edges matrix
-      if (any(duplicated(a))) {
-        # We keep the edges between nodes that are seeds and remove the rest.
-        # neighEdges<-effEdges[a[duplicated(a)],]
-      }
-    }
-  } else {
-    while (nn > 0 & more) {
-      a <- is.element(effEdges, seeds)  # "seed" will be accumulating
-                                       # all included vertices (non repeated)
-      if (any(a))
-        {
-          eedges <- which(matrix(a, dim(effEdges)[1], 2), arr.ind = TRUE)
-          a <- sort(eedges[, 1])  #now it is the row number where they are in the edges matrix
-          arr.nodes <- sort(effEdges[cbind(eedges[, 1],
-                                           sapply(eedges[, 2], FUN = switch, 2, 1))])
-          # Above are the vertices we arrived to (duplicity is allowed)
-          # I need this specially to know which vertices were the last added:
-          if (!anyDuplicated(a)) {
-          new.nodes <- arr.nodes  # all the vertices we arrive to weren't already
-                                  # included in "seed"
-          } else {
-          new.nodes <- setdiff(arr.nodes, seeds)
-          }
-          # Then, already included vertices are not considered new because of
-          # inclusion of edge connecting them
-          ### subEdges<-effEdges[unique(a),] #the subset of edges.
-          ### The repeated just have to be included once.
-
-          # maybe we are arriving to the nodes more than once (due to small cycles)
-          # or we can get again to already included vertices (due to larger cycles).
-          # We want to include them as may times as they are
-          # neighbours of already included vertices. That is why I consider arr.nodes.
-          # If a originally seed vertex is included more than once, it is because it
-          # was selected also by following one edge and then it also has the category of non seed.
-
-          sampleN <- sort(c(sampleN, arr.nodes))
-          seeds <- unique(sampleN)
-
-          if (nn > 1)
-          effEdges <- effEdges[-unique(a), ]
-          # Above, I remove the "used edges" to facilitate following searches
-          # within while,and assure we do not "arrive" to a node more times
-          # than edges it has.
-
-          if (length(effEdges) > 0) {
-          if (is.vector(effEdges))
-            effEdges <- t(effEdges)
-          # Above, I have to this very often in R to make sure effEdges is a matrix
-          # and not a vector.
-          } else {
-          more <- FALSE
-          }  #when it reduces to become a matrix with one row.
-
-        }  #end if(any(a))
-      nn <- nn - 1
-    }  #end while
-  }
-  list(seeds = seed0, nodes = seeds, sampleN = sampleN, last.added = sort(new.nodes))
-  # neighEdges=neighEdges,
-  # Examples:
-  # we are not really interested in running this function directly,
-  # but within the next function called empdegreedistrib6
-  # net<-local.network.MR.new5(n=100,distrib="pois",param=2)
-  # a<-sampleneigh(net,n.seeds=3,n.neigh=1,seeds=NULL)
-  # a<-sampleneigh(net,n.seeds=3,n.neigh=3,seeds=NULL)
-}
-

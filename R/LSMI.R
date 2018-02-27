@@ -1,11 +1,10 @@
 #' Snowball sampling with multiple inclusion.
 #'
 #' The function will conduct snowball sampling.
-#' @references Thompson, M. E., Ramirez Ramirez, L. L., Lyubchich, V. and
-#'  Gel, Y. R. (2015), Using the bootstrap for statistical inference
-#'  on random graphs. Can J Statistics. doi: 10.1002/cjs.11271
+#' @references
+#' \insertRef{gel_bootstrap_2017}{snowboot}
 #' @param classic Option for neighborhoods, i.e. waves, without multiple inclusions.
-#' @inheritParams Oempdegreedistrib
+#' @inheritParams empd_deg_lsmi
 #'
 #' @return A list containing the following elements:
 #'    \item{seeds}{A \code{numeric} a vector containing the numeric ids of
@@ -27,31 +26,28 @@
 #' @export
 #' @examples
 #' net <- artificial_networks[[1]]
-#' a <- LSMI(net, n.seeds = 20, n.neigh = 2)
+#' a <- lsmi(net, n.seeds = 20, n.neigh = 2)
 
-LSMI <- function(net, n.seeds = 10, n.neigh = 1, seeds = NULL, classic = F) {
-      unodes <- nodes.waves <- as.list(rep(0, n.seeds))
-      # Seed selection: is without replacement and at random
-      if (is.null(seeds)) {
-            seed0 <- sort(sample(1:length(net$degree), n.seeds, replace = FALSE))
-      } else {
-            seed0 <- seeds
-      }
-      sampleN <- NULL
-      if(classic == T){
-        g <- igraph::graph_from_edgelist(net$edges)
-        sampleN <- unlist(igraph::ego(g, order = n.neigh, nodes = seed0))
-      } else {
-        for (i in 1:n.seeds) {
-          snowball <- sample_about_one_seed(net, seed0[i], n.neigh)
-          sampleN <- c(sampleN, snowball$sampleN)
-          unodes[[i]] <- snowball$unodes
-          nodes.waves[[i]] <- snowball$nodes.waves
-        }
-      }
-      res <- list(seeds = seed0, sampleN = sort(sampleN))
-      res
+lsmi <- function(net, n.seeds = 10, n.neigh = 1, seeds = NULL, classic = FALSE) {
+  unodes <- nodes.waves <- as.list(rep(0, n.seeds))
+  # Seed selection: is without replacement and at random
+  if (is.null(seeds)) {
+    seed0 <- sort(sample(1:length(net$degree), n.seeds, replace = FALSE))
+  } else {
+    seed0 <- seeds
+  }
+  sampleN <- NULL
+  if(classic == TRUE){
+    g <- igraph::graph_from_edgelist(net$edges)
+    sampleN <- unlist(igraph::ego(g, order = n.neigh, nodes = seed0))
+  } else {
+    for (i in 1:n.seeds) {
+      snowball <- sample_about_one_seed(net, seed0[i], n.neigh)
+      sampleN <- c(sampleN, snowball$sampleN)
+      unodes[[i]] <- snowball$unodes
+      nodes.waves[[i]] <- snowball$nodes.waves
+    }
+  }
+  res <- list(seeds = seed0, sampleN = sort(sampleN))
+  res
 }
-# Examples #we are not really interested in running this function directly but within the next function called empdegree
-# distrib6 net<-local.network.MR.new5(n=100,distrib='pois',param=2)
-# a<-LSMI(net,n.seeds=3,n.neigh=3,seed=NULL)

@@ -11,9 +11,9 @@ min.greater <- function(v, x, ge = TRUE) {
       # I construct this function to obtain percentiles from a empirical distribution.  This form is to allow obtaining it for
       # a matrix of distributions. v is a vector x is a value
       if (ge) {
-            res <- min(which(v >= x))
+        res <- min(which(v >= x))
       } else {
-            res <- min(which(v > x))
+        res <- min(which(v > x))
       }
-      res
+  res
 }

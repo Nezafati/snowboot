@@ -12,16 +12,17 @@ sample_about_one_seed(net, seed0, n.neigh = 1)
   \item{edges}{The edgelist of the network. A two column
     \code{matrix} where each row is an edge.}
   \item{degree}{The degree sequence of the network, which is
-    an \code{integer} vector of length n.}
+    an \code{integer} vector of length \eqn{n}.}
   \item{n}{The network order.}
 }
-  The object can be created by \code{\link{local.network.MR.new5}} or
+  The object can be created by \code{\link{random_network}} or
   it can be imported.}
 
 \item{seed0}{\code{num}. Id of a seed to be sampled around.}
 
 \item{n.neigh}{A number of waves to be sampled around each seed in LSMI.
-For example, n.neigh = 0 corresponds to seeds only, and n.neigh = 1
+For example, \code{n.neigh = 0} corresponds to seeds only, and
+\code{n.neigh = 1}
 corresponds to sampling seeds and their first neighbors).
 Note that the algorithm allows for multiple inclusions.}
 }
@@ -39,15 +40,13 @@ a list containing:
 This function performs snowball sampling with multiple inclusions (LSMI) around a
 single seed.
 }
-\note{
-\code{\link{LSMI}.}
-}
 \examples{
 net <- artificial_networks[[1]]
 a <- sample_about_one_seed(net = net, seed0 = 1, n.neigh = 2)
 }
 \references{
-Thompson, M. E., Ramirez Ramirez, L. L., Lyubchich, V. and
- Gel, Y. R. (2015), Using the bootstrap for statistical inference
- on random graphs. Can J Statistics. doi: 10.1002/cjs.11271
+\insertRef{gel_bootstrap_2017}{snowboot}
+}
+\seealso{
+\code{\link{lsmi}.}
 }

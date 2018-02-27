@@ -2,11 +2,11 @@
 % Please edit documentation in R/cross_validation_mean.R
 \name{cross_validation_mean}
 \alias{cross_validation_mean}
-\title{A function that uses cross-validation to select seed-wave combination for
-estimation of a degree's frequency.}
+\title{A function that uses cross-validation to select seed-wave combination of LSMI
+for the estimated mean degree.}
 \usage{
-cross_validation_mean(network, n.seeds, n.neigh, n.boot, method = "w",
-  alpha = 0.05, proxyRep = 19, proxyOrder = 30)
+cross_validation_mean(network, n.seeds, n.neigh, boot_rep, alpha = 0.05,
+  proxyRep = 19, proxyOrder = 30)
 }
 \arguments{
 \item{network}{A network object that is list containing:
@@ -17,7 +17,7 @@ cross_validation_mean(network, n.seeds, n.neigh, n.boot, method = "w",
     an \code{integer} vector of length n.}
   \item{n}{The network order.}
 }
-  The object can be created by \code{\link{local.network.MR.new5}} or
+  The object can be created by \code{\link{random_network}} or
   it can be imported.}
 
 \item{n.seeds}{A numeric vector for the different sample sizes of seed to use
@@ -26,10 +26,7 @@ in cross-validation.}
 \item{n.neigh}{A numeric vector for the different waves to use
 in cross-validation.}
 
-\item{n.boot}{The number of bootstrap sample.}
-
-\item{method}{Can be either "w" for weighted bootstrap or "nw" for
-non-weighted bootstrap. "w" is recommended and set as the default method.}
+\item{boot_rep}{The number of bootstrap sample.}
 
 \item{alpha}{Desided type I error for bootstrap confidence intervals, which
 are obtained using the quantile method.}
@@ -40,18 +37,18 @@ are obtained using the quantile method.}
 }
 \value{
 A list consisting of
- \item{selected_seed_wave}{A matrices that provides
-   the best seed-wave combinations (obtained via cross-validation) for
-   the respective estimation method.}
- \item{selected_seed_wave}{A vector of length 2 that provides
+ \item{best_combination}{A matrices that provides
+   the best seed-wave combinations for LSMI (obtained via cross-validation)
+   when estimating mean degree.}
+ \item{best_boot_ci_mean}{A vector of length 2 that provides
    the bootstrap confidence intervals for the estimated mean degree
    using the best seed-wave combinations (see above).}
 }
 \description{
 The function's inputs are a network, a vector of possible seed sample-sizes,
 a vector of possible waves, and a few tuning parameters. The output will
-contain the best seed-wave combination for each degree and the width of the
-95 percent bootstrap confidence intervals at each degree for
+contain the best seed-wave combination for the mean degree and the width of the
+bootstrap confidence intervals for the mean degree when using
 the best seed-wave combination.
 }
 \note{
@@ -60,13 +57,10 @@ Only one LSMI per seed-wave combination is currently supported.
 \examples{
 net <- artificial_networks[[1]]
 a <- cross_validation_mean(network = net, n.seeds = c(10, 20, 30), n.neigh = c(1, 2),
- n.boot = 200, method = "w")
+ boot_rep = 200)
 }
 \references{
-Efron, B. (1979). Bootstrap methods: another look at the
- jackknife. The annals of Statistics, 1-26.
+\insertRef{efron_bootstrap_1979}{snowboot}
 
-Thompson, M. E., Ramirez Ramirez, L. L., Lyubchich, V. and
- Gel, Y. R. (2015), Using the bootstrap for statistical inference
- on random graphs. Can J Statistics. doi: 10.1002/cjs.11271
+\insertRef{gel_bootstrap_2017}{snowboot}
 }

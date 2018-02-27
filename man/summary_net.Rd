@@ -12,10 +12,10 @@ summary_net(net)
   \item{edges}{The edgelist of the network. A two column
     \code{matrix} where each row is an edge.}
   \item{degree}{The degree sequence of the network, which is
-    an \code{integer} vector of length n.}
+    an \code{integer} vector of length \eqn{n}.}
   \item{n}{The network order.}
 }
-  The object can be created by \code{\link{local.network.MR.new5}} or
+  The object can be created by \code{\link{random_network}} or
   it can be imported.}
 }
 \value{
@@ -23,14 +23,14 @@ a list consisting of:
    \item{realdd}{A vector of length \code{net$n} where each element
    corresponds to the degree of a node in the network.}
    \item{rmean}{A numeric vector of length one that is the arithmetic mean
-         of \code{realdd}. see \code{\link[base]{mean}}.}
+         of \code{realdd}. See \code{\link[base]{mean}}.}
    \item{rquart}{The lower, median, and upper quartiles of degree sequence
          \code{realdd}.}
    \item{rfreq}{A numeric vector of length five where each element
          corresponds to the proportion of seeds with degree: 0, 1, 2, 3, and
          4 (respectively).}
    \item{rdeci}{A numeric vector of length nine containing the deciles of
-         of degree sequence \code{realdd} in increasing order.}
+         the degree sequence \code{realdd} in increasing order.}
 }
 \description{
 This function provides summary statistics of a network degree

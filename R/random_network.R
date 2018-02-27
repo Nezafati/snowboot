@@ -23,11 +23,11 @@
 #'    \item{n}{The network order. The order for every network is 2000.}
 #' @export
 #' @examples
-#' a <- local.network.MR.new5(1000,"poly.log",c(2,13))
+#' a <- random_network(1000, "poly.log", c(2, 13))
 
 ###################### NETWORK CONSTRUCTION MAIN FUNCTION ######################
-local.network.MR.new5 <- function(n, distrib, param = NULL, degree = NULL,
-                                  take.p = 0.05) {
+random_network <- function(n, distrib, param = NULL, degree = NULL,
+                           take.p = 0.05) {
   # param is not a list We develop the network construction by sampling in two stages.
   # We use the frequency tables of the vertices' degree
   # and arch weights (that are the product of the vertices's degree they connect)
