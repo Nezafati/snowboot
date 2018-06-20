@@ -1,5 +1,5 @@
 ## Test environments
-* local OS X install, R 3.3.2
+* local OS X install, R 3.5.0
 * win-builder (devel and release)
 
 ## R CMD check results
@@ -14,4 +14,4 @@ This is a resubmission. In this version I have:
 
 * Revised the object documentation.
 
-* Replaced cross_validation() with cross_validation_mean().
+* Standardized code style and naming convention of functions.
