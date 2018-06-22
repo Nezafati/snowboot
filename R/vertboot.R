@@ -6,7 +6,7 @@
 #' @param boot_rep A positive integer number, the number of bootstrap replications.
 #' @references
 #' \insertRef{snijders_non-parametric_1999}{snowboot}
-#' @return A list of bootstrapped networks as adjacency matricies.
+#' @return A list of bootstrapped networks as adjacency matrices.
 #' @export
 #' @examples
 #' graph_ex <- igraph::graph_from_edgelist(artificial_networks[[1]]$edges)

@@ -68,7 +68,7 @@ combine_lsmi_nodes <- function(bootEmpD){
 #' \insertRef{efron_bootstrap_1979}{snowboot}
 #' @references
 #' \insertRef{gel_bootstrap_2017}{snowboot}
-#' @param alpha Desided type I error for bootstrap confidence intervals, which
+#' @param alpha Desired type I error for bootstrap confidence intervals, which
 #'  are obtained using the quantile method.
 #' @param network A network object that is list containing:
 #'  \describe{

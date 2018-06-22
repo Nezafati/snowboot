@@ -10,7 +10,7 @@
 #'    \item{seeds}{A \code{numeric} a vector containing the numeric ids of
 #'          sampled seeds.}
 #'    \item{sampleN}{A \code{numeric} vector containing ids of the nodes from
-#'          the snowball sampling and the intial seeds' ids. This vector may have
+#'          the snowball sampling and the initial seeds' ids. This vector may have
 #'          duplicates, since the algorithm allows for multiple inclusions.}
 #'    \item{unodes}{A list of length \code{n.seeds} where each element is a
 #'          \code{numeric} vector containing the seed's id and

@@ -34,12 +34,12 @@
 #'          is a list containing three tables:
 #'          the frequency of degrees sampled from seeds,
 #'          non-seeds including duplicated nodes,
-#'          and non-seeds without duplications.}
+#'          and non-seeds without duplication.}
 #'    \item{values}{A list of length \code{num_lsmi} where each element is a
 #'          vector containing the unique degree values sampled in each LSMI.}
 #'    \item{Oemp}{A list of length \code{num_lsmi} where each element
 #'          is a list containing two tables based on different methods to
-#'          estimating the empirical distribution from the newtork sample, the LSMI.
+#'          estimating the empirical distribution from the network sample, the LSMI.
 #'          The two tables (\code{Oempd} and \code{Oempd.nw.p0rEks})
 #'          correspond to two different ways of estimating
 #'          the empirical distribution. \code{Oempd} is

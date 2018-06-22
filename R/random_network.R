@@ -13,7 +13,7 @@
 #' @param degree An optional vector of degrees that must be of length \code{n}.
 #' The default is \code{degree = NULL}.
 #' @param take.p A number between 0 and 1 representing the proportion to take
-#'  for elimiation with each iteration.
+#'  for elimination with each iteration.
 #' @return A list consisting of
 #'    \item{edges}{The edgelist of the network. A two column
 #'      \code{matrix} where each row is an edge.}

@@ -1,6 +1,6 @@
 #' Snowball sampling with multiple inclusion.
 #'
-#' The function will creat a list of LSMI objects. The function is primairly
+#' The function will create a list of LSMI objects. The function is primarily
 #' used in cross-validation.
 #' @seealso \code{\link{lsmi}.}
 #' @references
