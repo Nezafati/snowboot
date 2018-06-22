@@ -28,7 +28,7 @@ in cross-validation.}
 
 \item{boot_rep}{The number of bootstrap sample.}
 
-\item{alpha}{Desided type I error for bootstrap confidence intervals, which
+\item{alpha}{Desired type I error for bootstrap confidence intervals, which
 are obtained using the quantile method.}
 
 \item{proxyRep}{The number of time to sample a proxy. Default is 19.}

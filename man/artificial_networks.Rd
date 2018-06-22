@@ -24,7 +24,7 @@ degree distribution (Newman et al., 2001) with parameters
 \eqn{\delta = 0.1} and \eqn{\lambda = 2} as see in the following equations:
 \deqn{f(k) = k^{-{\delta}}e^{-{k/{\lambda}}}/Li_{\delta}(e^{-{1/\lambda}})}{f(k)=k^-\delta exp(-k/\lambda )/Li[\delta](exp(-1/\lambda))}
 \deqn{Li=\sum_{j=1}^{\infty} z^{-j}/{j^{\delta}},}{Li=\sum_{j=1}^{\infty} z^{-j}/{j^{\delta}},}
-where \eqn{\lambda > 0}. Please see refence below for details (Gel et al., 2017).
+where \eqn{\lambda > 0}. Please see reference below for details (Gel et al., 2017).
 }
 \references{
 \insertRef{gel_bootstrap_2017}{snowboot}

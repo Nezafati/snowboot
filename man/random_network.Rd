@@ -21,7 +21,7 @@ distribution. User may choose from 11 available distributions: "fixed",
 The default is \code{degree = NULL}.}
 
 \item{take.p}{A number between 0 and 1 representing the proportion to take
-for elimiation with each iteration.}
+for elimination with each iteration.}
 }
 \value{
 A list consisting of

@@ -12,7 +12,7 @@ vertboot(m1, boot_rep)
 \item{boot_rep}{A positive integer number, the number of bootstrap replications.}
 }
 \value{
-A list of bootstrapped networks as adjacency matricies.
+A list of bootstrapped networks as adjacency matrices.
 }
 \description{
 This function bootstraps the the original network using a vertex bootstrap technique.
