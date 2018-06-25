@@ -2,7 +2,7 @@ Package: snowboot
 Type: Package
 Title: Bootstrap Methods for Network Inference
 Version: 0.6.0
-Date: 2018-6-20
+Date: 2018-6-25
 Author: Leticia Ramirez-Ramirez, Kusha Nezafati, Yuzhou Chen, 
     Vyacheslav Lyubchich, Yulia Gel
 Maintainer: Kusha Nezafati <kusha.nezafati@gmail.com>
