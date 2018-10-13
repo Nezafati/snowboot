@@ -23,7 +23,7 @@ are centered around snowball sampling and bootstrap estimation.
 
 Get the released version from CRAN:
 
-```{r, eval=FALSE}
+```{r, eval = FALSE}
 install.packages("snowboot")
 ```
 

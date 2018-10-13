@@ -4,7 +4,8 @@
 \alias{random_network}
 \title{Construct Artificial Networks}
 \usage{
-random_network(n, distrib, param = NULL, degree = NULL, take.p = 0.05)
+random_network(n, distrib, param = NULL, degree = NULL,
+  take.p = 0.05)
 }
 \arguments{
 \item{n}{The number of nodes in the desired network.}

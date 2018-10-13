@@ -2,66 +2,58 @@
 % Please edit documentation in R/lsmi.R
 \name{lsmi}
 \alias{lsmi}
-\title{Snowball sampling with multiple inclusion.}
+\title{Labeled Snowball with Multiple Inclusions (LSMI)}
 \usage{
-lsmi(net, n.seeds = 10, n.neigh = 1, seeds = NULL, classic = FALSE)
+lsmi(net, n.seed = 10, n.wave = 1, seeds = NULL)
 }
 \arguments{
-\item{net}{A network object that is list containing:
+\item{net}{a network object that is a list containing:
 \describe{
-  \item{edges}{The edgelist of the network. A two column
-    \code{matrix} where each row is an edge.}
-  \item{degree}{The degree sequence of the network, which is
-    an \code{integer} vector of length \eqn{n}.}
-  \item{n}{The network order.}
+  \item{\code{degree}}{the degree sequence of the network, which is
+     an \code{integer} vector of length \eqn{n};}
+  \item{\code{edges}}{the edgelist, which is a two-column
+     matrix, where each row is an edge of the network;}
+  \item{\code{n}}{the network order (number of nodes in the network).}
 }
-  The object can be created by \code{\link{random_network}} or
-  it can be imported.}
+The network object can be simulated by \code{\link{random_network}},
+selected from the networks available in \code{\link{artificial_networks}},
+converged from an \code{igraph} object with \code{\link{igraph_to_network}},
+etc.}
 
-\item{n.seeds}{A number of seeds in the snowball sample.
-It must be a positive integer.}
+\item{n.seed}{an integer defining the number of nodes to randomly sample
+from the network to start an LSMI sample around each of them.}
 
-\item{n.neigh}{A number of waves to be sampled around each seed in LSMI.
-For example, \code{n.neigh = 0} corresponds to seeds only, and
-\code{n.neigh = 1}
-corresponds to sampling seeds and their first neighbors).
-Note that the algorithm allows for multiple inclusions.}
+\item{n.wave}{an integer defining the number of waves (order of the neighborhood)
+to be recorded around the seed in the LSMI. For example, \code{n.wave = 1} corresponds to
+an LSMI with the seed and its first neighbors. Note that the algorithm allows for
+multiple inclusions.}
 
-\item{seeds}{A matrix of dimension \code{num_lsmi} \eqn{\times} \code{n.seeds}
-containing the
-numeric ids of the seeds to initiate sampling. Each row of the matrix
-corresponds to one LSMI sample. Note that this is an optional parameter.
-WARNING: As of now, this feature is only supported when
-parameter \code{n.neigh} is greater than zero.}
-
-\item{classic}{Option for neighborhoods, i.e. waves, without multiple inclusions.}
+\item{seeds}{a vector of numeric IDs of pre-specified seeds. If specified,
+LSMIs are constructed around each such seed.}
 }
 \value{
-A list containing the following elements:
-   \item{seeds}{A \code{numeric} a vector containing the numeric ids of
-         sampled seeds.}
-   \item{sampleN}{A \code{numeric} vector containing ids of the nodes from
-         the snowball sampling and the initial seeds' ids. This vector may have
-         duplicates, since the algorithm allows for multiple inclusions.}
-   \item{unodes}{A list of length \code{n.seeds} where each element is a
-         \code{numeric} vector containing the seed's id and
-         the unique ids of all nodes that were snowball sampled from
-         that seed using \code{\link{sample_about_one_seed}}
-         (one vector per seed).}
-   \item{nodes.waves}{A list of length \code{n.seeds} where each element is
-         a list of length \code{n.neigh} (Note: these lists are the output
-         object \code{$nodes.waves} from
-         \code{\link{sample_about_one_seed}}) that contains vectors of
-         numeric id's of the nodes reached in each respective wave from the
-         respective seed.}
+A list of length \code{n.seed} (or, if \code{seeds} are specified,
+of length \code{length(unique(seeds))}), where each element is a list
+of length \code{n.wave + 1} representing an LSMI produced by
+\code{\link{sample_about_one_seed}}.
 }
 \description{
-The function will conduct snowball sampling.
+Obtain LSMI samples around several seeds, which can be selected randomly or
+pre-specified. See Figure 1 by
+\insertCite{gel_etal_2017;textual}{snowboot} illustrating the algorithm
+of samling around multiple seeds.
+}
+\details{
+If \code{seeds} specified, \code{n.seed} is not used.
 }
 \examples{
 net <- artificial_networks[[1]]
-a <- lsmi(net, n.seeds = 20, n.neigh = 2)
+a <- lsmi(net, n.seed = 20, n.wave = 2)
+
 }
 \references{
-\insertRef{gel_bootstrap_2017}{snowboot}
+\insertAllCited{}
+}
+\seealso{
+\code{\link{sample_about_one_seed}}, \code{\link{lsmi_union}}
 }

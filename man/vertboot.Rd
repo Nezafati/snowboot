@@ -2,7 +2,7 @@
 % Please edit documentation in R/vertboot.R
 \name{vertboot}
 \alias{vertboot}
-\title{Bootstrapping a network with vertex bootstrap}
+\title{Bootstrapping a Network with Vertex Bootstrap}
 \usage{
 vertboot(m1, boot_rep)
 }
@@ -24,5 +24,5 @@ m1 <- as.matrix(m1)
 vertboot_out <- vertboot(m1, 20)
 }
 \references{
-\insertRef{snijders_non-parametric_1999}{snowboot}
+\insertRef{snijders_borgatti_1999}{snowboot}
 }

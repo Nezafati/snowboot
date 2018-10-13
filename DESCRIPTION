@@ -2,23 +2,14 @@ Package: snowboot
 Type: Package
 Title: Bootstrap Methods for Network Inference
 Version: 0.6.0
-Date: 2018-6-25
-Author: Leticia Ramirez-Ramirez, Kusha Nezafati, Yuzhou Chen, 
-    Vyacheslav Lyubchich, Yulia Gel
-Maintainer: Kusha Nezafati <kusha.nezafati@gmail.com>
-Description: Functions for analysis of network objects, which are imported or
-    simulated by the package. The non-parametric methods of analysis center
-    around snowball and bootstrap sampling.
-Depends:
-    R (>= 3.3)
+Date: 2018-10-13
+Authors@R: c(person("Leticia", "Ramirez-Ramirez", role = "aut"), person("Kusha", "Nezafati", role = "aut"), person("Yuzhou", "Chen", role = "aut"), person("Vyacheslav", "Lyubchich", role = c("aut", "cre"), email = "lyubchich@umces.edu"), person("Yulia R.", "Gel", role = "aut"))
+Description: Functions for analysis of network objects, which are imported or simulated by the package. The non-parametric methods of analysis center around snowball and bootstrap sampling.
+Depends: R (>= 3.3)
 License: GPL-3
 LazyData: TRUE
-Imports:
-    VGAM,
-    igraph,
-    stats,
-    Rcpp,
-    Rdpack
+Imports: igraph, parallel, Rcpp, Rdpack, stats, VGAM
 RdMacros: Rdpack
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 LinkingTo: Rcpp
+Encoding: UTF-8

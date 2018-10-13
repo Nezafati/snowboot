@@ -1,6 +1,6 @@
 #' Create a "Network" Object from an igraph Object
 #'
-#' This function will convert an igraph object to an object compatible with
+#' This function converts an igraph object to an object compatible with
 #' snowboot functions.
 #'
 #' @param in_graph An igraph object. To create igraph objects from field data,
