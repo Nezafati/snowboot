@@ -4,7 +4,7 @@
 #' of network degree distribution: probabilities of node degrees \eqn{f(k)}
 #' and mean degree \eqn{\mu}, where \eqn{k = 0, 1, \ldots} are the degrees.
 #'
-#' @details Currently, the bootstap intervals can be calculated with two alternative
+#' @details Currently, the bootstrap intervals can be calculated with two alternative
 #' methods: \code{"percentile"} or \code{"basic"}. The \code{"percentile"}
 #' intervals correspond to Efron's \eqn{100\cdot}\code{prob}\% intervals
 #' \insertCite{@see @efron_1979, also Equation 5.18 by @davison_hinkley_1997 and Equation 3 by @gel_etal_2017}{snowboot}:

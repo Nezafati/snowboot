@@ -38,7 +38,7 @@ corresponding element of the output contains \code{NA}.
 This function obtains a labeled snowball with multiple inclusions (LSMI) sample,
 starting from a single network node called seed. See Figure 1 by
 \insertCite{thompson_etal_2016;textual}{snowboot} illustrating the algorithm
-of samling around one seed.
+of sampling around one seed.
 }
 \examples{
 net <- artificial_networks[[1]]

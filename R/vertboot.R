@@ -1,8 +1,8 @@
 #'Bootstrapping a Network with Vertex Bootstrap
 #'
-#'This function bootstraps the the original network using a vertex bootstrap technique.
+#'This function bootstraps the original network using a vertex bootstrap technique.
 #'
-#' @param m1 An adjacency matrix,the matrix represents the original network.
+#' @param m1 An adjacency matrix of the original network.
 #' @param boot_rep A positive integer number, the number of bootstrap replications.
 #' @references
 #' \insertRef{snijders_borgatti_1999}{snowboot}
