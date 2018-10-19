@@ -3,16 +3,16 @@
 #' This function constructs an artificial network from a given distribution.
 #' Only 11 distributions are available.
 #'
-#' @param n The number of nodes in the desired network.
-#' @param distrib An atomic character representing the desired degree
+#' @param n the number of nodes in the desired network.
+#' @param distrib an atomic character representing the desired degree
 #' distribution. User may choose from 11 available distributions: "fixed",
 #' "pois", "ztpois", "geom", "nbinom", "ztgeom", "poly.log", "logarithmic",
 #' "power.law", "full" (fully connected), or "none" (no element connected).
-#' @param param The distribution parameters. If the function is "fixed",
+#' @param param the distribution parameters. If the function is "fixed",
 #' \code{param} is a vector of degrees.
-#' @param degree An optional vector of degrees that must be of length \code{n}.
+#' @param degree an optional vector of degrees that must be of length \code{n}.
 #' The default is \code{degree = NULL}.
-#' @param take.p A number between 0 and 1 representing the proportion to take
+#' @param take.p a number between 0 and 1 representing the proportion to take
 #'  for elimination with each iteration.
 #' @return A list consisting of:
 #'    \item{edges}{The edgelist of the network. A two column

@@ -7,7 +7,7 @@
 vertboot(m1, boot_rep)
 }
 \arguments{
-\item{m1}{An adjacency matrix,the matrix represents the original network.}
+\item{m1}{An adjacency matrix of the original network.}
 
 \item{boot_rep}{A positive integer number, the number of bootstrap replications.}
 }
@@ -15,7 +15,7 @@ vertboot(m1, boot_rep)
 A list of bootstrapped networks as adjacency matrices.
 }
 \description{
-This function bootstraps the the original network using a vertex bootstrap technique.
+This function bootstraps the original network using a vertex bootstrap technique.
 }
 \examples{
 graph_ex <- igraph::graph_from_edgelist(artificial_networks[[1]]$edges)

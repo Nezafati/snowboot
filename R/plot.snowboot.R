@@ -2,13 +2,13 @@
 #'
 #' Plot LSMI-based point estimates of probabilities of node degrees, \eqn{\hat{f}(k)}, and
 #' of mean degree, \eqn{\hat{\mu}}, where \eqn{k = 0, 1, \ldots} are the degrees.
-#' Depending on the input, the point estimates are supplemented with box-and-whisker plots
-#' of bootstrapped values (if the input is a \code{\link{boot_dd}} object) or element-wise
-#' bootstrap confidence intervals (if the input is a \code{\link{boot_ci}} object).
+#' The point estimates are supplemented with box-and-whisker plots
+#' of bootstrapped values (if the input is a \code{\link{boot_dd}} output) or element-wise
+#' bootstrap confidence intervals (if the input is a \code{\link{boot_ci}} output).
 #'
 #' @param x output of \code{\link{lsmi_dd}}, \code{\link{boot_dd}}, or \code{\link{boot_ci}}.
 #' @param k an integer vector with degrees to plot.
-#' By default, all available degrees are plotted.
+#' By default, all degrees represented in \code{x} are plotted.
 #' @param plotmu logical value indicating whether to plot the results for mean degree
 #' (default is \code{TRUE}).
 #' @param plotlegend logical value indicating whether to plot a legend

@@ -3,7 +3,7 @@
 #' Obtain LSMI samples around several seeds, which can be selected randomly or
 #' pre-specified. See Figure 1 by
 #' \insertCite{gel_etal_2017;textual}{snowboot} illustrating the algorithm
-#' of samling around multiple seeds.
+#' of sampling around multiple seeds.
 #'
 #' If \code{seeds} specified, \code{n.seed} is not used.
 #'

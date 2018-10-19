@@ -8,20 +8,20 @@ random_network(n, distrib, param = NULL, degree = NULL,
   take.p = 0.05)
 }
 \arguments{
-\item{n}{The number of nodes in the desired network.}
+\item{n}{the number of nodes in the desired network.}
 
-\item{distrib}{An atomic character representing the desired degree
+\item{distrib}{an atomic character representing the desired degree
 distribution. User may choose from 11 available distributions: "fixed",
 "pois", "ztpois", "geom", "nbinom", "ztgeom", "poly.log", "logarithmic",
 "power.law", "full" (fully connected), or "none" (no element connected).}
 
-\item{param}{The distribution parameters. If the function is "fixed",
+\item{param}{the distribution parameters. If the function is "fixed",
 \code{param} is a vector of degrees.}
 
-\item{degree}{An optional vector of degrees that must be of length \code{n}.
+\item{degree}{an optional vector of degrees that must be of length \code{n}.
 The default is \code{degree = NULL}.}
 
-\item{take.p}{A number between 0 and 1 representing the proportion to take
+\item{take.p}{a number between 0 and 1 representing the proportion to take
 for elimination with each iteration.}
 }
 \value{

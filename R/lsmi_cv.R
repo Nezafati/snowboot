@@ -4,7 +4,7 @@
 #' seed, the function selects a single number \code{n.seed} and an \code{n.wave}
 #' (optimal seed-wave combination) that produce
 #' a labeled snowball with multiple inclusions (LSMI) sample with desired
-#' bootstrap confidende intervals for a parameter of interest. Here by `desired'
+#' bootstrap confidence intervals for a parameter of interest. Here by `desired'
 #' we mean that the interval (and corresponding seed-wave combination) are selected
 #' as having the best coverage (closest to the specified level \code{prob}), based on
 #' a cross-validation procedure with proxy estimates of the parameter.
