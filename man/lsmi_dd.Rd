@@ -29,7 +29,7 @@ etc.}
 (ignored if \code{x} is specified, see Details).}
 }
 \value{
-A list consisting of:
+A list object of class "\code{snowboot}" consisting of:
 \item{fk}{A named numeric vector with estimated probabilities \eqn{\hat{f}(k)}
 of degrees \eqn{k}, where \eqn{k = 0, 1, \ldots,} \code{max(c(ds, dns))}
 (i.e., \eqn{k} ranges from 0 to the maximum node degree observed in the LSMI sample).

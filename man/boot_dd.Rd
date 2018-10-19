@@ -32,7 +32,7 @@ Possible values are:
 }}
 }
 \value{
-A list consisting of:
+A list object of class "\code{snowboot}" consisting of:
    \item{fkb}{A matrix of dimensions \code{length(x$fk)}\eqn{\times}\code{B}
    with \code{B} bootstrap estimates of the degree distribution.
    The bootstrap estimates are computed according to

@@ -23,7 +23,7 @@
 #' @param ... arguments passed to the \code{\link{lsmi}} function
 #' (ignored if \code{x} is specified, see Details).
 #'
-#' @return A list consisting of:
+#' @return A list object of class "\code{snowboot}" consisting of:
 #' \item{fk}{A named numeric vector with estimated probabilities \eqn{\hat{f}(k)}
 #' of degrees \eqn{k}, where \eqn{k = 0, 1, \ldots,} \code{max(c(ds, dns))}
 #' (i.e., \eqn{k} ranges from 0 to the maximum node degree observed in the LSMI sample).
@@ -76,5 +76,7 @@ lsmi_dd <- function(x = NULL, net, ...) {
   k <- c(0:dmax)
   fk <- c(p0, fk)
   mu = sum(k * fk)
-  list(fk = fk, mu = mu, ds = ds, dns = dns)
+  res <- list(fk = fk, mu = mu, ds = ds, dns = dns)
+  class(res) <- "snowboot"
+  return(res)
 }

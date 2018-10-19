@@ -28,7 +28,7 @@
 #' @param method method for calculating the bootstrap intervals. Default is
 #' \code{"percentile"} (see Details).
 #'
-#' @return A list with the following elements:
+#' @return A list object of class "\code{snowboot}" with the following elements:
 #' \item{fk_ci}{A matrix of dimensions \eqn{2 \times}\code{length(x$fk)}, where
 #' the number of columns corresponds to the number of probabilities \eqn{f(k)}
 #' estimated from an LSMI sample. Each column of the matrix is a confidence
@@ -38,6 +38,9 @@
 #' bounds for the network mean degree \eqn{\mu}.}
 #' \item{prob}{Confidence level for the intervals.}
 #' \item{method}{Method that was used for calculating the bootstrap intervals.}
+#' \item{fk}{A vector with an estimate of the degree distribution, copied
+#'    from the input \code{x$fk}.}
+#' \item{mu}{An estimate of the mean degree, copied from the input \code{x$mu}.}
 #'
 #' @references
 #' \insertAllCited{}
@@ -66,5 +69,7 @@ boot_ci <- function(x, prob = 0.95, method = c("percentile", "basic")) {
     mu_ci[1] <- 2 * x$mu - tmp[2]
     mu_ci[2] <- 2 * x$mu - tmp[1]
   }
-  list(fk_ci = fk_ci, mu_ci = mu_ci, prob = prob, method = method)
+  res  <- list(fk_ci = fk_ci, mu_ci = mu_ci, prob = prob, method = method, fk = x$fk, mu = x$mu)
+  class(res) <- "snowboot"
+  return(res)
 }

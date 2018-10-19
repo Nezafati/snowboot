@@ -29,7 +29,7 @@
 #'   and stopped afterwards (using \link[parallel]{stopCluster}).
 #' }
 #'
-#' @return A list consisting of:
+#' @return A list object of class "\code{snowboot}" consisting of:
 #'    \item{fkb}{A matrix of dimensions \code{length(x$fk)}\eqn{\times}\code{B}
 #'    with \code{B} bootstrap estimates of the degree distribution.
 #'    The bootstrap estimates are computed according to
@@ -98,7 +98,9 @@ boot_dd <- function(x, B = 100, cl = 1) {
   fkb <- rbind(ddsb[1,], fkb)
   rownames(fkb) <- k
   mub <- apply(sweep(fkb, MARGIN = 1, k, `*`), 2, sum)
-  list(fkb = fkb, mub = mub, fk = fk, mu = x$mu, B = B)
+  res <- list(fkb = fkb, mub = mub, fk = fk, mu = x$mu, B = B)
+  class(res) <- "snowboot"
+  return(res)
 }
 
 
