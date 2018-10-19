@@ -28,7 +28,7 @@
 #' @references
 #' \insertAllCited{}
 #'
-#' @seealso \code{\link{sample_about_one_seed}}, \code{\link{lsmi}}, \code{\link{cross_validation}}
+#' @seealso \code{\link{sample_about_one_seed}}, \code{\link{lsmi}}, \code{\link{lsmi_cv}}
 #' @export
 #' @examples
 #' net <- artificial_networks[[1]]

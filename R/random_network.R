@@ -14,7 +14,7 @@
 #' The default is \code{degree = NULL}.
 #' @param take.p A number between 0 and 1 representing the proportion to take
 #'  for elimination with each iteration.
-#' @return A list consisting of
+#' @return A list consisting of:
 #'    \item{edges}{The edgelist of the network. A two column
 #'      \code{matrix} where each row is an edge.}
 #'    \item{degree}{The degree sequence of the network, which is

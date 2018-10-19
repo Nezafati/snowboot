@@ -1,4 +1,4 @@
-#' Cross-validation to Select Optimal Combination of n.seed and n.wave
+#' Cross-validation to Select an Optimal Combination of n.seed and n.wave
 #'
 #' From the vector of specified \code{n.seeds} and possible waves \code{1:n.wave} around each
 #' seed, the function selects a single number \code{n.seed} and an \code{n.wave}
@@ -44,13 +44,13 @@
 #' @export
 #' @examples
 #' net <- artificial_networks[[1]]
-#' a <- cross_validation(net, n.seeds = c(10, 20, 30), n.wave = 5, B = 100)
+#' a <- lsmi_cv(net, n.seeds = c(10, 20, 30), n.wave = 5, B = 100)
 #'
-cross_validation <- function(net, n.seeds, n.wave, seeds = NULL,
-                             B = 100, prob = 0.95, cl = 1,
-                             param = c("mu"),
-                             method = c("percentile", "basic"),
-                             proxyRep = 19, proxySize = 30)
+lsmi_cv <- function(net, n.seeds, n.wave, seeds = NULL,
+                    B = 100, prob = 0.95, cl = 1,
+                    param = c("mu"),
+                    method = c("percentile", "basic"),
+                    proxyRep = 19, proxySize = 30)
 {
   method <- match.arg(method)
   param <- match.arg(param)

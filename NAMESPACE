@@ -2,9 +2,9 @@
 
 export(boot_ci)
 export(boot_dd)
-export(cross_validation)
 export(igraph_to_network)
 export(lsmi)
+export(lsmi_cv)
 export(lsmi_dd)
 export(lsmi_union)
 export(random_network)

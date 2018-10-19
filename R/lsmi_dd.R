@@ -13,7 +13,7 @@
 #' not yet implemented in the package). To estimate a degree distribution or
 #' mean degree, both the LSMI sample and the original network object are required.
 #' If the LSMI object \code{x} is not supplied, the function will attempt
-#' sampling an LSMI automatically, using the arguments supplied in \code{...}
+#' sampling an LSMI automatically, using the arguments supplied in "\code{...}"
 #' that will be passed to the \code{\link{lsmi}} function.
 #'
 #' @inheritParams lsmi

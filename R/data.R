@@ -7,10 +7,9 @@
 #' \eqn{\delta = 0.1} and \eqn{\lambda = 2} as shown in the following equations:
 #' \deqn{f(k) = k^{-{\delta}}e^{-{k/{\lambda}}}/Li_{\delta}(e^{-{1/\lambda}})}{f(k)=k^-\delta exp(-k/\lambda )/Li[\delta](exp(-1/\lambda)),}
 #' \deqn{Li_{\delta}(z)=\sum_{j=1}^{\infty} z^{-j}/{j^{\delta}},}{Li[\delta](z)=\sum_{j=1}^{\infty} z^{-j}/{j^{\delta}},}
-#' where \eqn{\lambda > 0}. Please see \insertCite{newman_etal_2001;textual}{snowboot}
-#' and \insertCite{gel_etal_2017;textual}{snowboot} for details.
-#' @references
-#' \insertAllCited{}
+#' where \eqn{\lambda > 0}
+#' \insertCite{@see @newman_etal_2001 and @gel_etal_2017 for details}{snowboot}.
+#'
 #' @format A list containing 10 network objects. Each network object is a list
 #' with three elements:
 #' \describe{
@@ -21,5 +20,8 @@
 #'   \item{\code{n}}{the network order (number of nodes in the network).
 #'   The order is 2000.}
 #' }
+#'
+#' @references
+#' \insertAllCited{}
 
 "artificial_networks"

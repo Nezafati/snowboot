@@ -13,7 +13,7 @@ lsmi_union(net, n.seeds, n.wave, seeds = NULL)
      an \code{integer} vector of length \eqn{n};}
   \item{\code{edges}}{the edgelist, which is a two-column
      matrix, where each row is an edge of the network;}
-  \item{\code{n}}{the network order (number of nodes in the network).}
+  \item{\code{n}}{the network order (i.e., number of nodes in the network).}
 }
 The network object can be simulated by \code{\link{random_network}},
 selected from the networks available in \code{\link{artificial_networks}},
@@ -64,5 +64,5 @@ a <- lsmi_union(net, n.seeds = c(5, 10, 15), n.wave = 2)
 \insertAllCited{}
 }
 \seealso{
-\code{\link{sample_about_one_seed}}, \code{\link{lsmi}}, \code{\link{cross_validation}}
+\code{\link{sample_about_one_seed}}, \code{\link{lsmi}}, \code{\link{lsmi_cv}}
 }

@@ -25,7 +25,7 @@ The default is \code{degree = NULL}.}
 for elimination with each iteration.}
 }
 \value{
-A list consisting of
+A list consisting of:
    \item{edges}{The edgelist of the network. A two column
      \code{matrix} where each row is an edge.}
    \item{degree}{The degree sequence of the network, which is

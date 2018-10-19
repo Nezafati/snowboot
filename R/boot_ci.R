@@ -2,15 +2,12 @@
 #'
 #' The function calculates bootstrap confidence intervals for the parameters
 #' of network degree distribution: probabilities of node degrees \eqn{f(k)}
-#' (where \eqn{k = 0, 1, \ldots} are the degrees)
-#' and mean degree \eqn{\mu}.
+#' and mean degree \eqn{\mu}, where \eqn{k = 0, 1, \ldots} are the degrees.
 #'
 #' @details Currently, the bootstap intervals can be calculated with two alternative
 #' methods: \code{"percentile"} or \code{"basic"}. The \code{"percentile"}
 #' intervals correspond to Efron's \eqn{100\cdot}\code{prob}\% intervals
-#' (\insertCite{efron_1979;textual}{snowboot}, also Equation 5.18 by
-#' \insertCite{davison_hinkley_1997;textual}{snowboot} and Equation 3 by
-#' \insertCite{gel_etal_2017;textual}{snowboot}):
+#' \insertCite{@see @efron_1979, also Equation 5.18 by @davison_hinkley_1997 and Equation 3 by @gel_etal_2017}{snowboot}:
 #' \deqn{(\theta^*_{[B\alpha/2]}, \theta^*_{[B(1-\alpha/2)]}),}
 #' where \eqn{\theta^*_{[B\alpha/2]}} and \eqn{\theta^*_{[B(1-\alpha/2)]}}
 #' are empirical quantiles of the bootstrap distribution with \code{B} bootstrap
@@ -18,8 +15,8 @@
 #' (\eqn{\theta} can be the \eqn{f(k)} or \eqn{\mu}),
 #' and \eqn{\alpha = 1 -} \code{prob}.
 #'
-#' The \code{"basic"} method produces intervals (see Equation 5.6 by
-#' \insertCite{davison_hinkley_1997;textual}{snowboot}):
+#' The \code{"basic"} method produces intervals
+#' \insertCite{@see Equation 5.6 by @davison_hinkley_1997}{snowboot}:
 #' \deqn{(2\hat{\theta} - \theta^*_{[B(1-\alpha/2)]}, 2\hat{\theta} - \theta^*_{[B\alpha/2]}),}
 #' where \eqn{\hat{\theta}} is the sample estimate of the parameter.
 #' Note that this method can lead to negative confidence bounds, especially
@@ -27,7 +24,7 @@
 #'
 #' @param x a list with bootstrapped results -- output of \code{\link{boot_dd}}.
 #' @param prob confidence level for the intervals. Default is 0.95
-#' (for 95\% confidence).
+#' (i.e., 95\% confidence).
 #' @param method method for calculating the bootstrap intervals. Default is
 #' \code{"percentile"} (see Details).
 #'

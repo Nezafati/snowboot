@@ -18,7 +18,7 @@ by \code{\link{lsmi_union}}.}
      an \code{integer} vector of length \eqn{n};}
   \item{\code{edges}}{the edgelist, which is a two-column
      matrix, where each row is an edge of the network;}
-  \item{\code{n}}{the network order (number of nodes in the network).}
+  \item{\code{n}}{the network order (i.e., number of nodes in the network).}
 }
 The network object can be simulated by \code{\link{random_network}},
 selected from the networks available in \code{\link{artificial_networks}},
@@ -53,7 +53,7 @@ sufficient to study some properties of a network (e.g., network motifs --
 not yet implemented in the package). To estimate a degree distribution or
 mean degree, both the LSMI sample and the original network object are required.
 If the LSMI object \code{x} is not supplied, the function will attempt
-sampling an LSMI automatically, using the arguments supplied in \code{...}
+sampling an LSMI automatically, using the arguments supplied in "\code{...}"
 that will be passed to the \code{\link{lsmi}} function.
 }
 \examples{

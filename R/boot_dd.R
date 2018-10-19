@@ -25,7 +25,7 @@
 #'   after computations are finished;
 #'   \item positive integer defining the number of cores to start a cluster.
 #'   If \code{cl = 1}, no attempt to create a cluster will be made.
-#'   If \eqn{>1}, cluster will be started (using \link[parallel]{makeCluster})
+#'   If \code{cl > 1}, cluster will be started (using \link[parallel]{makeCluster})
 #'   and stopped afterwards (using \link[parallel]{stopCluster}).
 #' }
 #'
