@@ -58,7 +58,7 @@ plot.snowboot <- function(x, k = NULL, plotmu = TRUE,
     k <- 0:(length(x$fk) - 1)
   }
   k <- sort(k)
-  k <- k[k < (length(x$fk) - 1)]
+  k <- k[k <= (length(x$fk) - 1)]
   if (length(k) == 0) {stop(paste("Specify k within the range from 0 to", (length(x$fk) - 1)))}
   ind <- is.element(0:(length(x$fk) - 1), k)
   YLIM <- c(0, max(x$fk[ind]))
@@ -85,7 +85,7 @@ plot.snowboot <- function(x, k = NULL, plotmu = TRUE,
     YLIM[2] <- max(x$fk_ci[,ind])
   }
   plot(k, x$fk[ind], ylim = YLIM, las = las, type = "n", yaxt = "n",
-       xlab = "k", ylab = "f(k)") #, ...
+       xlab = "k", ylab = "f(k)", ...)
   tmp <- axTicks(2)
   axis(2, at = tmp[tmp >= 0], las = las)
   abline(h = 0, col = col0, lwd = lwd0)
