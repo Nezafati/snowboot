@@ -5,6 +5,7 @@
 #' The point estimates are supplemented with box-and-whisker plots
 #' of bootstrapped values (if the input is a \code{\link{boot_dd}} output) or element-wise
 #' bootstrap confidence intervals (if the input is a \code{\link{boot_ci}} output).
+#' See \insertCite{chen_etal_2018_snowboot;textual}{snowboot}.
 #'
 #' @param x output of \code{\link{lsmi_dd}}, \code{\link{boot_dd}}, or \code{\link{boot_ci}}.
 #' @param k an integer vector with degrees to plot.
@@ -30,6 +31,9 @@
 #' (see arguments in \code{\link[graphics]{legend}}).
 #' @param las argument of \code{\link[graphics]{plot}} function.
 #' @param ... additional arguments to pass to the \code{\link[graphics]{plot}} function.
+#'
+#' @references
+#' \insertAllCited{}
 #'
 #' @export
 #'
